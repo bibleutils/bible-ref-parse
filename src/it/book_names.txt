@@ -9,13 +9,21 @@
 1Chr	1 Cr
 1Chr	1Chr
 1Cor	Prima lettera ai Corinzi
+1Cor	Prima Corinti
 1Cor	Prima Corinzi
+1Cor	Primo Corinti
 1Cor	Primo Corinzi
+1Cor	1°. Corinti
 1Cor	1°. Corinzi
+1Cor	1. Corinti
 1Cor	1. Corinzi
+1Cor	1° Corinti
 1Cor	1° Corinzi
+1Cor	I. Corinti
 1Cor	I. Corinzi
+1Cor	1 Corinti
 1Cor	1 Corinzi
+1Cor	I Corinti
 1Cor	I Corinzi
 1Cor	1 Cor
 1Cor	1 Co
@@ -146,13 +154,21 @@
 2Chr	2 Cr
 2Chr	2Chr
 2Cor	Seconda lettera ai Corinzi
+2Cor	Seconda Corinti
 2Cor	Seconda Corinzi
+2Cor	Secondo Corinti
 2Cor	Secondo Corinzi
+2Cor	2°. Corinti
 2Cor	2°. Corinzi
+2Cor	II. Corinti
 2Cor	II. Corinzi
+2Cor	2. Corinti
 2Cor	2. Corinzi
+2Cor	2° Corinti
 2Cor	2° Corinzi
+2Cor	II Corinti
 2Cor	II Corinzi
+2Cor	2 Corinti
 2Cor	2 Corinzi
 2Cor	2 Cor
 2Cor	2 Co

@@ -65,8 +65,8 @@ Luke	Luca	Lu	Lc	$GOSPEL $OFSAINT Luca
 John	Giovanni	Gv	$GOSPEL $OFSAINT Giovanni
 Acts	Atti	At	Atti degli Apostoli
 Rom	Romani	Ro	Rm	Lettera ai Romani
-1Cor	$FIRST Corinzi	1 Co	1 Cor	Prima lettera ai Corinzi
-2Cor	$SECOND Corinzi	2 Co	2 Cor	Seconda lettera ai Corinzi
+1Cor	$FIRST Corinzi	1 Co	1 Cor	Prima lettera ai Corinzi	$FIRST Corinti
+2Cor	$SECOND Corinzi	2 Co	2 Cor	Seconda lettera ai Corinzi	$SECOND Corinti
 Gal	Galati	Ga	Gàlati	Gal	Lettera ai Galati
 Eph	Efesini	Ef	Lettera agli Efesini
 Phil	Filippesi	Fl	Fil	Lettera ai Filippesi
