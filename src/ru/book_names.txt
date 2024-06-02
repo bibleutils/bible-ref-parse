@@ -719,6 +719,7 @@ Deut	Второзаконие
 Deut	Deut
 Deut	Втор
 Eccl	Книга Екклесиаста
+Eccl	Екклесиаста
 Eccl	Размышления
 Eccl	Екклесиаст
 Eccl	Eccl
