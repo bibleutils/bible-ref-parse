@@ -157,7 +157,9 @@
 2Pet	ペトロの手紙二
 2Pet	Ⅱ ヘテロ
 2Pet	Ⅱ ペテロ
+2Pet	ヘテロ第二
 2Pet	ヘトロ 2
+2Pet	ペテロ第二
 2Pet	ペトロ 2
 2Pet	2Pet
 2Pet	二ヘトロ
