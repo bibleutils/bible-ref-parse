@@ -419,7 +419,7 @@ bcv_parser::regexps.get_books = (include_apocrypha, case_sensitive) ->
 	,
 		osis: ["Heb"]
 		regexp: ///(^|#{bcv_parser::regexps.pre_book})(
-		(?:ヘ[フブ](?:ライ(?:人への手紙|書)?|ル(?:人への手紙|(?:人への)?書|人へ))|へ[フブ]ル人への手紙|へ[フブ]ル|Heb)
+		(?:ヘ[フブ](?:ライ(?:人への手紙|書)?|ル(?:人への手紙|(?:人への)?書|人へ)?)|へ[フブ]ル人への手紙|へ[フブ]ル|Heb)
 			)(?:(?=[\d\s\xa0.:,;\x1e\x1f&\(\)\uff08\uff09\[\]/"'\*=~\-\u2013\u2014])|$)///gi
 	,
 		osis: ["Jas"]

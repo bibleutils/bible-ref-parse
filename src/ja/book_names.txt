@@ -357,6 +357,8 @@ Heb	ヘブル書
 Heb	Heb
 Heb	へフル
 Heb	へブル
+Heb	ヘフル
+Heb	ヘブル
 Hos	ホセアしょ
 Hos	ホセア書
 Hos	Hos

@@ -1799,6 +1799,8 @@ describe "Localized book Heb (ja)", ->
 		expect(p.parse("Heb 1:1").osis()).toEqual("Heb.1.1", "parsing: 'Heb 1:1'")
 		expect(p.parse("へフル 1:1").osis()).toEqual("Heb.1.1", "parsing: 'へフル 1:1'")
 		expect(p.parse("へブル 1:1").osis()).toEqual("Heb.1.1", "parsing: 'へブル 1:1'")
+		expect(p.parse("ヘフル 1:1").osis()).toEqual("Heb.1.1", "parsing: 'ヘフル 1:1'")
+		expect(p.parse("ヘブル 1:1").osis()).toEqual("Heb.1.1", "parsing: 'ヘブル 1:1'")
 		p.include_apocrypha(false)
 		expect(p.parse("ヘフライ人への手紙 1:1").osis()).toEqual("Heb.1.1", "parsing: 'ヘフライ人への手紙 1:1'")
 		expect(p.parse("ヘブライ人への手紙 1:1").osis()).toEqual("Heb.1.1", "parsing: 'ヘブライ人への手紙 1:1'")
@@ -1819,6 +1821,8 @@ describe "Localized book Heb (ja)", ->
 		expect(p.parse("HEB 1:1").osis()).toEqual("Heb.1.1", "parsing: 'HEB 1:1'")
 		expect(p.parse("へフル 1:1").osis()).toEqual("Heb.1.1", "parsing: 'へフル 1:1'")
 		expect(p.parse("へブル 1:1").osis()).toEqual("Heb.1.1", "parsing: 'へブル 1:1'")
+		expect(p.parse("ヘフル 1:1").osis()).toEqual("Heb.1.1", "parsing: 'ヘフル 1:1'")
+		expect(p.parse("ヘブル 1:1").osis()).toEqual("Heb.1.1", "parsing: 'ヘブル 1:1'")
 		`
 		true
 describe "Localized book Jas (ja)", ->
