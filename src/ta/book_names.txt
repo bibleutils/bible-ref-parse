@@ -1396,6 +1396,7 @@ Rev	Veḷippatuttiṉa
 Rev	Veḷippaṭuttina
 Rev	Veḷippaṭuttiṉa
 Rev	திருவெளிப்பாடு
+Rev	வெளிப்படுத்தல்
 Rev	திவெ
 Rev	வெளி
 Rev	Rev
