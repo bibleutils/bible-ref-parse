@@ -244,6 +244,7 @@
 4Macc	4 Mak
 4Macc	4Macc
 Acts	Djela apostolska
+Acts	Djela
 Acts	Acts
 Acts	Dj
 Amos	Amos

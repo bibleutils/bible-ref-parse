@@ -57,7 +57,7 @@ Matt	Jevanđelje po Mateju	Evanðelje po Mateju	Evanđelje po Mateju	Matej	Mt
 Mark	Jevanđelje po Marku	Evanðelje po Marku	Evanđelje po Marku	Marko	Mk
 Luke	Jevanđelje po Luki	Evanðelje po Luki	Evanđelje po Luki	Luka	Lk
 John	Jevanđelje po Ivanu	Evanðelje po Ivanu	Evanđelje po Ivanu	Ivan	Iv
-Acts	Djela apostolska	Dj
+Acts	Djela apostolska	Djela	Dj
 Rom	Pavlova poslanica Rimljanima	Poslanica Rimljanima	Rimljanima	Rim
 1Cor	$FIRST Korinćanima Poslanica	Prva poslanica Korinæanima	Pavlova prva poslanica Korinćanima	Prva poslanica Korinćanima	$FIRST Korinćanima	1 Kor
 2Cor	$SECOND Korinćanima Poslanica	Druga poslanica Korinæanima	Pavlova druga poslanica Korinćanima	Druga poslanica Korinćanima	$SECOND Korinćanima	2 Kor
