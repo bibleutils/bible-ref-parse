@@ -3011,11 +3011,11 @@
 
   bcv_parser.prototype.regexps.pre_book = "[^A-Za-zªµºÀ-ÖØ-öø-ɏḀ-ỿⱠ-ⱿꜢ-ꞈꞋ-ꞎꞐ-ꞓꞠ-Ɦꟸ-ꟿ]";
 
-  bcv_parser.prototype.regexps.first = `(?:Prva|1|I)\\.?${bcv_parser.prototype.regexps.space}*`;
+  bcv_parser.prototype.regexps.first = `(?:Prva|1|1|I)\\.?${bcv_parser.prototype.regexps.space}*`;
 
-  bcv_parser.prototype.regexps.second = `(?:Druga|2|II)\\.?${bcv_parser.prototype.regexps.space}*`;
+  bcv_parser.prototype.regexps.second = `(?:Druga|2|2|II)\\.?${bcv_parser.prototype.regexps.space}*`;
 
-  bcv_parser.prototype.regexps.third = `(?:Treæa|Tre[ćc]a|3|III)\\.?${bcv_parser.prototype.regexps.space}*`;
+  bcv_parser.prototype.regexps.third = `(?:Treæa|Tre[ćc]a|3|3|III)\\.?${bcv_parser.prototype.regexps.space}*`;
 
   bcv_parser.prototype.regexps.range_and = "(?:[&\u2013\u2014-]|i|-)";
 
@@ -3129,27 +3129,27 @@
       },
       {
         osis: ["2Sam"],
-        regexp: /(^|[^0-9A-Za-zªµºÀ-ÖØ-öø-ɏḀ-ỿⱠ-ⱿꜢ-ꞈꞋ-ꞎꞐ-ꞓꞠ-Ɦꟸ-ꟿ])((?:Druga[\s\xa0]*(?:knjiga[\s\xa0]*o[\s\xa0]*Samuelu|Samuelova(?:[\s\xa0]*knjiga)?)|(?:II\.?|2\.?)[\s\xa0]*Samuelova|2[\s\xa0]*?Sam))(?:(?=[\d\s\xa0.:,;\x1e\x1f&\(\)\uff08\uff09\[\]\/"'\*=~\-\u2013\u2014])|$)/gi
+        regexp: /(^|[^0-9A-Za-zªµºÀ-ÖØ-öø-ɏḀ-ỿⱠ-ⱿꜢ-ꞈꞋ-ꞎꞐ-ꞓꞠ-Ɦꟸ-ꟿ])((?:Druga[\s\xa0]*(?:knjiga[\s\xa0]*o[\s\xa0]*Samuelu|Samuelova(?:[\s\xa0]*knjiga)?)|(?:II\.?|2(?:\.\.?)?)[\s\xa0]*Samuelova|2[\s\xa0]*?Sam))(?:(?=[\d\s\xa0.:,;\x1e\x1f&\(\)\uff08\uff09\[\]\/"'\*=~\-\u2013\u2014])|$)/gi
       },
       {
         osis: ["1Sam"],
-        regexp: /(^|[^0-9A-Za-zªµºÀ-ÖØ-öø-ɏḀ-ỿⱠ-ⱿꜢ-ꞈꞋ-ꞎꞐ-ꞓꞠ-Ɦꟸ-ꟿ])((?:Prva[\s\xa0]*(?:knjiga[\s\xa0]*o[\s\xa0]*Samuelu|Samuelova(?:[\s\xa0]*knjiga)?)|(?:I\.?|1\.?)[\s\xa0]*Samuelova|1[\s\xa0]*?Sam))(?:(?=[\d\s\xa0.:,;\x1e\x1f&\(\)\uff08\uff09\[\]\/"'\*=~\-\u2013\u2014])|$)/gi
+        regexp: /(^|[^0-9A-Za-zªµºÀ-ÖØ-öø-ɏḀ-ỿⱠ-ⱿꜢ-ꞈꞋ-ꞎꞐ-ꞓꞠ-Ɦꟸ-ꟿ])((?:Prva[\s\xa0]*(?:knjiga[\s\xa0]*o[\s\xa0]*Samuelu|Samuelova(?:[\s\xa0]*knjiga)?)|(?:1(?:\.\.?)?|I\.?)[\s\xa0]*Samuelova|1[\s\xa0]*?Sam))(?:(?=[\d\s\xa0.:,;\x1e\x1f&\(\)\uff08\uff09\[\]\/"'\*=~\-\u2013\u2014])|$)/gi
       },
       {
         osis: ["2Kgs"],
-        regexp: /(^|[^0-9A-Za-zªµºÀ-ÖØ-öø-ɏḀ-ỿⱠ-ⱿꜢ-ꞈꞋ-ꞎꞐ-ꞓꞠ-Ɦꟸ-ꟿ])((?:Druga[\s\xa0]*(?:knjiga[\s\xa0]*o[\s\xa0]*)?Kraljevima|(?:II|2)\.[\s\xa0]*Kraljevima|II[\s\xa0]*Kraljevima|2(?:[\s\xa0]*Kraljevima|[\s\xa0]*Kr|Kgs)))(?:(?=[\d\s\xa0.:,;\x1e\x1f&\(\)\uff08\uff09\[\]\/"'\*=~\-\u2013\u2014])|$)/gi
+        regexp: /(^|[^0-9A-Za-zªµºÀ-ÖØ-öø-ɏḀ-ỿⱠ-ⱿꜢ-ꞈꞋ-ꞎꞐ-ꞓꞠ-Ɦꟸ-ꟿ])((?:Druga[\s\xa0]*(?:knjiga[\s\xa0]*o[\s\xa0]*)?Kraljevima|(?:II|2\.)\.[\s\xa0]*Kraljevima|(?:II|2\.)[\s\xa0]*Kraljevima|2(?:[\s\xa0]*Kraljevima|[\s\xa0]*Kr|Kgs)))(?:(?=[\d\s\xa0.:,;\x1e\x1f&\(\)\uff08\uff09\[\]\/"'\*=~\-\u2013\u2014])|$)/gi
       },
       {
         osis: ["1Kgs"],
-        regexp: /(^|[^0-9A-Za-zªµºÀ-ÖØ-öø-ɏḀ-ỿⱠ-ⱿꜢ-ꞈꞋ-ꞎꞐ-ꞓꞠ-Ɦꟸ-ꟿ])((?:Prva[\s\xa0]*(?:knjiga[\s\xa0]*o[\s\xa0]*)?Kraljevima|[1I]\.[\s\xa0]*Kraljevima|1(?:[\s\xa0]*Kraljevima|[\s\xa0]*Kr|Kgs)|I[\s\xa0]*Kraljevima))(?:(?=[\d\s\xa0.:,;\x1e\x1f&\(\)\uff08\uff09\[\]\/"'\*=~\-\u2013\u2014])|$)/gi
+        regexp: /(^|[^0-9A-Za-zªµºÀ-ÖØ-öø-ɏḀ-ỿⱠ-ⱿꜢ-ꞈꞋ-ꞎꞐ-ꞓꞠ-Ɦꟸ-ꟿ])((?:Prva[\s\xa0]*(?:knjiga[\s\xa0]*o[\s\xa0]*)?Kraljevima|(?:1\.|I)\.[\s\xa0]*Kraljevima|(?:1\.|I)[\s\xa0]*Kraljevima|1(?:[\s\xa0]*Kraljevima|[\s\xa0]*Kr|Kgs)))(?:(?=[\d\s\xa0.:,;\x1e\x1f&\(\)\uff08\uff09\[\]\/"'\*=~\-\u2013\u2014])|$)/gi
       },
       {
         osis: ["2Chr"],
-        regexp: /(^|[^0-9A-Za-zªµºÀ-ÖØ-öø-ɏḀ-ỿⱠ-ⱿꜢ-ꞈꞋ-ꞎꞐ-ꞓꞠ-Ɦꟸ-ꟿ])((?:Druga[\s\xa0]*(?:knjiga[\s\xa0]*)?Ljetopisa|(?:II|2)\.[\s\xa0]*Ljetopisa|II[\s\xa0]*Ljetopisa|2(?:[\s\xa0]*Ljetopisa|[\s\xa0]*Ljet|Chr)))(?:(?=[\d\s\xa0.:,;\x1e\x1f&\(\)\uff08\uff09\[\]\/"'\*=~\-\u2013\u2014])|$)/gi
+        regexp: /(^|[^0-9A-Za-zªµºÀ-ÖØ-öø-ɏḀ-ỿⱠ-ⱿꜢ-ꞈꞋ-ꞎꞐ-ꞓꞠ-Ɦꟸ-ꟿ])((?:Druga[\s\xa0]*(?:knjiga[\s\xa0]*)?Ljetopisa|(?:II|2\.)\.[\s\xa0]*Ljetopisa|(?:II|2\.)[\s\xa0]*Ljetopisa|2(?:[\s\xa0]*Ljetopisa|[\s\xa0]*Ljet|Chr)))(?:(?=[\d\s\xa0.:,;\x1e\x1f&\(\)\uff08\uff09\[\]\/"'\*=~\-\u2013\u2014])|$)/gi
       },
       {
         osis: ["1Chr"],
-        regexp: /(^|[^0-9A-Za-zªµºÀ-ÖØ-öø-ɏḀ-ỿⱠ-ⱿꜢ-ꞈꞋ-ꞎꞐ-ꞓꞠ-Ɦꟸ-ꟿ])((?:Prva[\s\xa0]*(?:knjiga[\s\xa0]*)?Ljetopisa|[1I]\.[\s\xa0]*Ljetopisa|1(?:[\s\xa0]*Ljetopisa|[\s\xa0]*Ljet|Chr)|I[\s\xa0]*Ljetopisa))(?:(?=[\d\s\xa0.:,;\x1e\x1f&\(\)\uff08\uff09\[\]\/"'\*=~\-\u2013\u2014])|$)/gi
+        regexp: /(^|[^0-9A-Za-zªµºÀ-ÖØ-öø-ɏḀ-ỿⱠ-ⱿꜢ-ꞈꞋ-ꞎꞐ-ꞓꞠ-Ɦꟸ-ꟿ])((?:Prva[\s\xa0]*(?:knjiga[\s\xa0]*)?Ljetopisa|(?:1\.|I)\.[\s\xa0]*Ljetopisa|(?:1\.|I)[\s\xa0]*Ljetopisa|1(?:[\s\xa0]*Ljetopisa|[\s\xa0]*Ljet|Chr)))(?:(?=[\d\s\xa0.:,;\x1e\x1f&\(\)\uff08\uff09\[\]\/"'\*=~\-\u2013\u2014])|$)/gi
       },
       {
         osis: ["Ezra"],
@@ -3301,15 +3301,15 @@
       },
       {
         osis: ["1John"],
-        regexp: /(^|[^0-9A-Za-zªµºÀ-ÖØ-öø-ɏḀ-ỿⱠ-ⱿꜢ-ꞈꞋ-ꞎꞐ-ꞓꞠ-Ɦꟸ-ꟿ])((?:Prva[\s\xa0]*Ivanova(?:[\s\xa0]*[Pp]oslanica)?|(?:I\.?|1\.?)[\s\xa0]*Ivanova[\s\xa0]*Poslanica|I\.?[\s\xa0]*Ivanova|1(?:\.[\s\xa0]*Ivanova|[\s\xa0]*Iv(?:anova)?)|1John))(?:(?=[\d\s\xa0.:,;\x1e\x1f&\(\)\uff08\uff09\[\]\/"'\*=~\-\u2013\u2014])|$)/gi
+        regexp: /(^|[^0-9A-Za-zªµºÀ-ÖØ-öø-ɏḀ-ỿⱠ-ⱿꜢ-ꞈꞋ-ꞎꞐ-ꞓꞠ-Ɦꟸ-ꟿ])((?:Prva[\s\xa0]*Ivanova(?:[\s\xa0]*[Pp]oslanica)?|(?:1(?:\.\.?)?|I\.?)[\s\xa0]*Ivanova[\s\xa0]*Poslanica|1(?:\.\.?[\s\xa0]*Ivanova|[\s\xa0]*Iv(?:anova)?)|I\.?[\s\xa0]*Ivanova|1John))(?:(?=[\d\s\xa0.:,;\x1e\x1f&\(\)\uff08\uff09\[\]\/"'\*=~\-\u2013\u2014])|$)/gi
       },
       {
         osis: ["2John"],
-        regexp: /(^|[^0-9A-Za-zªµºÀ-ÖØ-öø-ɏḀ-ỿⱠ-ⱿꜢ-ꞈꞋ-ꞎꞐ-ꞓꞠ-Ɦꟸ-ꟿ])((?:Druga[\s\xa0]*Ivanova(?:[\s\xa0]*[Pp]oslanica)?|(?:II\.?|2\.?)[\s\xa0]*Ivanova[\s\xa0]*Poslanica|II\.?[\s\xa0]*Ivanova|2(?:\.[\s\xa0]*Ivanova|[\s\xa0]*Iv(?:anova)?)|2John))(?:(?=[\d\s\xa0.:,;\x1e\x1f&\(\)\uff08\uff09\[\]\/"'\*=~\-\u2013\u2014])|$)/gi
+        regexp: /(^|[^0-9A-Za-zªµºÀ-ÖØ-öø-ɏḀ-ỿⱠ-ⱿꜢ-ꞈꞋ-ꞎꞐ-ꞓꞠ-Ɦꟸ-ꟿ])((?:Druga[\s\xa0]*Ivanova(?:[\s\xa0]*[Pp]oslanica)?|(?:II\.?|2(?:\.\.?)?)[\s\xa0]*Ivanova[\s\xa0]*Poslanica|II\.?[\s\xa0]*Ivanova|2(?:\.\.?[\s\xa0]*Ivanova|[\s\xa0]*Iv(?:anova)?)|2John))(?:(?=[\d\s\xa0.:,;\x1e\x1f&\(\)\uff08\uff09\[\]\/"'\*=~\-\u2013\u2014])|$)/gi
       },
       {
         osis: ["3John"],
-        regexp: /(^|[^0-9A-Za-zªµºÀ-ÖØ-öø-ɏḀ-ỿⱠ-ⱿꜢ-ꞈꞋ-ꞎꞐ-ꞓꞠ-Ɦꟸ-ꟿ])((?:Tre[c\xE6ć]a[\s\xa0]*Ivanova(?:[\s\xa0]*[Pp]oslanica)?|(?:III\.?|3\.?)[\s\xa0]*Ivanova[\s\xa0]*Poslanica|III\.?[\s\xa0]*Ivanova|3(?:\.[\s\xa0]*Ivanova|[\s\xa0]*Iv(?:anova)?)|3John))(?:(?=[\d\s\xa0.:,;\x1e\x1f&\(\)\uff08\uff09\[\]\/"'\*=~\-\u2013\u2014])|$)/gi
+        regexp: /(^|[^0-9A-Za-zªµºÀ-ÖØ-öø-ɏḀ-ỿⱠ-ⱿꜢ-ꞈꞋ-ꞎꞐ-ꞓꞠ-Ɦꟸ-ꟿ])((?:Tre[c\xE6ć]a[\s\xa0]*Ivanova[\s\xa0]*Poslanica|(?:III|3\.)\.[\s\xa0]*Ivanova[\s\xa0]*Poslanica|(?:III|3\.)[\s\xa0]*Ivanova[\s\xa0]*Poslanica|3(?:[\s\xa0]*Ivanova[\s\xa0]*Poslanica|John|[\s\xa0]*Iv))|(?:Tre[c\xE6ć]a[\s\xa0]*Ivanova(?:[\s\xa0]*poslanica)?|(?:III\.?|3(?:\.\.?)?)[\s\xa0]*Ivanova))(?:(?=[\d\s\xa0.:,;\x1e\x1f&\(\)\uff08\uff09\[\]\/"'\*=~\-\u2013\u2014])|$)/gi
       },
       {
         osis: ["John"],
@@ -3328,11 +3328,11 @@
       },
       {
         osis: ["2Cor"],
-        regexp: /(^|[^0-9A-Za-zªµºÀ-ÖØ-öø-ɏḀ-ỿⱠ-ⱿꜢ-ꞈꞋ-ꞎꞐ-ꞓꞠ-Ɦꟸ-ꟿ])((?:Pavlova[\s\xa0]*druga[\s\xa0]*poslanica[\s\xa0]*Korin[cć]anima|(?:Druga[\s\xa0]*Korin[cć]|(?:II\.?|2\.)[\s\xa0]*Korin[cć]|2[\s\xa0]*Korin[cć])anima[\s\xa0]*Poslanica|Druga[\s\xa0]*poslanica[\s\xa0]*Korin\xE6anima|2(?:[\s\xa0]*K|C)or)|(?:(?:Druga[\s\xa0]*(?:poslanica[\s\xa0]*Korin[cć]|Korin[cć])|(?:II|2)\.[\s\xa0]*Korin[cć]|(?:II|2)[\s\xa0]*Korin[cć])anima))(?:(?=[\d\s\xa0.:,;\x1e\x1f&\(\)\uff08\uff09\[\]\/"'\*=~\-\u2013\u2014])|$)/gi
+        regexp: /(^|[^0-9A-Za-zªµºÀ-ÖØ-öø-ɏḀ-ỿⱠ-ⱿꜢ-ꞈꞋ-ꞎꞐ-ꞓꞠ-Ɦꟸ-ꟿ])((?:Pavlova[\s\xa0]*druga[\s\xa0]*poslanica[\s\xa0]*Korin[cć]anima|(?:Druga[\s\xa0]*Korin[cć]|(?:II\.?|2\.\.?)[\s\xa0]*Korin[cć]|2[\s\xa0]*Korin[cć])anima[\s\xa0]*Poslanica|Druga[\s\xa0]*poslanica[\s\xa0]*Korin\xE6anima|2(?:[\s\xa0]*K|C)or)|(?:(?:Druga[\s\xa0]*(?:poslanica[\s\xa0]*Korin[cć]|Korin[cć])|(?:II|2\.)\.[\s\xa0]*Korin[cć]|(?:II|2\.?)[\s\xa0]*Korin[cć])anima))(?:(?=[\d\s\xa0.:,;\x1e\x1f&\(\)\uff08\uff09\[\]\/"'\*=~\-\u2013\u2014])|$)/gi
       },
       {
         osis: ["1Cor"],
-        regexp: /(^|[^0-9A-Za-zªµºÀ-ÖØ-öø-ɏḀ-ỿⱠ-ⱿꜢ-ꞈꞋ-ꞎꞐ-ꞓꞠ-Ɦꟸ-ꟿ])((?:P(?:avlova[\s\xa0]*prva[\s\xa0]*poslanica[\s\xa0]*Korin[cć]anim|rva[\s\xa0]*(?:Korin[cć]anima[\s\xa0]*Poslanic|poslanica[\s\xa0]*Korin\xE6anim))a|(?:(?:I\.?|1\.)[\s\xa0]*Korin[cć]|1[\s\xa0]*Korin[cć])anima[\s\xa0]*Poslanica|1(?:[\s\xa0]*K|C)or)|(?:(?:Prva[\s\xa0]*(?:poslanica[\s\xa0]*Korin[cć]|Korin[cć])|[1I]\.[\s\xa0]*Korin[cć]|[1I][\s\xa0]*Korin[cć])anima))(?:(?=[\d\s\xa0.:,;\x1e\x1f&\(\)\uff08\uff09\[\]\/"'\*=~\-\u2013\u2014])|$)/gi
+        regexp: /(^|[^0-9A-Za-zªµºÀ-ÖØ-öø-ɏḀ-ỿⱠ-ⱿꜢ-ꞈꞋ-ꞎꞐ-ꞓꞠ-Ɦꟸ-ꟿ])((?:P(?:avlova[\s\xa0]*prva[\s\xa0]*poslanica[\s\xa0]*Korin[cć]anim|rva[\s\xa0]*(?:Korin[cć]anima[\s\xa0]*Poslanic|poslanica[\s\xa0]*Korin\xE6anim))a|(?:(?:1\.\.?|I\.?)[\s\xa0]*Korin[cć]|1[\s\xa0]*Korin[cć])anima[\s\xa0]*Poslanica|1(?:[\s\xa0]*K|C)or)|(?:(?:Prva[\s\xa0]*(?:poslanica[\s\xa0]*Korin[cć]|Korin[cć])|(?:1\.|I)\.[\s\xa0]*Korin[cć]|(?:1\.?|I)[\s\xa0]*Korin[cć])anima))(?:(?=[\d\s\xa0.:,;\x1e\x1f&\(\)\uff08\uff09\[\]\/"'\*=~\-\u2013\u2014])|$)/gi
       },
       {
         osis: ["Gal"],
@@ -3356,19 +3356,19 @@
       },
       {
         osis: ["2Thess"],
-        regexp: /(^|[^0-9A-Za-zªµºÀ-ÖØ-öø-ɏḀ-ỿⱠ-ⱿꜢ-ꞈꞋ-ꞎꞐ-ꞓꞠ-Ɦꟸ-ꟿ])((?:Pavlova[\s\xa0]*druga[\s\xa0]*poslanica[\s\xa0]*Solunjanima|(?:Druga|II\.?|2\.|2)[\s\xa0]*Solunjanima[\s\xa0]*Poslanica|Druga[\s\xa0]*poslanica[\s\xa0]*Solunjanima|Druga[\s\xa0]*Solunjanima|(?:II\.?|2\.)[\s\xa0]*Solunjanima|2[\s\xa0]*Sol(?:unjanima)?|2Thess))(?:(?=[\d\s\xa0.:,;\x1e\x1f&\(\)\uff08\uff09\[\]\/"'\*=~\-\u2013\u2014])|$)/gi
+        regexp: /(^|[^0-9A-Za-zªµºÀ-ÖØ-öø-ɏḀ-ỿⱠ-ⱿꜢ-ꞈꞋ-ꞎꞐ-ꞓꞠ-Ɦꟸ-ꟿ])((?:Pavlova[\s\xa0]*druga[\s\xa0]*poslanica[\s\xa0]*Solunjanima|(?:Druga|II\.?|2\.\.?|2)[\s\xa0]*Solunjanima[\s\xa0]*Poslanica|Druga[\s\xa0]*poslanica[\s\xa0]*Solunjanima|Druga[\s\xa0]*Solunjanima|(?:II\.?|2\.\.?)[\s\xa0]*Solunjanima|2[\s\xa0]*Sol(?:unjanima)?|2Thess))(?:(?=[\d\s\xa0.:,;\x1e\x1f&\(\)\uff08\uff09\[\]\/"'\*=~\-\u2013\u2014])|$)/gi
       },
       {
         osis: ["1Thess"],
-        regexp: /(^|[^0-9A-Za-zªµºÀ-ÖØ-öø-ɏḀ-ỿⱠ-ⱿꜢ-ꞈꞋ-ꞎꞐ-ꞓꞠ-Ɦꟸ-ꟿ])((?:P(?:avlova[\s\xa0]*prva[\s\xa0]*poslanica[\s\xa0]*Solunjanima|rva[\s\xa0]*(?:Solunjanima(?:[\s\xa0]*Poslanica)?|poslanica[\s\xa0]*Solunjanima))|(?:I\.?|1\.|1)[\s\xa0]*Solunjanima[\s\xa0]*Poslanica|(?:I\.?|1\.)[\s\xa0]*Solunjanima|1[\s\xa0]*Sol(?:unjanima)?|1Thess))(?:(?=[\d\s\xa0.:,;\x1e\x1f&\(\)\uff08\uff09\[\]\/"'\*=~\-\u2013\u2014])|$)/gi
+        regexp: /(^|[^0-9A-Za-zªµºÀ-ÖØ-öø-ɏḀ-ỿⱠ-ⱿꜢ-ꞈꞋ-ꞎꞐ-ꞓꞠ-Ɦꟸ-ꟿ])((?:P(?:avlova[\s\xa0]*prva[\s\xa0]*poslanica[\s\xa0]*Solunjanima|rva[\s\xa0]*(?:Solunjanima(?:[\s\xa0]*Poslanica)?|poslanica[\s\xa0]*Solunjanima))|(?:1\.\.?|I\.?|1)[\s\xa0]*Solunjanima[\s\xa0]*Poslanica|(?:1\.\.?|I\.?)[\s\xa0]*Solunjanima|1[\s\xa0]*Sol(?:unjanima)?|1Thess))(?:(?=[\d\s\xa0.:,;\x1e\x1f&\(\)\uff08\uff09\[\]\/"'\*=~\-\u2013\u2014])|$)/gi
       },
       {
         osis: ["2Tim"],
-        regexp: /(^|[^0-9A-Za-zªµºÀ-ÖØ-öø-ɏḀ-ỿⱠ-ⱿꜢ-ꞈꞋ-ꞎꞐ-ꞓꞠ-Ɦꟸ-ꟿ])((?:Pavlova[\s\xa0]*druga[\s\xa0]*poslanica[\s\xa0]*Timoteju|Druga[\s\xa0]*Timoteju[\s\xa0]*Poslanica|Druga[\s\xa0]*poslanica[\s\xa0]*Timoteju|(?:II\.?|2\.)[\s\xa0]*Timoteju[\s\xa0]*Poslanica|2(?:[\s\xa0]*Timoteju[\s\xa0]*Poslanica|Tim)|Druga[\s\xa0]*Timoteju|(?:II\.?|2\.)[\s\xa0]*Timoteju|2[\s\xa0]*Tim(?:oteju)?))(?:(?=[\d\s\xa0.:,;\x1e\x1f&\(\)\uff08\uff09\[\]\/"'\*=~\-\u2013\u2014])|$)/gi
+        regexp: /(^|[^0-9A-Za-zªµºÀ-ÖØ-öø-ɏḀ-ỿⱠ-ⱿꜢ-ꞈꞋ-ꞎꞐ-ꞓꞠ-Ɦꟸ-ꟿ])((?:Pavlova[\s\xa0]*druga[\s\xa0]*poslanica[\s\xa0]*Timoteju|Druga[\s\xa0]*Timoteju[\s\xa0]*Poslanica|Druga[\s\xa0]*poslanica[\s\xa0]*Timoteju|(?:II\.?|2\.\.?)[\s\xa0]*Timoteju[\s\xa0]*Poslanica|2(?:[\s\xa0]*Timoteju[\s\xa0]*Poslanica|Tim)|Druga[\s\xa0]*Timoteju|(?:II\.?|2\.\.?)[\s\xa0]*Timoteju|2[\s\xa0]*Tim(?:oteju)?))(?:(?=[\d\s\xa0.:,;\x1e\x1f&\(\)\uff08\uff09\[\]\/"'\*=~\-\u2013\u2014])|$)/gi
       },
       {
         osis: ["1Tim"],
-        regexp: /(^|[^0-9A-Za-zªµºÀ-ÖØ-öø-ɏḀ-ỿⱠ-ⱿꜢ-ꞈꞋ-ꞎꞐ-ꞓꞠ-Ɦꟸ-ꟿ])((?:P(?:avlova[\s\xa0]*prva[\s\xa0]*poslanica[\s\xa0]*Timoteju|rva[\s\xa0]*(?:Timoteju(?:[\s\xa0]*Poslanica)?|poslanica[\s\xa0]*Timoteju))|(?:I\.?|1\.)[\s\xa0]*Timoteju[\s\xa0]*Poslanica|1(?:[\s\xa0]*Timoteju[\s\xa0]*Poslanica|Tim)|(?:I\.?|1\.)[\s\xa0]*Timoteju|1[\s\xa0]*Tim(?:oteju)?))(?:(?=[\d\s\xa0.:,;\x1e\x1f&\(\)\uff08\uff09\[\]\/"'\*=~\-\u2013\u2014])|$)/gi
+        regexp: /(^|[^0-9A-Za-zªµºÀ-ÖØ-öø-ɏḀ-ỿⱠ-ⱿꜢ-ꞈꞋ-ꞎꞐ-ꞓꞠ-Ɦꟸ-ꟿ])((?:P(?:avlova[\s\xa0]*prva[\s\xa0]*poslanica[\s\xa0]*Timoteju|rva[\s\xa0]*(?:Timoteju(?:[\s\xa0]*Poslanica)?|poslanica[\s\xa0]*Timoteju))|(?:1\.\.?|I\.?)[\s\xa0]*Timoteju[\s\xa0]*Poslanica|1(?:[\s\xa0]*Timoteju[\s\xa0]*Poslanica|Tim)|(?:1\.\.?|I\.?)[\s\xa0]*Timoteju|1[\s\xa0]*Tim(?:oteju)?))(?:(?=[\d\s\xa0.:,;\x1e\x1f&\(\)\uff08\uff09\[\]\/"'\*=~\-\u2013\u2014])|$)/gi
       },
       {
         osis: ["Titus"],
@@ -3392,11 +3392,11 @@
       },
       {
         osis: ["2Pet"],
-        regexp: /(^|[^0-9A-Za-zªµºÀ-ÖØ-öø-ɏḀ-ỿⱠ-ⱿꜢ-ꞈꞋ-ꞎꞐ-ꞓꞠ-Ɦꟸ-ꟿ])((?:Druga[\s\xa0]*Petrova(?:[\s\xa0]*[Pp]oslanica)?|(?:II\.?|2\.?)[\s\xa0]*Petrova[\s\xa0]*Poslanica|(?:II\.?|2\.?)[\s\xa0]*Petrova|2(?:Pe|[\s\xa0]*P)t))(?:(?=[\d\s\xa0.:,;\x1e\x1f&\(\)\uff08\uff09\[\]\/"'\*=~\-\u2013\u2014])|$)/gi
+        regexp: /(^|[^0-9A-Za-zªµºÀ-ÖØ-öø-ɏḀ-ỿⱠ-ⱿꜢ-ꞈꞋ-ꞎꞐ-ꞓꞠ-Ɦꟸ-ꟿ])((?:Druga[\s\xa0]*Petrova(?:[\s\xa0]*[Pp]oslanica)?|(?:II\.?|2(?:\.\.?)?)[\s\xa0]*Petrova[\s\xa0]*Poslanica|(?:II\.?|2(?:\.\.?)?)[\s\xa0]*Petrova|2(?:Pe|[\s\xa0]*P)t))(?:(?=[\d\s\xa0.:,;\x1e\x1f&\(\)\uff08\uff09\[\]\/"'\*=~\-\u2013\u2014])|$)/gi
       },
       {
         osis: ["1Pet"],
-        regexp: /(^|[^0-9A-Za-zªµºÀ-ÖØ-öø-ɏḀ-ỿⱠ-ⱿꜢ-ꞈꞋ-ꞎꞐ-ꞓꞠ-Ɦꟸ-ꟿ])((?:Prva[\s\xa0]*Petrova(?:[\s\xa0]*[Pp]oslanica)?|(?:I\.?|1\.?)[\s\xa0]*Petrova[\s\xa0]*Poslanica|(?:I\.?|1\.?)[\s\xa0]*Petrova|1(?:Pe|[\s\xa0]*P)t))(?:(?=[\d\s\xa0.:,;\x1e\x1f&\(\)\uff08\uff09\[\]\/"'\*=~\-\u2013\u2014])|$)/gi
+        regexp: /(^|[^0-9A-Za-zªµºÀ-ÖØ-öø-ɏḀ-ỿⱠ-ⱿꜢ-ꞈꞋ-ꞎꞐ-ꞓꞠ-Ɦꟸ-ꟿ])((?:Prva[\s\xa0]*Petrova(?:[\s\xa0]*[Pp]oslanica)?|(?:1(?:\.\.?)?|I\.?)[\s\xa0]*Petrova[\s\xa0]*Poslanica|(?:1(?:\.\.?)?|I\.?)[\s\xa0]*Petrova|1(?:Pe|[\s\xa0]*P)t))(?:(?=[\d\s\xa0.:,;\x1e\x1f&\(\)\uff08\uff09\[\]\/"'\*=~\-\u2013\u2014])|$)/gi
       },
       {
         osis: ["Jude"],

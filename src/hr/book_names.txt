@@ -1,5 +1,6 @@
 1Chr	Prva knjiga Ljetopisa
 1Chr	Prva Ljetopisa
+1Chr	1.. Ljetopisa
 1Chr	1. Ljetopisa
 1Chr	I. Ljetopisa
 1Chr	1 Ljetopisa
@@ -13,6 +14,8 @@
 1Cor	Prva poslanica Korincanima
 1Cor	Prva poslanica Korinæanima
 1Cor	Prva poslanica Korinćanima
+1Cor	1.. Korincanima Poslanica
+1Cor	1.. Korinćanima Poslanica
 1Cor	1. Korincanima Poslanica
 1Cor	1. Korinćanima Poslanica
 1Cor	I. Korincanima Poslanica
@@ -23,6 +26,8 @@
 1Cor	I Korinćanima Poslanica
 1Cor	Prva Korincanima
 1Cor	Prva Korinćanima
+1Cor	1.. Korincanima
+1Cor	1.. Korinćanima
 1Cor	1. Korincanima
 1Cor	1. Korinćanima
 1Cor	I. Korincanima
@@ -36,11 +41,13 @@
 1Esd	1Esd
 1John	Prva Ivanova Poslanica
 1John	Prva Ivanova poslanica
+1John	1.. Ivanova Poslanica
 1John	1. Ivanova Poslanica
 1John	I. Ivanova Poslanica
 1John	1 Ivanova Poslanica
 1John	I Ivanova Poslanica
 1John	Prva Ivanova
+1John	1.. Ivanova
 1John	1. Ivanova
 1John	I. Ivanova
 1John	1 Ivanova
@@ -49,6 +56,7 @@
 1John	1 Iv
 1Kgs	Prva knjiga o Kraljevima
 1Kgs	Prva Kraljevima
+1Kgs	1.. Kraljevima
 1Kgs	1. Kraljevima
 1Kgs	I. Kraljevima
 1Kgs	1 Kraljevima
@@ -60,11 +68,13 @@
 1Macc	1Macc
 1Pet	Prva Petrova Poslanica
 1Pet	Prva Petrova poslanica
+1Pet	1.. Petrova Poslanica
 1Pet	1. Petrova Poslanica
 1Pet	I. Petrova Poslanica
 1Pet	1 Petrova Poslanica
 1Pet	I Petrova Poslanica
 1Pet	Prva Petrova
+1Pet	1.. Petrova
 1Pet	1. Petrova
 1Pet	I. Petrova
 1Pet	1 Petrova
@@ -74,6 +84,7 @@
 1Sam	Prva Samuelova knjiga
 1Sam	Prva knjiga o Samuelu
 1Sam	Prva Samuelova
+1Sam	1.. Samuelova
 1Sam	1. Samuelova
 1Sam	I. Samuelova
 1Sam	1 Samuelova
@@ -83,11 +94,13 @@
 1Thess	Pavlova prva poslanica Solunjanima
 1Thess	Prva Solunjanima Poslanica
 1Thess	Prva poslanica Solunjanima
+1Thess	1.. Solunjanima Poslanica
 1Thess	1. Solunjanima Poslanica
 1Thess	I. Solunjanima Poslanica
 1Thess	1 Solunjanima Poslanica
 1Thess	I Solunjanima Poslanica
 1Thess	Prva Solunjanima
+1Thess	1.. Solunjanima
 1Thess	1. Solunjanima
 1Thess	I. Solunjanima
 1Thess	1 Solunjanima
@@ -97,11 +110,13 @@
 1Tim	Pavlova prva poslanica Timoteju
 1Tim	Prva Timoteju Poslanica
 1Tim	Prva poslanica Timoteju
+1Tim	1.. Timoteju Poslanica
 1Tim	1. Timoteju Poslanica
 1Tim	I. Timoteju Poslanica
 1Tim	1 Timoteju Poslanica
 1Tim	I Timoteju Poslanica
 1Tim	Prva Timoteju
+1Tim	1.. Timoteju
 1Tim	1. Timoteju
 1Tim	I. Timoteju
 1Tim	1 Timoteju
@@ -110,6 +125,7 @@
 1Tim	1Tim
 2Chr	Druga knjiga Ljetopisa
 2Chr	Druga Ljetopisa
+2Chr	2.. Ljetopisa
 2Chr	II. Ljetopisa
 2Chr	2. Ljetopisa
 2Chr	II Ljetopisa
@@ -123,6 +139,8 @@
 2Cor	Druga poslanica Korincanima
 2Cor	Druga poslanica Korinæanima
 2Cor	Druga poslanica Korinćanima
+2Cor	2.. Korincanima Poslanica
+2Cor	2.. Korinćanima Poslanica
 2Cor	II. Korincanima Poslanica
 2Cor	II. Korinćanima Poslanica
 2Cor	2. Korincanima Poslanica
@@ -133,6 +151,8 @@
 2Cor	2 Korinćanima Poslanica
 2Cor	Druga Korincanima
 2Cor	Druga Korinćanima
+2Cor	2.. Korincanima
+2Cor	2.. Korinćanima
 2Cor	II. Korincanima
 2Cor	II. Korinćanima
 2Cor	2. Korincanima
@@ -146,11 +166,13 @@
 2Esd	2Esd
 2John	Druga Ivanova Poslanica
 2John	Druga Ivanova poslanica
+2John	2.. Ivanova Poslanica
 2John	II. Ivanova Poslanica
 2John	2. Ivanova Poslanica
 2John	II Ivanova Poslanica
 2John	2 Ivanova Poslanica
 2John	Druga Ivanova
+2John	2.. Ivanova
 2John	II. Ivanova
 2John	2. Ivanova
 2John	II Ivanova
@@ -159,6 +181,7 @@
 2John	2 Iv
 2Kgs	Druga knjiga o Kraljevima
 2Kgs	Druga Kraljevima
+2Kgs	2.. Kraljevima
 2Kgs	II. Kraljevima
 2Kgs	2. Kraljevima
 2Kgs	II Kraljevima
@@ -170,11 +193,13 @@
 2Macc	2Macc
 2Pet	Druga Petrova Poslanica
 2Pet	Druga Petrova poslanica
+2Pet	2.. Petrova Poslanica
 2Pet	II. Petrova Poslanica
 2Pet	2. Petrova Poslanica
 2Pet	II Petrova Poslanica
 2Pet	2 Petrova Poslanica
 2Pet	Druga Petrova
+2Pet	2.. Petrova
 2Pet	II. Petrova
 2Pet	2. Petrova
 2Pet	II Petrova
@@ -184,6 +209,7 @@
 2Sam	Druga Samuelova knjiga
 2Sam	Druga knjiga o Samuelu
 2Sam	Druga Samuelova
+2Sam	2.. Samuelova
 2Sam	II. Samuelova
 2Sam	2. Samuelova
 2Sam	II Samuelova
@@ -193,11 +219,13 @@
 2Thess	Pavlova druga poslanica Solunjanima
 2Thess	Druga Solunjanima Poslanica
 2Thess	Druga poslanica Solunjanima
+2Thess	2.. Solunjanima Poslanica
 2Thess	II. Solunjanima Poslanica
 2Thess	2. Solunjanima Poslanica
 2Thess	II Solunjanima Poslanica
 2Thess	2 Solunjanima Poslanica
 2Thess	Druga Solunjanima
+2Thess	2.. Solunjanima
 2Thess	II. Solunjanima
 2Thess	2. Solunjanima
 2Thess	II Solunjanima
@@ -207,11 +235,13 @@
 2Tim	Pavlova druga poslanica Timoteju
 2Tim	Druga Timoteju Poslanica
 2Tim	Druga poslanica Timoteju
+2Tim	2.. Timoteju Poslanica
 2Tim	II. Timoteju Poslanica
 2Tim	2. Timoteju Poslanica
 2Tim	II Timoteju Poslanica
 2Tim	2 Timoteju Poslanica
 2Tim	Druga Timoteju
+2Tim	2.. Timoteju
 2Tim	II. Timoteju
 2Tim	2. Timoteju
 2Tim	II Timoteju
@@ -225,6 +255,7 @@
 3John	Treća Ivanova Poslanica
 3John	Treća Ivanova poslanica
 3John	III. Ivanova Poslanica
+3John	3.. Ivanova Poslanica
 3John	III Ivanova Poslanica
 3John	3. Ivanova Poslanica
 3John	3 Ivanova Poslanica
@@ -232,6 +263,7 @@
 3John	Treæa Ivanova
 3John	Treća Ivanova
 3John	III. Ivanova
+3John	3.. Ivanova
 3John	III Ivanova
 3John	3. Ivanova
 3John	3 Ivanova

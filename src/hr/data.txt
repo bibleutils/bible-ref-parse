@@ -1,6 +1,6 @@
-$FIRST	Prva	1	I
-$SECOND	Druga	2	II
-$THIRD	Treæa	Treća	3	III
+$FIRST	Prva	1	1.	I
+$SECOND	Druga	2	2.	II
+$THIRD	Treæa	Treća	3	3.	III
 $FOURTH	4	IV
 $AB	[a-e]
 # http://hr.wikipedia.org/wiki/Psalmi
