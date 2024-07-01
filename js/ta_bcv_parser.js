@@ -3050,7 +3050,7 @@
       },
       {
         osis: ["Lev"],
-        regexp: RegExp(`(^|${bcv_parser.prototype.regexps.pre_book})((?:L(?:ēviyar[aā]kamam|ev(?:iyar[aā]kamam)?)|லேவி(?:யர(?:ாகமம)?்)?))(?:(?=[\\d\\s\\xa0.:,;\\x1e\\x1f&\\(\\)\\uff08\\uff09\\[\\]/"'\\*=~\\-\\u2013\\u2014])|$)`,
+        regexp: RegExp(`(^|${bcv_parser.prototype.regexps.pre_book})((?:L(?:ēviyar[aā]kamam|ev(?:iyar[aā]kamam)?)|லேவி(?:ய(?:ாரகமம|ர(?:ாகமம)?)்)?))(?:(?=[\\d\\s\\xa0.:,;\\x1e\\x1f&\\(\\)\\uff08\\uff09\\[\\]/"'\\*=~\\-\\u2013\\u2014])|$)`,
       "gi")
       },
       {

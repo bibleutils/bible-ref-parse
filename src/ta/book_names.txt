@@ -1084,6 +1084,7 @@ Lev	Leviyarākamam
 Lev	Lēviyarakamam
 Lev	Lēviyarākamam
 Lev	லேவியராகமம்
+Lev	லேவியாரகமம்
 Lev	லேவியர்
 Lev	லேவி
 Lev	Lev

@@ -193,7 +193,7 @@ John,Josh,Joel,Jonah	யோ
 # OSIS	Long	Short	Shorter	Single (Ps)
 *Gen	ஆதியாகமம்	ஆதி
 *Exod	யாத்திராகமம்	யாத்
-*Lev	லேவியராகமம்	லேவி
+*Lev	லேவியராகமம்	லேவியாரகமம்	லேவி
 *Num	எண்ணாகமம்	எண்
 *Deut	உபாகமம்	உபா
 *Josh	யோசுவா	யோசு
