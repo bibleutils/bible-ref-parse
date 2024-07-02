@@ -108,6 +108,7 @@ Bel	Bel
 Col	โคโลสี
 Col	Col
 Col	คส
+Dan	ดานิเอล
 Dan	ดาเนียล
 Dan	Dan
 Dan	ดนล
@@ -227,6 +228,7 @@ Obad	โอบาดีย์
 Obad	โอบาดีห์
 Obad	Obad
 Obad	อบด
+Phil	ฟิลิปปี
 Phil	ฟีลิปปี
 Phil	Phil
 Phil	ฟป
@@ -267,6 +269,7 @@ Tob	Tob
 Wis	ปรีชาญาณ
 Wis	Wis
 Zech	เศคาริยาห์
+Zech	เศคาริยา
 Zech	Zech
 Zech	ศคย
 Zeph	เศฟันยาห์

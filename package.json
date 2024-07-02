@@ -1,6 +1,6 @@
 {
   "name": "bible-ref-parse",
-  "version": "2.1.13",
+  "version": "2.1.14",
   "description": "Identifies and parses Bible references (like John 3:16) in over 40 languages.",
   "main": "js/",
   "directories": {
