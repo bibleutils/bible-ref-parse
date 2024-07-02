@@ -359,6 +359,7 @@ Isa	Isa
 Isa	Iz
 Jas	Jakovljeva poslanica
 Jas	Jakovljeva
+Jas	Jakov
 Jas	Jak
 Jas	Jas
 Jdt	Judita

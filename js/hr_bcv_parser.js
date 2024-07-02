@@ -3387,7 +3387,7 @@
       },
       {
         osis: ["Jas"],
-        regexp: RegExp(`(^|${bcv_parser.prototype.regexps.pre_book})((?:Ja(?:k(?:ovljeva(?:[\\s\\xa0]*poslanica)?)?|s)))(?:(?=[\\d\\s\\xa0.:,;\\x1e\\x1f&\\(\\)\\uff08\\uff09\\[\\]/"'\\*=~\\-\\u2013\\u2014])|$)`,
+        regexp: RegExp(`(^|${bcv_parser.prototype.regexps.pre_book})((?:Ja(?:k(?:ov(?:ljeva(?:[\\s\\xa0]*poslanica)?)?)?|s)))(?:(?=[\\d\\s\\xa0.:,;\\x1e\\x1f&\\(\\)\\uff08\\uff09\\[\\]/"'\\*=~\\-\\u2013\\u2014])|$)`,
       "gi")
       },
       {

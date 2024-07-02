@@ -245,7 +245,7 @@ PrMan	PrMan
 *Titus	Titu	Tit
 *Phlm	Filemonu	Flm
 *Heb	Hebrejima	Heb
-*Jas	Jakovljeva	Jak
+*Jas	Jakovljeva	Jakov	Jak
 *1Pet	1 Petrova	1 Pt
 *2Pet	2 Petrova	2 Pt
 *1John	1 Ivanova	1 Iv

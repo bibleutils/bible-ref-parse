@@ -1701,11 +1701,13 @@ describe "Localized book Jas (hr)", ->
 		`
 		expect(p.parse("Jakovljeva poslanica 1:1").osis()).toEqual("Jas.1.1", "parsing: 'Jakovljeva poslanica 1:1'")
 		expect(p.parse("Jakovljeva 1:1").osis()).toEqual("Jas.1.1", "parsing: 'Jakovljeva 1:1'")
+		expect(p.parse("Jakov 1:1").osis()).toEqual("Jas.1.1", "parsing: 'Jakov 1:1'")
 		expect(p.parse("Jak 1:1").osis()).toEqual("Jas.1.1", "parsing: 'Jak 1:1'")
 		expect(p.parse("Jas 1:1").osis()).toEqual("Jas.1.1", "parsing: 'Jas 1:1'")
 		p.include_apocrypha(false)
 		expect(p.parse("JAKOVLJEVA POSLANICA 1:1").osis()).toEqual("Jas.1.1", "parsing: 'JAKOVLJEVA POSLANICA 1:1'")
 		expect(p.parse("JAKOVLJEVA 1:1").osis()).toEqual("Jas.1.1", "parsing: 'JAKOVLJEVA 1:1'")
+		expect(p.parse("JAKOV 1:1").osis()).toEqual("Jas.1.1", "parsing: 'JAKOV 1:1'")
 		expect(p.parse("JAK 1:1").osis()).toEqual("Jas.1.1", "parsing: 'JAK 1:1'")
 		expect(p.parse("JAS 1:1").osis()).toEqual("Jas.1.1", "parsing: 'JAS 1:1'")
 		`

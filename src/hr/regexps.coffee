@@ -424,7 +424,7 @@ bcv_parser::regexps.get_books = (include_apocrypha, case_sensitive) ->
 	,
 		osis: ["Jas"]
 		regexp: ///(^|#{bcv_parser::regexps.pre_book})(
-		(?:Ja(?:k(?:ovljeva(?:[\s\xa0]*poslanica)?)?|s))
+		(?:Ja(?:k(?:ov(?:ljeva(?:[\s\xa0]*poslanica)?)?)?|s))
 			)(?:(?=[\d\s\xa0.:,;\x1e\x1f&\(\)\uff08\uff09\[\]/"'\*=~\-\u2013\u2014])|$)///gi
 	,
 		osis: ["2Pet"]
