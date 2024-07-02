@@ -634,11 +634,13 @@ describe "Localized book Prov (hr)", ->
 		`
 		expect(p.parse("Mudre izreke 1:1").osis()).toEqual("Prov.1.1", "parsing: 'Mudre izreke 1:1'")
 		expect(p.parse("Poslovice 1:1").osis()).toEqual("Prov.1.1", "parsing: 'Poslovice 1:1'")
+		expect(p.parse("Izreke 1:1").osis()).toEqual("Prov.1.1", "parsing: 'Izreke 1:1'")
 		expect(p.parse("Prov 1:1").osis()).toEqual("Prov.1.1", "parsing: 'Prov 1:1'")
 		expect(p.parse("Izr 1:1").osis()).toEqual("Prov.1.1", "parsing: 'Izr 1:1'")
 		p.include_apocrypha(false)
 		expect(p.parse("MUDRE IZREKE 1:1").osis()).toEqual("Prov.1.1", "parsing: 'MUDRE IZREKE 1:1'")
 		expect(p.parse("POSLOVICE 1:1").osis()).toEqual("Prov.1.1", "parsing: 'POSLOVICE 1:1'")
+		expect(p.parse("IZREKE 1:1").osis()).toEqual("Prov.1.1", "parsing: 'IZREKE 1:1'")
 		expect(p.parse("PROV 1:1").osis()).toEqual("Prov.1.1", "parsing: 'PROV 1:1'")
 		expect(p.parse("IZR 1:1").osis()).toEqual("Prov.1.1", "parsing: 'IZR 1:1'")
 		`

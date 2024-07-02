@@ -3190,7 +3190,7 @@
       },
       {
         osis: ["Prov"],
-        regexp: RegExp(`(^|${bcv_parser.prototype.regexps.pre_book})((?:Mudre[\\s\\xa0]*izreke|Poslovice|Prov|Izr))(?:(?=[\\d\\s\\xa0.:,;\\x1e\\x1f&\\(\\)\\uff08\\uff09\\[\\]/"'\\*=~\\-\\u2013\\u2014])|$)`,
+        regexp: RegExp(`(^|${bcv_parser.prototype.regexps.pre_book})((?:Mudre[\\s\\xa0]*izreke|Poslovice|Izreke|Prov|Izr))(?:(?=[\\d\\s\\xa0.:,;\\x1e\\x1f&\\(\\)\\uff08\\uff09\\[\\]/"'\\*=~\\-\\u2013\\u2014])|$)`,
       "gi")
       },
       {

@@ -451,6 +451,7 @@ PrAzar	PrAzar
 PrMan	PrMan
 Prov	Mudre izreke
 Prov	Poslovice
+Prov	Izreke
 Prov	Prov
 Prov	Izr
 Ps	Psalam

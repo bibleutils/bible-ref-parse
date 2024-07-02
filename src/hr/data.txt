@@ -206,7 +206,7 @@ PrMan	PrMan
 *Esth	Estera	Est
 *Job	Job	Job
 *Ps	Psalmi	Ps		Psalam
-*Prov	Mudre izreke	Izr
+*Prov	Mudre izreke	Izreke	Izr
 *Eccl	Propovjednik	Prop
 *Song	Pjesma nad pjesmama	Pj
 *Isa	Izaija	Iz
