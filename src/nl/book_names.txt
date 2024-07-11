@@ -290,6 +290,7 @@
 1Thess	1e Thessalonicenzen
 1Thess	1e. Tessalonicenzen
 1Thess	I. Thessalonicenzen
+1Thess	1 Thessalonicensen
 1Thess	1 Thessalonicenzen
 1Thess	1. Tessalonicenzen
 1Thess	1e Tessalonicenzen
@@ -336,6 +337,7 @@
 1Tim	I. Timotheüs
 1Tim	1 Timotheus
 1Tim	1 Timotheüs
+1Tim	1 Timótheüs
 1Tim	1. Timoteus
 1Tim	1. Timoteüs
 1Tim	1e Timoteus
@@ -646,6 +648,7 @@
 2Thess	2e. Tessalonicenzen
 2Thess	II Thessalonicenzen
 2Thess	II. Tessalonicenzen
+2Thess	2 Thessalonicensen
 2Thess	2 Thessalonicenzen
 2Thess	2. Tessalonicenzen
 2Thess	2e Tessalonicenzen
@@ -694,6 +697,7 @@
 2Tim	II. Timoteüs
 2Tim	2 Timotheus
 2Tim	2 Timotheüs
+2Tim	2 Timótheüs
 2Tim	2. Timoteus
 2Tim	2. Timoteüs
 2Tim	2e Timoteus
@@ -776,6 +780,7 @@ Bar	Bar
 Bel	Bel en de draak
 Bel	Bel
 Col	Colossenzen
+Col	Kolossensen
 Col	Kolossenzen
 Col	Col
 Col	Kol
@@ -969,6 +974,7 @@ Num	Nu
 Obad	Obadja
 Obad	Obad
 Obad	Ob
+Phil	Filippensen
 Phil	Filippenzen
 Phil	Filip
 Phil	Phil

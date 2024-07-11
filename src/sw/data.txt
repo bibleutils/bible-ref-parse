@@ -74,7 +74,7 @@ Col	Barua kwa Wakolosai	Wakolosai	Waraka kwa Wakolosai	Kol
 2Tim	Barua ya Pili kwa Timotheo	Timotheo II	Waraka wa Pili kwa Timotheo	$SECOND Tim	$SECOND Timotheo
 Titus	Barua kwa Tito	Tito?	Waraka kwa Tito
 Phlm	Barua kwa Filemoni	Filemoni	Waraka kwa Filemoni	Fi?lm
-Heb	Barua kwa Waebrania	Waebrania	Waraka kwa Waebrania	Ebr?
+Heb	Barua kwa Waebrania	Waebrania	Ebrania	Waraka kwa Waebrania	Ebr?
 Jas	Barua ya Yakobo	Yakobo	Waraka wa Yakobo	Yak
 1Pet	Barua ya Kwanza ya Petro	Petro I	Waraka wa Kwanza wa Petro	$FIRST Pet	$FIRST Petro
 2Pet	Barua ya Pili ya Petro	Petro II	Waraka wa Pili wa Petro	$SECOND Pet	$SECOND Petro
@@ -196,7 +196,7 @@ John,Jonah	Yn
 *Exod	Kutoka	Kut
 *Lev	Walawi	Law
 *Num	Hesabu	Hes
-*Deut	Kumbukumbu	Kum
+*Deut	Kumbukumbu	Kumbukumbu la Torati	Torati	Kum
 *Josh	Yoshua	Yos
 *Judg	Waamuzi	Amu
 *Ruth	Ruthu	Ruth

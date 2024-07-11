@@ -35,7 +35,7 @@ Ezra	Ezdráš	Ezd
 Neh	Nehemjáš	Nehemiáš	Neh
 Esth	Ester	Est
 Job	Jób	Job	Jb
-Ps	Žalmy	Žalm	Ž	Žl	Kniha žalmů
+Ps	Žalmy	Žalm	Žalmy	Ž	Žl	Kniha žalmů
 Prov	Přísloví	Přís	Přísloví Šalomounova	Př
 Eccl	Kazatel	Kohelet	Kaz
 Song	Píseň písní	Píseň	Píseň Šalamounova	Pís
@@ -56,7 +56,7 @@ Zeph	Sofonjáš	Sofoniáš	Sf	Sof
 Hag	Ageus	Aggeus	Ag
 Zech	Zacharjáš	Zachariáš	Za	Zach
 Mal	Malachiáš	Mal
-Matt	Matouš	Mat	Mt	Matoušovo evangelium	Evangelium podle Matouše
+Matt	Matouš	Mat	Mt	Matoušovo evangelium	Matouš	Evangelium podle Matouše
 Mark	Marek	Mk	Markovo evangelium	Evangelium podle Marka
 Luke	Lukáš	Lk	L	Lukášovo evangelium	Evangelium podle Lukáše
 John	Jan	J	Janovo evangelium	Evangelium podle Jana

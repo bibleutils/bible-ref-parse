@@ -376,6 +376,7 @@ Deut	Kitabu cha Tano cha Musa
 Deut	Kumbukumbu la Sheria
 Deut	Kumbukumbu la Torati
 Deut	Kumbukumbu
+Deut	Torati
 Deut	Deut
 Deut	Kumb
 Deut	Kum
@@ -419,6 +420,7 @@ Hag	Hag
 Heb	Waraka kwa Waebrania
 Heb	Barua kwa Waebrania
 Heb	Waebrania
+Heb	Ebrania
 Heb	Ebr
 Heb	Heb
 Heb	Eb

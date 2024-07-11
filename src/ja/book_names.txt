@@ -12,9 +12,11 @@
 1Cor	コリント人への前の書
 1Cor	コリント人への手紙Ⅰ
 1Cor	コリント人への手紙一
+1Cor	コリント第一の手紙
 1Cor	Ⅰ コリント人へ
 1Cor	コリント 1
 1Cor	コリント前書
+1Cor	コリント第一
 1Cor	1Cor
 1Esd	エストラ第一巻
 1Esd	エスドラ第一巻
@@ -29,6 +31,7 @@
 1John	ヨハネの手紙一
 1John	1John
 1John	Ⅰ ヨハネ
+1John	ヨハネ第一
 1John	一ヨハネ
 1Kgs	列王記第三巻
 1Kgs	列王紀略上
@@ -62,7 +65,9 @@
 1Pet	ペトロの手紙一
 1Pet	Ⅰ ヘテロ
 1Pet	Ⅰ ペテロ
+1Pet	ヘテロ第一
 1Pet	ヘトロ 1
+1Pet	ペテロ第一
 1Pet	ペトロ 1
 1Pet	1Pet
 1Pet	一ヘトロ
@@ -91,6 +96,7 @@
 1Tim	Ⅰ テモテへ
 1Tim	テモテ 1
 1Tim	テモテ前書
+1Tim	テモテ第一
 1Tim	1Tim
 1Tim	一テモテ
 2Chr	歴代志略下
@@ -110,6 +116,7 @@
 2Cor	Ⅱ コリント人へ
 2Cor	コリント 2
 2Cor	コリント後書
+2Cor	コリント第二
 2Cor	2Cor
 2Esd	エストラ第二巻
 2Esd	エスドラ第二巻
@@ -124,6 +131,7 @@
 2John	ヨハネの手紙二
 2John	2John
 2John	Ⅱ ヨハネ
+2John	ヨハネ第二
 2John	二ヨハネ
 2Kgs	列王記第四巻
 2Kgs	列王紀略下
@@ -181,16 +189,17 @@
 2Thess	テサロニケ 2
 2Thess	テサロニケ後書
 2Thess	2Thess
+2Tim	テモテ第二 テモテ後書
 2Tim	テモテヘの第二の手紙
 2Tim	テモテへの後の書
 2Tim	テモテへの手紙Ⅱ
 2Tim	テモテへの手紙二
 2Tim	Ⅱ テモテへ
 2Tim	テモテ 2
-2Tim	テモテ後書
 2Tim	2Tim
 2Tim	二テモテ
 3John	ヨハネの第三の手紙
+3John	ヨハネの手紙三章
 3John	ヨハネの第三の書
 3John	ヨハネの手紙Ⅲ
 3John	ヨハネの手紙三
@@ -525,6 +534,10 @@ Phil	ピリヒ書
 Phil	ピリピ書
 Phil	フィリヒ
 Phil	フィリピ
+Phil	ヒリヒ
+Phil	ヒリピ
+Phil	ピリヒ
+Phil	ピリピ
 Phlm	フィレモンへの手紙
 Phlm	ヒレモンへの手紙
 Phlm	ヒレモンヘの手紙

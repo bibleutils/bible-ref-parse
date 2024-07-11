@@ -70,7 +70,7 @@ Rom	Romeinen	Rom	Romeinenbrief
 Gal	Galaten	Gal	Galatenbrief
 Eph	Efeziërs	Efez	Ef
 Phil	Filippenzen	Filip	Fil
-Col	[CK]olossenzen	[CK]ol
+Col	[CK]olossenzen	Kolossensen	[CK]ol
 1Thess	$FIRST Th?essalonicenzen	$FIRST Th?ess	$FIRST Tes	1 Thes
 2Thess	$SECOND Th?essalonicenzen	$SECOND Th?ess	$SECOND Tes	2 Thes
 1Tim	$FIRST Timoth?eüs	$FIRST Tim
@@ -244,12 +244,12 @@ Ezek,Ezra	Ez
 *2Cor	2 Korinthiërs	2 Kor
 *Gal	Galaten	Gal
 *Eph	Efeziërs	Efez	Ef
-*Phil	Filippenzen	Fil
+*Phil	Filippenzen	Filippensen	Fil
 *Col	Kolossenzen	Kol
-*1Thess	1 Tessalonicenzen	1 Tes
-*2Thess	2 Tessalonicenzen	2 Tes
-*1Tim	1 Timoteüs	1 Tim
-*2Tim	2 Timoteüs	2 Tim
+*1Thess	1 Tessalonicenzen	1 Thessalonicensen	1 Tes
+*2Thess	2 Tessalonicenzen	2 Thessalonicensen	2 Tes
+*1Tim	1 Timoteüs	1 Timótheüs	1 Tim
+*2Tim	2 Timoteüs	2 Timótheüs	2 Tim
 *Titus	Titus	Tit
 *Phlm	Filemon	Filem	Film
 *Heb	Hebreeën	Hebr	Heb
