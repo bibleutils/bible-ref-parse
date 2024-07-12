@@ -20,7 +20,7 @@ Deut	व्यवस्था विवरण	व्यवस्था	व्य
 Josh	यहोशू	यहोशु	Yahoshoo
 Judg	न्यायियों	न्यायिय का विर्तान्त	Nyayiyon
 Ruth	रूत	रुत	Root
-1Sam	$FIRST शमूएल	$FIRST शमू	शमुऐल की १ली पुस्तक	$FIRST Shamooael
+1Sam	$FIRST शमूएल	$FIRST शमू	मैं शमूएल	शमुऐल की १ली पुस्तक	$FIRST Shamooael
 2Sam	$SECOND शमूएल	$SECOND शमू	शमुऐयल की २री पुस्तक	$SECOND Shamooael
 1Kgs	$FIRST राजा	राजाओ का विर्तान्त १ला भाग्	$FIRST Raja	$FIRST राजाओं
 2Kgs	$SECOND राजा	राजाओ का विर्तान्त २रा भाग	$SECOND Raja	$SECOND राजाओं
@@ -54,7 +54,7 @@ Mal	मलाकी	Malakee
 Matt	मत्ती	Mattee
 Mark	मरकुस	Marakus
 Luke	लूका	Looka
-John	यूहन्ना	Yuhanna	युहत्रा
+John	यूहन्ना	यहुन्ना	यहून्ना	Yuhanna	युहत्रा
 Acts	प्रेरितों के काम	प्र. क	मसीह-दूत	Praeriton Ke Kam	प्रेरितों के कामों
 Rom	रोमियों	रोमी	रोमियो	Romiyon
 1Cor	$FIRST कुरिन्थियों?	$FIRST कुरिन्यि़यों	$FIRST कुरिन्थ	$FIRST कुरन्थियों	$FIRST कोरिन्‍थी	$FIRST Kurinthiayon

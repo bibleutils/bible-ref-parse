@@ -251,7 +251,7 @@ PrMan	PrMan
 *1John	1 Ivanova	1 Iv
 *2John	2 Ivanova	2 Iv
 *3John	3 Ivanova	3 Iv
-*Jude	Judina	Jd
+*Jude	Judina	Juda	Jd
 *Rev	Otkrivenje	Otk
 *Tob	Tobija	Tob
 *Jdt	Judita	Jdt

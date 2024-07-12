@@ -359,7 +359,7 @@ bcv_parser::regexps.get_books = (include_apocrypha, case_sensitive) ->
 	,
 		osis: ["2Cor"]
 		regexp: ///(^|[^0-9A-Za-zªµºÀ-ÖØ-öø-ɏḀ-ỿⱠ-ⱿꜢ-ꞈꞋ-ꞎꞐ-ꞓꞠ-Ɦꟸ-ꟿ])(
-		(?:Pavlova[\s\xa0]*druga[\s\xa0]*poslanica[\s\xa0]*Korin[cć]anima|(?:Druga[\s\xa0]*Korin[cć]|(?:II\.?|2\.\.?)[\s\xa0]*Korin[cć]|2[\s\xa0]*Korin[cć])anima[\s\xa0]*Poslanica|Druga[\s\xa0]*poslanica[\s\xa0]*Korin\xE6anima|2(?:[\s\xa0]*K|C)or)|(?:(?:Druga[\s\xa0]*(?:poslanica[\s\xa0]*Korin[cć]|Korin[cć])|(?:II|2\.)\.[\s\xa0]*Korin[cć]|(?:II|2\.?)[\s\xa0]*Korin[cć])anima)
+		(?:Pavlova[\s\xa0]*druga[\s\xa0]*poslanica[\s\xa0]*Korin[cć]anima|(?:Druga[\s\xa0]*Korin[cć]|(?:II\.?|2\.\.?)[\s\xa0]*Korin[cć]|2[\s\xa0]*Korin[cć])anima[\s\xa0]*Poslanica|Druga[\s\xa0]*poslanica[\s\xa0]*Korin\xE6anima|2(?:[\s\xa0]*K|C)or)|(?:(?:Druga[\s\xa0]*(?:poslanica[\s\xa0]*Korin[cć]|Korin[cć])|(?:2\.|II)\.[\s\xa0]*Korin[cć]|(?:2\.?|II)[\s\xa0]*Korin[cć])anima)
 			)(?:(?=[\d\s\xa0.:,;\x1e\x1f&\(\)\uff08\uff09\[\]/"'\*=~\-\u2013\u2014])|$)///gi
 	,
 		osis: ["1Cor"]
@@ -439,7 +439,7 @@ bcv_parser::regexps.get_books = (include_apocrypha, case_sensitive) ->
 	,
 		osis: ["Jude"]
 		regexp: ///(^|#{bcv_parser::regexps.pre_book})(
-		(?:Poslanica[\s\xa0]*Jude[\s\xa0]*apostola|J(?:udina[\s\xa0]*poslanica|udina|ude|d))
+		(?:Poslanica[\s\xa0]*Jude[\s\xa0]*apostola|J(?:udina[\s\xa0]*poslanica|udina|ud[ae]|d))
 			)(?:(?=[\d\s\xa0.:,;\x1e\x1f&\(\)\uff08\uff09\[\]/"'\*=~\-\u2013\u2014])|$)///gi
 	,
 		osis: ["Tob"]

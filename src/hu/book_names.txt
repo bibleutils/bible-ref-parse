@@ -143,6 +143,8 @@
 1Pet	I. Péter
 1Pet	1 Peter
 1Pet	1 Péter
+1Pet	Elso Pt
+1Pet	Első Pt
 1Pet	I Peter
 1Pet	I Péter
 1Pet	1. Pet
@@ -151,9 +153,14 @@
 1Pet	I. Pét
 1Pet	1 Pet
 1Pet	1 Pét
+1Pet	1. Pt
 1Pet	I Pet
 1Pet	I Pét
+1Pet	I. Pt
+1Pet	1 Pt
 1Pet	1Pet
+1Pet	I Pt
+1Pet	1Pt
 1Sam	Elso Samuel
 1Sam	Elso Sámuel
 1Sam	Első Samuel
@@ -412,6 +419,8 @@
 2Pet	Masodik Pét
 2Pet	Második Pet
 2Pet	Második Pét
+2Pet	Masodik Pt
+2Pet	Második Pt
 2Pet	II. Peter
 2Pet	II. Péter
 2Pet	2. Peter
@@ -426,9 +435,14 @@
 2Pet	2. Pét
 2Pet	II Pet
 2Pet	II Pét
+2Pet	II. Pt
 2Pet	2 Pet
 2Pet	2 Pét
+2Pet	2. Pt
+2Pet	II Pt
+2Pet	2 Pt
 2Pet	2Pet
+2Pet	2Pt
 2Sam	Masodik Samuel
 2Sam	Masodik Sámuel
 2Sam	Második Samuel
@@ -597,6 +611,7 @@ Acts	Ap. Csel
 Acts	Ap Csel
 Acts	ApCsel
 Acts	Acts
+Acts	Apcs
 Amos	Amosz
 Amos	Ámosz
 Amos	Amos
@@ -656,6 +671,7 @@ Dan	Daniel
 Dan	Dániel
 Dan	Dan
 Dan	Dán
+Dan	Dn
 Deut	Masodik torvenykonyv
 Deut	Masodik torvenykönyv
 Deut	Masodik torvénykonyv
@@ -811,6 +827,7 @@ Hab	Hab
 Hag	Haggeus
 Hag	Aggeus
 Hag	Haggai
+Hag	Agg
 Hag	Hag
 Hag	Ag
 Heb	Zsidokhoz irt level
@@ -1033,6 +1050,7 @@ Prov	Péld
 Ps	Zsoltarok
 Ps	Zsoltárok
 Ps	Zsolt
+Ps	Zsol
 Ps	Ps
 Rev	Janos jelenesei
 Rev	Janos jelenései
@@ -1049,6 +1067,7 @@ Rom	Roma
 Rom	Róma
 Rom	Rom
 Rom	Róm
+Rom	Rm
 Ruth	Ruth
 Ruth	Rut
 SgThree	Harom fiatalember eneke

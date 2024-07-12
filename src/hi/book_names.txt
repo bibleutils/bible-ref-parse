@@ -53,6 +53,7 @@
 1Sam	शमुऐल की १ली पुस्तक
 1Sam	1. Shamooael
 1Sam	1 Shamooael
+1Sam	मैं शमूएल
 1Sam	1. शमूएल
 1Sam	1 शमूएल
 1Sam	1. शमू
@@ -268,6 +269,8 @@ Joel	Yoael
 Joel	Joel
 Joel	योएल
 John	Yuhanna
+John	यहुन्ना
+John	यहून्ना
 John	युहत्रा
 John	यूहन्ना
 John	John

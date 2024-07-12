@@ -7,7 +7,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.options.osis_compaction_strategy = "b";
       return p.options.sequence_combination_strategy = "combine";
     });
@@ -73,7 +73,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -84,15 +84,15 @@
     });
     return it("should handle book: Gen (hi)", function() {
       
-		expect(p.parse("उत्पत्ति 1:1").osis()).toEqual("Gen.1.1")
-		expect(p.parse("Utpaati 1:1").osis()).toEqual("Gen.1.1")
-		expect(p.parse("उत्पाति 1:1").osis()).toEqual("Gen.1.1")
-		expect(p.parse("Gen 1:1").osis()).toEqual("Gen.1.1")
+		expect(p.parse("उत्पत्ति 1:1").osis()).toEqual("Gen.1.1", "parsing: 'उत्पत्ति 1:1'")
+		expect(p.parse("Utpaati 1:1").osis()).toEqual("Gen.1.1", "parsing: 'Utpaati 1:1'")
+		expect(p.parse("उत्पाति 1:1").osis()).toEqual("Gen.1.1", "parsing: 'उत्पाति 1:1'")
+		expect(p.parse("Gen 1:1").osis()).toEqual("Gen.1.1", "parsing: 'Gen 1:1'")
 		p.include_apocrypha(false)
-		expect(p.parse("उत्पत्ति 1:1").osis()).toEqual("Gen.1.1")
-		expect(p.parse("UTPAATI 1:1").osis()).toEqual("Gen.1.1")
-		expect(p.parse("उत्पाति 1:1").osis()).toEqual("Gen.1.1")
-		expect(p.parse("GEN 1:1").osis()).toEqual("Gen.1.1")
+		expect(p.parse("उत्पत्ति 1:1").osis()).toEqual("Gen.1.1", "parsing: 'उत्पत्ति 1:1'")
+		expect(p.parse("UTPAATI 1:1").osis()).toEqual("Gen.1.1", "parsing: 'UTPAATI 1:1'")
+		expect(p.parse("उत्पाति 1:1").osis()).toEqual("Gen.1.1", "parsing: 'उत्पाति 1:1'")
+		expect(p.parse("GEN 1:1").osis()).toEqual("Gen.1.1", "parsing: 'GEN 1:1'")
 		;
       return true;
     });
@@ -102,7 +102,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -113,13 +113,13 @@
     });
     return it("should handle book: Exod (hi)", function() {
       
-		expect(p.parse("Nirgaman 1:1").osis()).toEqual("Exod.1.1")
-		expect(p.parse("निर्गमन 1:1").osis()).toEqual("Exod.1.1")
-		expect(p.parse("Exod 1:1").osis()).toEqual("Exod.1.1")
+		expect(p.parse("Nirgaman 1:1").osis()).toEqual("Exod.1.1", "parsing: 'Nirgaman 1:1'")
+		expect(p.parse("निर्गमन 1:1").osis()).toEqual("Exod.1.1", "parsing: 'निर्गमन 1:1'")
+		expect(p.parse("Exod 1:1").osis()).toEqual("Exod.1.1", "parsing: 'Exod 1:1'")
 		p.include_apocrypha(false)
-		expect(p.parse("NIRGAMAN 1:1").osis()).toEqual("Exod.1.1")
-		expect(p.parse("निर्गमन 1:1").osis()).toEqual("Exod.1.1")
-		expect(p.parse("EXOD 1:1").osis()).toEqual("Exod.1.1")
+		expect(p.parse("NIRGAMAN 1:1").osis()).toEqual("Exod.1.1", "parsing: 'NIRGAMAN 1:1'")
+		expect(p.parse("निर्गमन 1:1").osis()).toEqual("Exod.1.1", "parsing: 'निर्गमन 1:1'")
+		expect(p.parse("EXOD 1:1").osis()).toEqual("Exod.1.1", "parsing: 'EXOD 1:1'")
 		;
       return true;
     });
@@ -129,7 +129,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -140,7 +140,7 @@
     });
     return it("should handle book: Bel (hi)", function() {
       
-		expect(p.parse("Bel 1:1").osis()).toEqual("Bel.1.1")
+		expect(p.parse("Bel 1:1").osis()).toEqual("Bel.1.1", "parsing: 'Bel 1:1'")
 		;
       return true;
     });
@@ -150,7 +150,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -161,21 +161,21 @@
     });
     return it("should handle book: Lev (hi)", function() {
       
-		expect(p.parse("Laaivyavyavastha 1:1").osis()).toEqual("Lev.1.1")
-		expect(p.parse("लैव्य्व्य्वस्था 1:1").osis()).toEqual("Lev.1.1")
-		expect(p.parse("लैव्यव्यवस्था 1:1").osis()).toEqual("Lev.1.1")
-		expect(p.parse("लैव्यव्यवस्थ 1:1").osis()).toEqual("Lev.1.1")
-		expect(p.parse("लैव्यवस्था 1:1").osis()).toEqual("Lev.1.1")
-		expect(p.parse("लैव्य 1:1").osis()).toEqual("Lev.1.1")
-		expect(p.parse("Lev 1:1").osis()).toEqual("Lev.1.1")
+		expect(p.parse("Laaivyavyavastha 1:1").osis()).toEqual("Lev.1.1", "parsing: 'Laaivyavyavastha 1:1'")
+		expect(p.parse("लैव्य्व्य्वस्था 1:1").osis()).toEqual("Lev.1.1", "parsing: 'लैव्य्व्य्वस्था 1:1'")
+		expect(p.parse("लैव्यव्यवस्था 1:1").osis()).toEqual("Lev.1.1", "parsing: 'लैव्यव्यवस्था 1:1'")
+		expect(p.parse("लैव्यव्यवस्थ 1:1").osis()).toEqual("Lev.1.1", "parsing: 'लैव्यव्यवस्थ 1:1'")
+		expect(p.parse("लैव्यवस्था 1:1").osis()).toEqual("Lev.1.1", "parsing: 'लैव्यवस्था 1:1'")
+		expect(p.parse("लैव्य 1:1").osis()).toEqual("Lev.1.1", "parsing: 'लैव्य 1:1'")
+		expect(p.parse("Lev 1:1").osis()).toEqual("Lev.1.1", "parsing: 'Lev 1:1'")
 		p.include_apocrypha(false)
-		expect(p.parse("LAAIVYAVYAVASTHA 1:1").osis()).toEqual("Lev.1.1")
-		expect(p.parse("लैव्य्व्य्वस्था 1:1").osis()).toEqual("Lev.1.1")
-		expect(p.parse("लैव्यव्यवस्था 1:1").osis()).toEqual("Lev.1.1")
-		expect(p.parse("लैव्यव्यवस्थ 1:1").osis()).toEqual("Lev.1.1")
-		expect(p.parse("लैव्यवस्था 1:1").osis()).toEqual("Lev.1.1")
-		expect(p.parse("लैव्य 1:1").osis()).toEqual("Lev.1.1")
-		expect(p.parse("LEV 1:1").osis()).toEqual("Lev.1.1")
+		expect(p.parse("LAAIVYAVYAVASTHA 1:1").osis()).toEqual("Lev.1.1", "parsing: 'LAAIVYAVYAVASTHA 1:1'")
+		expect(p.parse("लैव्य्व्य्वस्था 1:1").osis()).toEqual("Lev.1.1", "parsing: 'लैव्य्व्य्वस्था 1:1'")
+		expect(p.parse("लैव्यव्यवस्था 1:1").osis()).toEqual("Lev.1.1", "parsing: 'लैव्यव्यवस्था 1:1'")
+		expect(p.parse("लैव्यव्यवस्थ 1:1").osis()).toEqual("Lev.1.1", "parsing: 'लैव्यव्यवस्थ 1:1'")
+		expect(p.parse("लैव्यवस्था 1:1").osis()).toEqual("Lev.1.1", "parsing: 'लैव्यवस्था 1:1'")
+		expect(p.parse("लैव्य 1:1").osis()).toEqual("Lev.1.1", "parsing: 'लैव्य 1:1'")
+		expect(p.parse("LEV 1:1").osis()).toEqual("Lev.1.1", "parsing: 'LEV 1:1'")
 		;
       return true;
     });
@@ -185,7 +185,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -196,13 +196,13 @@
     });
     return it("should handle book: Num (hi)", function() {
       
-		expect(p.parse("Ginatee 1:1").osis()).toEqual("Num.1.1")
-		expect(p.parse("गिनती 1:1").osis()).toEqual("Num.1.1")
-		expect(p.parse("Num 1:1").osis()).toEqual("Num.1.1")
+		expect(p.parse("Ginatee 1:1").osis()).toEqual("Num.1.1", "parsing: 'Ginatee 1:1'")
+		expect(p.parse("गिनती 1:1").osis()).toEqual("Num.1.1", "parsing: 'गिनती 1:1'")
+		expect(p.parse("Num 1:1").osis()).toEqual("Num.1.1", "parsing: 'Num 1:1'")
 		p.include_apocrypha(false)
-		expect(p.parse("GINATEE 1:1").osis()).toEqual("Num.1.1")
-		expect(p.parse("गिनती 1:1").osis()).toEqual("Num.1.1")
-		expect(p.parse("NUM 1:1").osis()).toEqual("Num.1.1")
+		expect(p.parse("GINATEE 1:1").osis()).toEqual("Num.1.1", "parsing: 'GINATEE 1:1'")
+		expect(p.parse("गिनती 1:1").osis()).toEqual("Num.1.1", "parsing: 'गिनती 1:1'")
+		expect(p.parse("NUM 1:1").osis()).toEqual("Num.1.1", "parsing: 'NUM 1:1'")
 		;
       return true;
     });
@@ -212,7 +212,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -223,7 +223,7 @@
     });
     return it("should handle book: Sir (hi)", function() {
       
-		expect(p.parse("Sir 1:1").osis()).toEqual("Sir.1.1")
+		expect(p.parse("Sir 1:1").osis()).toEqual("Sir.1.1", "parsing: 'Sir 1:1'")
 		;
       return true;
     });
@@ -233,7 +233,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -244,7 +244,7 @@
     });
     return it("should handle book: Wis (hi)", function() {
       
-		expect(p.parse("Wis 1:1").osis()).toEqual("Wis.1.1")
+		expect(p.parse("Wis 1:1").osis()).toEqual("Wis.1.1", "parsing: 'Wis 1:1'")
 		;
       return true;
     });
@@ -254,7 +254,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -265,17 +265,17 @@
     });
     return it("should handle book: Lam (hi)", function() {
       
-		expect(p.parse("Vilapageet 1:1").osis()).toEqual("Lam.1.1")
-		expect(p.parse("विलापगीत 1:1").osis()).toEqual("Lam.1.1")
-		expect(p.parse("विलापगेत 1:1").osis()).toEqual("Lam.1.1")
-		expect(p.parse("विलाप 1:1").osis()).toEqual("Lam.1.1")
-		expect(p.parse("Lam 1:1").osis()).toEqual("Lam.1.1")
+		expect(p.parse("Vilapageet 1:1").osis()).toEqual("Lam.1.1", "parsing: 'Vilapageet 1:1'")
+		expect(p.parse("विलापगीत 1:1").osis()).toEqual("Lam.1.1", "parsing: 'विलापगीत 1:1'")
+		expect(p.parse("विलापगेत 1:1").osis()).toEqual("Lam.1.1", "parsing: 'विलापगेत 1:1'")
+		expect(p.parse("विलाप 1:1").osis()).toEqual("Lam.1.1", "parsing: 'विलाप 1:1'")
+		expect(p.parse("Lam 1:1").osis()).toEqual("Lam.1.1", "parsing: 'Lam 1:1'")
 		p.include_apocrypha(false)
-		expect(p.parse("VILAPAGEET 1:1").osis()).toEqual("Lam.1.1")
-		expect(p.parse("विलापगीत 1:1").osis()).toEqual("Lam.1.1")
-		expect(p.parse("विलापगेत 1:1").osis()).toEqual("Lam.1.1")
-		expect(p.parse("विलाप 1:1").osis()).toEqual("Lam.1.1")
-		expect(p.parse("LAM 1:1").osis()).toEqual("Lam.1.1")
+		expect(p.parse("VILAPAGEET 1:1").osis()).toEqual("Lam.1.1", "parsing: 'VILAPAGEET 1:1'")
+		expect(p.parse("विलापगीत 1:1").osis()).toEqual("Lam.1.1", "parsing: 'विलापगीत 1:1'")
+		expect(p.parse("विलापगेत 1:1").osis()).toEqual("Lam.1.1", "parsing: 'विलापगेत 1:1'")
+		expect(p.parse("विलाप 1:1").osis()).toEqual("Lam.1.1", "parsing: 'विलाप 1:1'")
+		expect(p.parse("LAM 1:1").osis()).toEqual("Lam.1.1", "parsing: 'LAM 1:1'")
 		;
       return true;
     });
@@ -285,7 +285,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -296,7 +296,7 @@
     });
     return it("should handle book: EpJer (hi)", function() {
       
-		expect(p.parse("EpJer 1:1").osis()).toEqual("EpJer.1.1")
+		expect(p.parse("EpJer 1:1").osis()).toEqual("EpJer.1.1", "parsing: 'EpJer 1:1'")
 		;
       return true;
     });
@@ -306,7 +306,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -317,21 +317,21 @@
     });
     return it("should handle book: Rev (hi)", function() {
       
-		expect(p.parse("Prakashaitavakya 1:1").osis()).toEqual("Rev.1.1")
-		expect(p.parse("प्रकाशित-वाक्‍य 1:1").osis()).toEqual("Rev.1.1")
-		expect(p.parse("प्रकाशित वाक्य 1:1").osis()).toEqual("Rev.1.1")
-		expect(p.parse("प्रकाशितवाक्य 1:1").osis()).toEqual("Rev.1.1")
-		expect(p.parse("प्र. व 1:1").osis()).toEqual("Rev.1.1")
-		expect(p.parse("प्र व 1:1").osis()).toEqual("Rev.1.1")
-		expect(p.parse("Rev 1:1").osis()).toEqual("Rev.1.1")
+		expect(p.parse("Prakashaitavakya 1:1").osis()).toEqual("Rev.1.1", "parsing: 'Prakashaitavakya 1:1'")
+		expect(p.parse("प्रकाशित-वाक्‍य 1:1").osis()).toEqual("Rev.1.1", "parsing: 'प्रकाशित-वाक्‍य 1:1'")
+		expect(p.parse("प्रकाशित वाक्य 1:1").osis()).toEqual("Rev.1.1", "parsing: 'प्रकाशित वाक्य 1:1'")
+		expect(p.parse("प्रकाशितवाक्य 1:1").osis()).toEqual("Rev.1.1", "parsing: 'प्रकाशितवाक्य 1:1'")
+		expect(p.parse("प्र. व 1:1").osis()).toEqual("Rev.1.1", "parsing: 'प्र. व 1:1'")
+		expect(p.parse("प्र व 1:1").osis()).toEqual("Rev.1.1", "parsing: 'प्र व 1:1'")
+		expect(p.parse("Rev 1:1").osis()).toEqual("Rev.1.1", "parsing: 'Rev 1:1'")
 		p.include_apocrypha(false)
-		expect(p.parse("PRAKASHAITAVAKYA 1:1").osis()).toEqual("Rev.1.1")
-		expect(p.parse("प्रकाशित-वाक्‍य 1:1").osis()).toEqual("Rev.1.1")
-		expect(p.parse("प्रकाशित वाक्य 1:1").osis()).toEqual("Rev.1.1")
-		expect(p.parse("प्रकाशितवाक्य 1:1").osis()).toEqual("Rev.1.1")
-		expect(p.parse("प्र. व 1:1").osis()).toEqual("Rev.1.1")
-		expect(p.parse("प्र व 1:1").osis()).toEqual("Rev.1.1")
-		expect(p.parse("REV 1:1").osis()).toEqual("Rev.1.1")
+		expect(p.parse("PRAKASHAITAVAKYA 1:1").osis()).toEqual("Rev.1.1", "parsing: 'PRAKASHAITAVAKYA 1:1'")
+		expect(p.parse("प्रकाशित-वाक्‍य 1:1").osis()).toEqual("Rev.1.1", "parsing: 'प्रकाशित-वाक्‍य 1:1'")
+		expect(p.parse("प्रकाशित वाक्य 1:1").osis()).toEqual("Rev.1.1", "parsing: 'प्रकाशित वाक्य 1:1'")
+		expect(p.parse("प्रकाशितवाक्य 1:1").osis()).toEqual("Rev.1.1", "parsing: 'प्रकाशितवाक्य 1:1'")
+		expect(p.parse("प्र. व 1:1").osis()).toEqual("Rev.1.1", "parsing: 'प्र. व 1:1'")
+		expect(p.parse("प्र व 1:1").osis()).toEqual("Rev.1.1", "parsing: 'प्र व 1:1'")
+		expect(p.parse("REV 1:1").osis()).toEqual("Rev.1.1", "parsing: 'REV 1:1'")
 		;
       return true;
     });
@@ -341,7 +341,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -352,7 +352,7 @@
     });
     return it("should handle book: PrMan (hi)", function() {
       
-		expect(p.parse("PrMan 1:1").osis()).toEqual("PrMan.1.1")
+		expect(p.parse("PrMan 1:1").osis()).toEqual("PrMan.1.1", "parsing: 'PrMan 1:1'")
 		;
       return true;
     });
@@ -362,7 +362,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -373,19 +373,19 @@
     });
     return it("should handle book: Deut (hi)", function() {
       
-		expect(p.parse("Vyavasthaavivaran 1:1").osis()).toEqual("Deut.1.1")
-		expect(p.parse("व्यवस्था विवरण 1:1").osis()).toEqual("Deut.1.1")
-		expect(p.parse("व्य्वस्थाविवरन 1:1").osis()).toEqual("Deut.1.1")
-		expect(p.parse("व्यवस्थाविवरण 1:1").osis()).toEqual("Deut.1.1")
-		expect(p.parse("व्यवस्था 1:1").osis()).toEqual("Deut.1.1")
-		expect(p.parse("Deut 1:1").osis()).toEqual("Deut.1.1")
+		expect(p.parse("Vyavasthaavivaran 1:1").osis()).toEqual("Deut.1.1", "parsing: 'Vyavasthaavivaran 1:1'")
+		expect(p.parse("व्यवस्था विवरण 1:1").osis()).toEqual("Deut.1.1", "parsing: 'व्यवस्था विवरण 1:1'")
+		expect(p.parse("व्य्वस्थाविवरन 1:1").osis()).toEqual("Deut.1.1", "parsing: 'व्य्वस्थाविवरन 1:1'")
+		expect(p.parse("व्यवस्थाविवरण 1:1").osis()).toEqual("Deut.1.1", "parsing: 'व्यवस्थाविवरण 1:1'")
+		expect(p.parse("व्यवस्था 1:1").osis()).toEqual("Deut.1.1", "parsing: 'व्यवस्था 1:1'")
+		expect(p.parse("Deut 1:1").osis()).toEqual("Deut.1.1", "parsing: 'Deut 1:1'")
 		p.include_apocrypha(false)
-		expect(p.parse("VYAVASTHAAVIVARAN 1:1").osis()).toEqual("Deut.1.1")
-		expect(p.parse("व्यवस्था विवरण 1:1").osis()).toEqual("Deut.1.1")
-		expect(p.parse("व्य्वस्थाविवरन 1:1").osis()).toEqual("Deut.1.1")
-		expect(p.parse("व्यवस्थाविवरण 1:1").osis()).toEqual("Deut.1.1")
-		expect(p.parse("व्यवस्था 1:1").osis()).toEqual("Deut.1.1")
-		expect(p.parse("DEUT 1:1").osis()).toEqual("Deut.1.1")
+		expect(p.parse("VYAVASTHAAVIVARAN 1:1").osis()).toEqual("Deut.1.1", "parsing: 'VYAVASTHAAVIVARAN 1:1'")
+		expect(p.parse("व्यवस्था विवरण 1:1").osis()).toEqual("Deut.1.1", "parsing: 'व्यवस्था विवरण 1:1'")
+		expect(p.parse("व्य्वस्थाविवरन 1:1").osis()).toEqual("Deut.1.1", "parsing: 'व्य्वस्थाविवरन 1:1'")
+		expect(p.parse("व्यवस्थाविवरण 1:1").osis()).toEqual("Deut.1.1", "parsing: 'व्यवस्थाविवरण 1:1'")
+		expect(p.parse("व्यवस्था 1:1").osis()).toEqual("Deut.1.1", "parsing: 'व्यवस्था 1:1'")
+		expect(p.parse("DEUT 1:1").osis()).toEqual("Deut.1.1", "parsing: 'DEUT 1:1'")
 		;
       return true;
     });
@@ -395,7 +395,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -406,15 +406,15 @@
     });
     return it("should handle book: Josh (hi)", function() {
       
-		expect(p.parse("Yahoshoo 1:1").osis()).toEqual("Josh.1.1")
-		expect(p.parse("यहोशु 1:1").osis()).toEqual("Josh.1.1")
-		expect(p.parse("यहोशू 1:1").osis()).toEqual("Josh.1.1")
-		expect(p.parse("Josh 1:1").osis()).toEqual("Josh.1.1")
+		expect(p.parse("Yahoshoo 1:1").osis()).toEqual("Josh.1.1", "parsing: 'Yahoshoo 1:1'")
+		expect(p.parse("यहोशु 1:1").osis()).toEqual("Josh.1.1", "parsing: 'यहोशु 1:1'")
+		expect(p.parse("यहोशू 1:1").osis()).toEqual("Josh.1.1", "parsing: 'यहोशू 1:1'")
+		expect(p.parse("Josh 1:1").osis()).toEqual("Josh.1.1", "parsing: 'Josh 1:1'")
 		p.include_apocrypha(false)
-		expect(p.parse("YAHOSHOO 1:1").osis()).toEqual("Josh.1.1")
-		expect(p.parse("यहोशु 1:1").osis()).toEqual("Josh.1.1")
-		expect(p.parse("यहोशू 1:1").osis()).toEqual("Josh.1.1")
-		expect(p.parse("JOSH 1:1").osis()).toEqual("Josh.1.1")
+		expect(p.parse("YAHOSHOO 1:1").osis()).toEqual("Josh.1.1", "parsing: 'YAHOSHOO 1:1'")
+		expect(p.parse("यहोशु 1:1").osis()).toEqual("Josh.1.1", "parsing: 'यहोशु 1:1'")
+		expect(p.parse("यहोशू 1:1").osis()).toEqual("Josh.1.1", "parsing: 'यहोशू 1:1'")
+		expect(p.parse("JOSH 1:1").osis()).toEqual("Josh.1.1", "parsing: 'JOSH 1:1'")
 		;
       return true;
     });
@@ -424,7 +424,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -435,15 +435,15 @@
     });
     return it("should handle book: Judg (hi)", function() {
       
-		expect(p.parse("न्यायिय का विर्तान्त 1:1").osis()).toEqual("Judg.1.1")
-		expect(p.parse("न्यायियों 1:1").osis()).toEqual("Judg.1.1")
-		expect(p.parse("Nyayiyon 1:1").osis()).toEqual("Judg.1.1")
-		expect(p.parse("Judg 1:1").osis()).toEqual("Judg.1.1")
+		expect(p.parse("न्यायिय का विर्तान्त 1:1").osis()).toEqual("Judg.1.1", "parsing: 'न्यायिय का विर्तान्त 1:1'")
+		expect(p.parse("न्यायियों 1:1").osis()).toEqual("Judg.1.1", "parsing: 'न्यायियों 1:1'")
+		expect(p.parse("Nyayiyon 1:1").osis()).toEqual("Judg.1.1", "parsing: 'Nyayiyon 1:1'")
+		expect(p.parse("Judg 1:1").osis()).toEqual("Judg.1.1", "parsing: 'Judg 1:1'")
 		p.include_apocrypha(false)
-		expect(p.parse("न्यायिय का विर्तान्त 1:1").osis()).toEqual("Judg.1.1")
-		expect(p.parse("न्यायियों 1:1").osis()).toEqual("Judg.1.1")
-		expect(p.parse("NYAYIYON 1:1").osis()).toEqual("Judg.1.1")
-		expect(p.parse("JUDG 1:1").osis()).toEqual("Judg.1.1")
+		expect(p.parse("न्यायिय का विर्तान्त 1:1").osis()).toEqual("Judg.1.1", "parsing: 'न्यायिय का विर्तान्त 1:1'")
+		expect(p.parse("न्यायियों 1:1").osis()).toEqual("Judg.1.1", "parsing: 'न्यायियों 1:1'")
+		expect(p.parse("NYAYIYON 1:1").osis()).toEqual("Judg.1.1", "parsing: 'NYAYIYON 1:1'")
+		expect(p.parse("JUDG 1:1").osis()).toEqual("Judg.1.1", "parsing: 'JUDG 1:1'")
 		;
       return true;
     });
@@ -453,7 +453,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -464,15 +464,15 @@
     });
     return it("should handle book: Ruth (hi)", function() {
       
-		expect(p.parse("Root 1:1").osis()).toEqual("Ruth.1.1")
-		expect(p.parse("Ruth 1:1").osis()).toEqual("Ruth.1.1")
-		expect(p.parse("रुत 1:1").osis()).toEqual("Ruth.1.1")
-		expect(p.parse("रूत 1:1").osis()).toEqual("Ruth.1.1")
+		expect(p.parse("Root 1:1").osis()).toEqual("Ruth.1.1", "parsing: 'Root 1:1'")
+		expect(p.parse("Ruth 1:1").osis()).toEqual("Ruth.1.1", "parsing: 'Ruth 1:1'")
+		expect(p.parse("रुत 1:1").osis()).toEqual("Ruth.1.1", "parsing: 'रुत 1:1'")
+		expect(p.parse("रूत 1:1").osis()).toEqual("Ruth.1.1", "parsing: 'रूत 1:1'")
 		p.include_apocrypha(false)
-		expect(p.parse("ROOT 1:1").osis()).toEqual("Ruth.1.1")
-		expect(p.parse("RUTH 1:1").osis()).toEqual("Ruth.1.1")
-		expect(p.parse("रुत 1:1").osis()).toEqual("Ruth.1.1")
-		expect(p.parse("रूत 1:1").osis()).toEqual("Ruth.1.1")
+		expect(p.parse("ROOT 1:1").osis()).toEqual("Ruth.1.1", "parsing: 'ROOT 1:1'")
+		expect(p.parse("RUTH 1:1").osis()).toEqual("Ruth.1.1", "parsing: 'RUTH 1:1'")
+		expect(p.parse("रुत 1:1").osis()).toEqual("Ruth.1.1", "parsing: 'रुत 1:1'")
+		expect(p.parse("रूत 1:1").osis()).toEqual("Ruth.1.1", "parsing: 'रूत 1:1'")
 		;
       return true;
     });
@@ -482,7 +482,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -493,7 +493,7 @@
     });
     return it("should handle book: 1Esd (hi)", function() {
       
-		expect(p.parse("1Esd 1:1").osis()).toEqual("1Esd.1.1")
+		expect(p.parse("1Esd 1:1").osis()).toEqual("1Esd.1.1", "parsing: '1Esd 1:1'")
 		;
       return true;
     });
@@ -503,7 +503,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -514,7 +514,7 @@
     });
     return it("should handle book: 2Esd (hi)", function() {
       
-		expect(p.parse("2Esd 1:1").osis()).toEqual("2Esd.1.1")
+		expect(p.parse("2Esd 1:1").osis()).toEqual("2Esd.1.1", "parsing: '2Esd 1:1'")
 		;
       return true;
     });
@@ -524,7 +524,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -535,17 +535,17 @@
     });
     return it("should handle book: Isa (hi)", function() {
       
-		expect(p.parse("yashaayaah 1:1").osis()).toEqual("Isa.1.1")
-		expect(p.parse("यशायाह 1:1").osis()).toEqual("Isa.1.1")
-		expect(p.parse("यशाया 1:1").osis()).toEqual("Isa.1.1")
-		expect(p.parse("Isa 1:1").osis()).toEqual("Isa.1.1")
-		expect(p.parse("यशा 1:1").osis()).toEqual("Isa.1.1")
+		expect(p.parse("yashaayaah 1:1").osis()).toEqual("Isa.1.1", "parsing: 'yashaayaah 1:1'")
+		expect(p.parse("यशायाह 1:1").osis()).toEqual("Isa.1.1", "parsing: 'यशायाह 1:1'")
+		expect(p.parse("यशाया 1:1").osis()).toEqual("Isa.1.1", "parsing: 'यशाया 1:1'")
+		expect(p.parse("Isa 1:1").osis()).toEqual("Isa.1.1", "parsing: 'Isa 1:1'")
+		expect(p.parse("यशा 1:1").osis()).toEqual("Isa.1.1", "parsing: 'यशा 1:1'")
 		p.include_apocrypha(false)
-		expect(p.parse("YASHAAYAAH 1:1").osis()).toEqual("Isa.1.1")
-		expect(p.parse("यशायाह 1:1").osis()).toEqual("Isa.1.1")
-		expect(p.parse("यशाया 1:1").osis()).toEqual("Isa.1.1")
-		expect(p.parse("ISA 1:1").osis()).toEqual("Isa.1.1")
-		expect(p.parse("यशा 1:1").osis()).toEqual("Isa.1.1")
+		expect(p.parse("YASHAAYAAH 1:1").osis()).toEqual("Isa.1.1", "parsing: 'YASHAAYAAH 1:1'")
+		expect(p.parse("यशायाह 1:1").osis()).toEqual("Isa.1.1", "parsing: 'यशायाह 1:1'")
+		expect(p.parse("यशाया 1:1").osis()).toEqual("Isa.1.1", "parsing: 'यशाया 1:1'")
+		expect(p.parse("ISA 1:1").osis()).toEqual("Isa.1.1", "parsing: 'ISA 1:1'")
+		expect(p.parse("यशा 1:1").osis()).toEqual("Isa.1.1", "parsing: 'यशा 1:1'")
 		;
       return true;
     });
@@ -555,7 +555,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -566,15 +566,15 @@
     });
     it("should handle book: 2Sam (hi)", function() {
       
-		expect(p.parse("शमुऐयल की 2री पुस्तक 1:1").osis()).toEqual("2Sam.1.1")
-		expect(p.parse("शमुऐयल की २री पुस्तक 1:1").osis()).toEqual("2Sam.1.1")
-		expect(p.parse("2. Shamooael 1:1").osis()).toEqual("2Sam.1.1")
-		expect(p.parse("2 Shamooael 1:1").osis()).toEqual("2Sam.1.1")
-		expect(p.parse("2. शमूएल 1:1").osis()).toEqual("2Sam.1.1")
-		expect(p.parse("2 शमूएल 1:1").osis()).toEqual("2Sam.1.1")
-		expect(p.parse("2. शमू 1:1").osis()).toEqual("2Sam.1.1")
-		expect(p.parse("2 शमू 1:1").osis()).toEqual("2Sam.1.1")
-		expect(p.parse("2Sam 1:1").osis()).toEqual("2Sam.1.1")
+		expect(p.parse("शमुऐयल की 2री पुस्तक 1:1").osis()).toEqual("2Sam.1.1", "parsing: 'शमुऐयल की 2री पुस्तक 1:1'")
+		expect(p.parse("शमुऐयल की २री पुस्तक 1:1").osis()).toEqual("2Sam.1.1", "parsing: 'शमुऐयल की २री पुस्तक 1:1'")
+		expect(p.parse("2. Shamooael 1:1").osis()).toEqual("2Sam.1.1", "parsing: '2. Shamooael 1:1'")
+		expect(p.parse("2 Shamooael 1:1").osis()).toEqual("2Sam.1.1", "parsing: '2 Shamooael 1:1'")
+		expect(p.parse("2. शमूएल 1:1").osis()).toEqual("2Sam.1.1", "parsing: '2. शमूएल 1:1'")
+		expect(p.parse("2 शमूएल 1:1").osis()).toEqual("2Sam.1.1", "parsing: '2 शमूएल 1:1'")
+		expect(p.parse("2. शमू 1:1").osis()).toEqual("2Sam.1.1", "parsing: '2. शमू 1:1'")
+		expect(p.parse("2 शमू 1:1").osis()).toEqual("2Sam.1.1", "parsing: '2 शमू 1:1'")
+		expect(p.parse("2Sam 1:1").osis()).toEqual("2Sam.1.1", "parsing: '2Sam 1:1'")
 		;
       return true;
     });
@@ -583,25 +583,25 @@
         non_latin_digits_strategy: "replace"
       });
       
-		expect(p.parse("शमुऐयल की 2री पुस्तक 1:1").osis()).toEqual("2Sam.1.1")
-		expect(p.parse("शमुऐयल की २री पुस्तक 1:1").osis()).toEqual("2Sam.1.1")
-		expect(p.parse("2. Shamooael 1:1").osis()).toEqual("2Sam.1.1")
-		expect(p.parse("2 Shamooael 1:1").osis()).toEqual("2Sam.1.1")
-		expect(p.parse("2. शमूएल 1:1").osis()).toEqual("2Sam.1.1")
-		expect(p.parse("2 शमूएल 1:1").osis()).toEqual("2Sam.1.1")
-		expect(p.parse("2. शमू 1:1").osis()).toEqual("2Sam.1.1")
-		expect(p.parse("2 शमू 1:1").osis()).toEqual("2Sam.1.1")
-		expect(p.parse("2Sam 1:1").osis()).toEqual("2Sam.1.1")
+		expect(p.parse("शमुऐयल की 2री पुस्तक 1:1").osis()).toEqual("2Sam.1.1", "parsing: 'शमुऐयल की 2री पुस्तक 1:1'")
+		expect(p.parse("शमुऐयल की २री पुस्तक 1:1").osis()).toEqual("2Sam.1.1", "parsing: 'शमुऐयल की २री पुस्तक 1:1'")
+		expect(p.parse("2. Shamooael 1:1").osis()).toEqual("2Sam.1.1", "parsing: '2. Shamooael 1:1'")
+		expect(p.parse("2 Shamooael 1:1").osis()).toEqual("2Sam.1.1", "parsing: '2 Shamooael 1:1'")
+		expect(p.parse("2. शमूएल 1:1").osis()).toEqual("2Sam.1.1", "parsing: '2. शमूएल 1:1'")
+		expect(p.parse("2 शमूएल 1:1").osis()).toEqual("2Sam.1.1", "parsing: '2 शमूएल 1:1'")
+		expect(p.parse("2. शमू 1:1").osis()).toEqual("2Sam.1.1", "parsing: '2. शमू 1:1'")
+		expect(p.parse("2 शमू 1:1").osis()).toEqual("2Sam.1.1", "parsing: '2 शमू 1:1'")
+		expect(p.parse("2Sam 1:1").osis()).toEqual("2Sam.1.1", "parsing: '2Sam 1:1'")
 		p.include_apocrypha(false)
-		expect(p.parse("शमुऐयल की 2री पुस्तक 1:1").osis()).toEqual("2Sam.1.1")
-		expect(p.parse("शमुऐयल की २री पुस्तक 1:1").osis()).toEqual("2Sam.1.1")
-		expect(p.parse("2. SHAMOOAEL 1:1").osis()).toEqual("2Sam.1.1")
-		expect(p.parse("2 SHAMOOAEL 1:1").osis()).toEqual("2Sam.1.1")
-		expect(p.parse("2. शमूएल 1:1").osis()).toEqual("2Sam.1.1")
-		expect(p.parse("2 शमूएल 1:1").osis()).toEqual("2Sam.1.1")
-		expect(p.parse("2. शमू 1:1").osis()).toEqual("2Sam.1.1")
-		expect(p.parse("2 शमू 1:1").osis()).toEqual("2Sam.1.1")
-		expect(p.parse("2SAM 1:1").osis()).toEqual("2Sam.1.1")
+		expect(p.parse("शमुऐयल की 2री पुस्तक 1:1").osis()).toEqual("2Sam.1.1", "parsing: 'शमुऐयल की 2री पुस्तक 1:1'")
+		expect(p.parse("शमुऐयल की २री पुस्तक 1:1").osis()).toEqual("2Sam.1.1", "parsing: 'शमुऐयल की २री पुस्तक 1:1'")
+		expect(p.parse("2. SHAMOOAEL 1:1").osis()).toEqual("2Sam.1.1", "parsing: '2. SHAMOOAEL 1:1'")
+		expect(p.parse("2 SHAMOOAEL 1:1").osis()).toEqual("2Sam.1.1", "parsing: '2 SHAMOOAEL 1:1'")
+		expect(p.parse("2. शमूएल 1:1").osis()).toEqual("2Sam.1.1", "parsing: '2. शमूएल 1:1'")
+		expect(p.parse("2 शमूएल 1:1").osis()).toEqual("2Sam.1.1", "parsing: '2 शमूएल 1:1'")
+		expect(p.parse("2. शमू 1:1").osis()).toEqual("2Sam.1.1", "parsing: '2. शमू 1:1'")
+		expect(p.parse("2 शमू 1:1").osis()).toEqual("2Sam.1.1", "parsing: '2 शमू 1:1'")
+		expect(p.parse("2SAM 1:1").osis()).toEqual("2Sam.1.1", "parsing: '2SAM 1:1'")
 		;
       return true;
     });
@@ -611,7 +611,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -622,15 +622,16 @@
     });
     it("should handle book: 1Sam (hi)", function() {
       
-		expect(p.parse("शमुऐल की 1ली पुस्तक 1:1").osis()).toEqual("1Sam.1.1")
-		expect(p.parse("शमुऐल की १ली पुस्तक 1:1").osis()).toEqual("1Sam.1.1")
-		expect(p.parse("1. Shamooael 1:1").osis()).toEqual("1Sam.1.1")
-		expect(p.parse("1 Shamooael 1:1").osis()).toEqual("1Sam.1.1")
-		expect(p.parse("1. शमूएल 1:1").osis()).toEqual("1Sam.1.1")
-		expect(p.parse("1 शमूएल 1:1").osis()).toEqual("1Sam.1.1")
-		expect(p.parse("1. शमू 1:1").osis()).toEqual("1Sam.1.1")
-		expect(p.parse("1 शमू 1:1").osis()).toEqual("1Sam.1.1")
-		expect(p.parse("1Sam 1:1").osis()).toEqual("1Sam.1.1")
+		expect(p.parse("शमुऐल की 1ली पुस्तक 1:1").osis()).toEqual("1Sam.1.1", "parsing: 'शमुऐल की 1ली पुस्तक 1:1'")
+		expect(p.parse("शमुऐल की १ली पुस्तक 1:1").osis()).toEqual("1Sam.1.1", "parsing: 'शमुऐल की १ली पुस्तक 1:1'")
+		expect(p.parse("1. Shamooael 1:1").osis()).toEqual("1Sam.1.1", "parsing: '1. Shamooael 1:1'")
+		expect(p.parse("1 Shamooael 1:1").osis()).toEqual("1Sam.1.1", "parsing: '1 Shamooael 1:1'")
+		expect(p.parse("मैं शमूएल 1:1").osis()).toEqual("1Sam.1.1", "parsing: 'मैं शमूएल 1:1'")
+		expect(p.parse("1. शमूएल 1:1").osis()).toEqual("1Sam.1.1", "parsing: '1. शमूएल 1:1'")
+		expect(p.parse("1 शमूएल 1:1").osis()).toEqual("1Sam.1.1", "parsing: '1 शमूएल 1:1'")
+		expect(p.parse("1. शमू 1:1").osis()).toEqual("1Sam.1.1", "parsing: '1. शमू 1:1'")
+		expect(p.parse("1 शमू 1:1").osis()).toEqual("1Sam.1.1", "parsing: '1 शमू 1:1'")
+		expect(p.parse("1Sam 1:1").osis()).toEqual("1Sam.1.1", "parsing: '1Sam 1:1'")
 		;
       return true;
     });
@@ -639,25 +640,27 @@
         non_latin_digits_strategy: "replace"
       });
       
-		expect(p.parse("शमुऐल की 1ली पुस्तक 1:1").osis()).toEqual("1Sam.1.1")
-		expect(p.parse("शमुऐल की १ली पुस्तक 1:1").osis()).toEqual("1Sam.1.1")
-		expect(p.parse("1. Shamooael 1:1").osis()).toEqual("1Sam.1.1")
-		expect(p.parse("1 Shamooael 1:1").osis()).toEqual("1Sam.1.1")
-		expect(p.parse("1. शमूएल 1:1").osis()).toEqual("1Sam.1.1")
-		expect(p.parse("1 शमूएल 1:1").osis()).toEqual("1Sam.1.1")
-		expect(p.parse("1. शमू 1:1").osis()).toEqual("1Sam.1.1")
-		expect(p.parse("1 शमू 1:1").osis()).toEqual("1Sam.1.1")
-		expect(p.parse("1Sam 1:1").osis()).toEqual("1Sam.1.1")
+		expect(p.parse("शमुऐल की 1ली पुस्तक 1:1").osis()).toEqual("1Sam.1.1", "parsing: 'शमुऐल की 1ली पुस्तक 1:1'")
+		expect(p.parse("शमुऐल की १ली पुस्तक 1:1").osis()).toEqual("1Sam.1.1", "parsing: 'शमुऐल की १ली पुस्तक 1:1'")
+		expect(p.parse("1. Shamooael 1:1").osis()).toEqual("1Sam.1.1", "parsing: '1. Shamooael 1:1'")
+		expect(p.parse("1 Shamooael 1:1").osis()).toEqual("1Sam.1.1", "parsing: '1 Shamooael 1:1'")
+		expect(p.parse("मैं शमूएल 1:1").osis()).toEqual("1Sam.1.1", "parsing: 'मैं शमूएल 1:1'")
+		expect(p.parse("1. शमूएल 1:1").osis()).toEqual("1Sam.1.1", "parsing: '1. शमूएल 1:1'")
+		expect(p.parse("1 शमूएल 1:1").osis()).toEqual("1Sam.1.1", "parsing: '1 शमूएल 1:1'")
+		expect(p.parse("1. शमू 1:1").osis()).toEqual("1Sam.1.1", "parsing: '1. शमू 1:1'")
+		expect(p.parse("1 शमू 1:1").osis()).toEqual("1Sam.1.1", "parsing: '1 शमू 1:1'")
+		expect(p.parse("1Sam 1:1").osis()).toEqual("1Sam.1.1", "parsing: '1Sam 1:1'")
 		p.include_apocrypha(false)
-		expect(p.parse("शमुऐल की 1ली पुस्तक 1:1").osis()).toEqual("1Sam.1.1")
-		expect(p.parse("शमुऐल की १ली पुस्तक 1:1").osis()).toEqual("1Sam.1.1")
-		expect(p.parse("1. SHAMOOAEL 1:1").osis()).toEqual("1Sam.1.1")
-		expect(p.parse("1 SHAMOOAEL 1:1").osis()).toEqual("1Sam.1.1")
-		expect(p.parse("1. शमूएल 1:1").osis()).toEqual("1Sam.1.1")
-		expect(p.parse("1 शमूएल 1:1").osis()).toEqual("1Sam.1.1")
-		expect(p.parse("1. शमू 1:1").osis()).toEqual("1Sam.1.1")
-		expect(p.parse("1 शमू 1:1").osis()).toEqual("1Sam.1.1")
-		expect(p.parse("1SAM 1:1").osis()).toEqual("1Sam.1.1")
+		expect(p.parse("शमुऐल की 1ली पुस्तक 1:1").osis()).toEqual("1Sam.1.1", "parsing: 'शमुऐल की 1ली पुस्तक 1:1'")
+		expect(p.parse("शमुऐल की १ली पुस्तक 1:1").osis()).toEqual("1Sam.1.1", "parsing: 'शमुऐल की १ली पुस्तक 1:1'")
+		expect(p.parse("1. SHAMOOAEL 1:1").osis()).toEqual("1Sam.1.1", "parsing: '1. SHAMOOAEL 1:1'")
+		expect(p.parse("1 SHAMOOAEL 1:1").osis()).toEqual("1Sam.1.1", "parsing: '1 SHAMOOAEL 1:1'")
+		expect(p.parse("मैं शमूएल 1:1").osis()).toEqual("1Sam.1.1", "parsing: 'मैं शमूएल 1:1'")
+		expect(p.parse("1. शमूएल 1:1").osis()).toEqual("1Sam.1.1", "parsing: '1. शमूएल 1:1'")
+		expect(p.parse("1 शमूएल 1:1").osis()).toEqual("1Sam.1.1", "parsing: '1 शमूएल 1:1'")
+		expect(p.parse("1. शमू 1:1").osis()).toEqual("1Sam.1.1", "parsing: '1. शमू 1:1'")
+		expect(p.parse("1 शमू 1:1").osis()).toEqual("1Sam.1.1", "parsing: '1 शमू 1:1'")
+		expect(p.parse("1SAM 1:1").osis()).toEqual("1Sam.1.1", "parsing: '1SAM 1:1'")
 		;
       return true;
     });
@@ -667,7 +670,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -678,15 +681,15 @@
     });
     it("should handle book: 2Kgs (hi)", function() {
       
-		expect(p.parse("राजाओ का विर्तान्त 2रा भाग 1:1").osis()).toEqual("2Kgs.1.1")
-		expect(p.parse("राजाओ का विर्तान्त २रा भाग 1:1").osis()).toEqual("2Kgs.1.1")
-		expect(p.parse("2. राजाओं 1:1").osis()).toEqual("2Kgs.1.1")
-		expect(p.parse("2 राजाओं 1:1").osis()).toEqual("2Kgs.1.1")
-		expect(p.parse("2. Raja 1:1").osis()).toEqual("2Kgs.1.1")
-		expect(p.parse("2. राजा 1:1").osis()).toEqual("2Kgs.1.1")
-		expect(p.parse("2 Raja 1:1").osis()).toEqual("2Kgs.1.1")
-		expect(p.parse("2 राजा 1:1").osis()).toEqual("2Kgs.1.1")
-		expect(p.parse("2Kgs 1:1").osis()).toEqual("2Kgs.1.1")
+		expect(p.parse("राजाओ का विर्तान्त 2रा भाग 1:1").osis()).toEqual("2Kgs.1.1", "parsing: 'राजाओ का विर्तान्त 2रा भाग 1:1'")
+		expect(p.parse("राजाओ का विर्तान्त २रा भाग 1:1").osis()).toEqual("2Kgs.1.1", "parsing: 'राजाओ का विर्तान्त २रा भाग 1:1'")
+		expect(p.parse("2. राजाओं 1:1").osis()).toEqual("2Kgs.1.1", "parsing: '2. राजाओं 1:1'")
+		expect(p.parse("2 राजाओं 1:1").osis()).toEqual("2Kgs.1.1", "parsing: '2 राजाओं 1:1'")
+		expect(p.parse("2. Raja 1:1").osis()).toEqual("2Kgs.1.1", "parsing: '2. Raja 1:1'")
+		expect(p.parse("2. राजा 1:1").osis()).toEqual("2Kgs.1.1", "parsing: '2. राजा 1:1'")
+		expect(p.parse("2 Raja 1:1").osis()).toEqual("2Kgs.1.1", "parsing: '2 Raja 1:1'")
+		expect(p.parse("2 राजा 1:1").osis()).toEqual("2Kgs.1.1", "parsing: '2 राजा 1:1'")
+		expect(p.parse("2Kgs 1:1").osis()).toEqual("2Kgs.1.1", "parsing: '2Kgs 1:1'")
 		;
       return true;
     });
@@ -695,25 +698,25 @@
         non_latin_digits_strategy: "replace"
       });
       
-		expect(p.parse("राजाओ का विर्तान्त 2रा भाग 1:1").osis()).toEqual("2Kgs.1.1")
-		expect(p.parse("राजाओ का विर्तान्त २रा भाग 1:1").osis()).toEqual("2Kgs.1.1")
-		expect(p.parse("2. राजाओं 1:1").osis()).toEqual("2Kgs.1.1")
-		expect(p.parse("2 राजाओं 1:1").osis()).toEqual("2Kgs.1.1")
-		expect(p.parse("2. Raja 1:1").osis()).toEqual("2Kgs.1.1")
-		expect(p.parse("2. राजा 1:1").osis()).toEqual("2Kgs.1.1")
-		expect(p.parse("2 Raja 1:1").osis()).toEqual("2Kgs.1.1")
-		expect(p.parse("2 राजा 1:1").osis()).toEqual("2Kgs.1.1")
-		expect(p.parse("2Kgs 1:1").osis()).toEqual("2Kgs.1.1")
+		expect(p.parse("राजाओ का विर्तान्त 2रा भाग 1:1").osis()).toEqual("2Kgs.1.1", "parsing: 'राजाओ का विर्तान्त 2रा भाग 1:1'")
+		expect(p.parse("राजाओ का विर्तान्त २रा भाग 1:1").osis()).toEqual("2Kgs.1.1", "parsing: 'राजाओ का विर्तान्त २रा भाग 1:1'")
+		expect(p.parse("2. राजाओं 1:1").osis()).toEqual("2Kgs.1.1", "parsing: '2. राजाओं 1:1'")
+		expect(p.parse("2 राजाओं 1:1").osis()).toEqual("2Kgs.1.1", "parsing: '2 राजाओं 1:1'")
+		expect(p.parse("2. Raja 1:1").osis()).toEqual("2Kgs.1.1", "parsing: '2. Raja 1:1'")
+		expect(p.parse("2. राजा 1:1").osis()).toEqual("2Kgs.1.1", "parsing: '2. राजा 1:1'")
+		expect(p.parse("2 Raja 1:1").osis()).toEqual("2Kgs.1.1", "parsing: '2 Raja 1:1'")
+		expect(p.parse("2 राजा 1:1").osis()).toEqual("2Kgs.1.1", "parsing: '2 राजा 1:1'")
+		expect(p.parse("2Kgs 1:1").osis()).toEqual("2Kgs.1.1", "parsing: '2Kgs 1:1'")
 		p.include_apocrypha(false)
-		expect(p.parse("राजाओ का विर्तान्त 2रा भाग 1:1").osis()).toEqual("2Kgs.1.1")
-		expect(p.parse("राजाओ का विर्तान्त २रा भाग 1:1").osis()).toEqual("2Kgs.1.1")
-		expect(p.parse("2. राजाओं 1:1").osis()).toEqual("2Kgs.1.1")
-		expect(p.parse("2 राजाओं 1:1").osis()).toEqual("2Kgs.1.1")
-		expect(p.parse("2. RAJA 1:1").osis()).toEqual("2Kgs.1.1")
-		expect(p.parse("2. राजा 1:1").osis()).toEqual("2Kgs.1.1")
-		expect(p.parse("2 RAJA 1:1").osis()).toEqual("2Kgs.1.1")
-		expect(p.parse("2 राजा 1:1").osis()).toEqual("2Kgs.1.1")
-		expect(p.parse("2KGS 1:1").osis()).toEqual("2Kgs.1.1")
+		expect(p.parse("राजाओ का विर्तान्त 2रा भाग 1:1").osis()).toEqual("2Kgs.1.1", "parsing: 'राजाओ का विर्तान्त 2रा भाग 1:1'")
+		expect(p.parse("राजाओ का विर्तान्त २रा भाग 1:1").osis()).toEqual("2Kgs.1.1", "parsing: 'राजाओ का विर्तान्त २रा भाग 1:1'")
+		expect(p.parse("2. राजाओं 1:1").osis()).toEqual("2Kgs.1.1", "parsing: '2. राजाओं 1:1'")
+		expect(p.parse("2 राजाओं 1:1").osis()).toEqual("2Kgs.1.1", "parsing: '2 राजाओं 1:1'")
+		expect(p.parse("2. RAJA 1:1").osis()).toEqual("2Kgs.1.1", "parsing: '2. RAJA 1:1'")
+		expect(p.parse("2. राजा 1:1").osis()).toEqual("2Kgs.1.1", "parsing: '2. राजा 1:1'")
+		expect(p.parse("2 RAJA 1:1").osis()).toEqual("2Kgs.1.1", "parsing: '2 RAJA 1:1'")
+		expect(p.parse("2 राजा 1:1").osis()).toEqual("2Kgs.1.1", "parsing: '2 राजा 1:1'")
+		expect(p.parse("2KGS 1:1").osis()).toEqual("2Kgs.1.1", "parsing: '2KGS 1:1'")
 		;
       return true;
     });
@@ -723,7 +726,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -734,15 +737,15 @@
     });
     it("should handle book: 1Kgs (hi)", function() {
       
-		expect(p.parse("राजाओ का विर्तान्त 1ला भाग् 1:1").osis()).toEqual("1Kgs.1.1")
-		expect(p.parse("राजाओ का विर्तान्त १ला भाग् 1:1").osis()).toEqual("1Kgs.1.1")
-		expect(p.parse("1. राजाओं 1:1").osis()).toEqual("1Kgs.1.1")
-		expect(p.parse("1 राजाओं 1:1").osis()).toEqual("1Kgs.1.1")
-		expect(p.parse("1. Raja 1:1").osis()).toEqual("1Kgs.1.1")
-		expect(p.parse("1. राजा 1:1").osis()).toEqual("1Kgs.1.1")
-		expect(p.parse("1 Raja 1:1").osis()).toEqual("1Kgs.1.1")
-		expect(p.parse("1 राजा 1:1").osis()).toEqual("1Kgs.1.1")
-		expect(p.parse("1Kgs 1:1").osis()).toEqual("1Kgs.1.1")
+		expect(p.parse("राजाओ का विर्तान्त 1ला भाग् 1:1").osis()).toEqual("1Kgs.1.1", "parsing: 'राजाओ का विर्तान्त 1ला भाग् 1:1'")
+		expect(p.parse("राजाओ का विर्तान्त १ला भाग् 1:1").osis()).toEqual("1Kgs.1.1", "parsing: 'राजाओ का विर्तान्त १ला भाग् 1:1'")
+		expect(p.parse("1. राजाओं 1:1").osis()).toEqual("1Kgs.1.1", "parsing: '1. राजाओं 1:1'")
+		expect(p.parse("1 राजाओं 1:1").osis()).toEqual("1Kgs.1.1", "parsing: '1 राजाओं 1:1'")
+		expect(p.parse("1. Raja 1:1").osis()).toEqual("1Kgs.1.1", "parsing: '1. Raja 1:1'")
+		expect(p.parse("1. राजा 1:1").osis()).toEqual("1Kgs.1.1", "parsing: '1. राजा 1:1'")
+		expect(p.parse("1 Raja 1:1").osis()).toEqual("1Kgs.1.1", "parsing: '1 Raja 1:1'")
+		expect(p.parse("1 राजा 1:1").osis()).toEqual("1Kgs.1.1", "parsing: '1 राजा 1:1'")
+		expect(p.parse("1Kgs 1:1").osis()).toEqual("1Kgs.1.1", "parsing: '1Kgs 1:1'")
 		;
       return true;
     });
@@ -751,25 +754,25 @@
         non_latin_digits_strategy: "replace"
       });
       
-		expect(p.parse("राजाओ का विर्तान्त 1ला भाग् 1:1").osis()).toEqual("1Kgs.1.1")
-		expect(p.parse("राजाओ का विर्तान्त १ला भाग् 1:1").osis()).toEqual("1Kgs.1.1")
-		expect(p.parse("1. राजाओं 1:1").osis()).toEqual("1Kgs.1.1")
-		expect(p.parse("1 राजाओं 1:1").osis()).toEqual("1Kgs.1.1")
-		expect(p.parse("1. Raja 1:1").osis()).toEqual("1Kgs.1.1")
-		expect(p.parse("1. राजा 1:1").osis()).toEqual("1Kgs.1.1")
-		expect(p.parse("1 Raja 1:1").osis()).toEqual("1Kgs.1.1")
-		expect(p.parse("1 राजा 1:1").osis()).toEqual("1Kgs.1.1")
-		expect(p.parse("1Kgs 1:1").osis()).toEqual("1Kgs.1.1")
+		expect(p.parse("राजाओ का विर्तान्त 1ला भाग् 1:1").osis()).toEqual("1Kgs.1.1", "parsing: 'राजाओ का विर्तान्त 1ला भाग् 1:1'")
+		expect(p.parse("राजाओ का विर्तान्त १ला भाग् 1:1").osis()).toEqual("1Kgs.1.1", "parsing: 'राजाओ का विर्तान्त १ला भाग् 1:1'")
+		expect(p.parse("1. राजाओं 1:1").osis()).toEqual("1Kgs.1.1", "parsing: '1. राजाओं 1:1'")
+		expect(p.parse("1 राजाओं 1:1").osis()).toEqual("1Kgs.1.1", "parsing: '1 राजाओं 1:1'")
+		expect(p.parse("1. Raja 1:1").osis()).toEqual("1Kgs.1.1", "parsing: '1. Raja 1:1'")
+		expect(p.parse("1. राजा 1:1").osis()).toEqual("1Kgs.1.1", "parsing: '1. राजा 1:1'")
+		expect(p.parse("1 Raja 1:1").osis()).toEqual("1Kgs.1.1", "parsing: '1 Raja 1:1'")
+		expect(p.parse("1 राजा 1:1").osis()).toEqual("1Kgs.1.1", "parsing: '1 राजा 1:1'")
+		expect(p.parse("1Kgs 1:1").osis()).toEqual("1Kgs.1.1", "parsing: '1Kgs 1:1'")
 		p.include_apocrypha(false)
-		expect(p.parse("राजाओ का विर्तान्त 1ला भाग् 1:1").osis()).toEqual("1Kgs.1.1")
-		expect(p.parse("राजाओ का विर्तान्त १ला भाग् 1:1").osis()).toEqual("1Kgs.1.1")
-		expect(p.parse("1. राजाओं 1:1").osis()).toEqual("1Kgs.1.1")
-		expect(p.parse("1 राजाओं 1:1").osis()).toEqual("1Kgs.1.1")
-		expect(p.parse("1. RAJA 1:1").osis()).toEqual("1Kgs.1.1")
-		expect(p.parse("1. राजा 1:1").osis()).toEqual("1Kgs.1.1")
-		expect(p.parse("1 RAJA 1:1").osis()).toEqual("1Kgs.1.1")
-		expect(p.parse("1 राजा 1:1").osis()).toEqual("1Kgs.1.1")
-		expect(p.parse("1KGS 1:1").osis()).toEqual("1Kgs.1.1")
+		expect(p.parse("राजाओ का विर्तान्त 1ला भाग् 1:1").osis()).toEqual("1Kgs.1.1", "parsing: 'राजाओ का विर्तान्त 1ला भाग् 1:1'")
+		expect(p.parse("राजाओ का विर्तान्त १ला भाग् 1:1").osis()).toEqual("1Kgs.1.1", "parsing: 'राजाओ का विर्तान्त १ला भाग् 1:1'")
+		expect(p.parse("1. राजाओं 1:1").osis()).toEqual("1Kgs.1.1", "parsing: '1. राजाओं 1:1'")
+		expect(p.parse("1 राजाओं 1:1").osis()).toEqual("1Kgs.1.1", "parsing: '1 राजाओं 1:1'")
+		expect(p.parse("1. RAJA 1:1").osis()).toEqual("1Kgs.1.1", "parsing: '1. RAJA 1:1'")
+		expect(p.parse("1. राजा 1:1").osis()).toEqual("1Kgs.1.1", "parsing: '1. राजा 1:1'")
+		expect(p.parse("1 RAJA 1:1").osis()).toEqual("1Kgs.1.1", "parsing: '1 RAJA 1:1'")
+		expect(p.parse("1 राजा 1:1").osis()).toEqual("1Kgs.1.1", "parsing: '1 राजा 1:1'")
+		expect(p.parse("1KGS 1:1").osis()).toEqual("1Kgs.1.1", "parsing: '1KGS 1:1'")
 		;
       return true;
     });
@@ -779,7 +782,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -790,15 +793,15 @@
     });
     it("should handle book: 2Chr (hi)", function() {
       
-		expect(p.parse("इतिहास 2रा भाग 1:1").osis()).toEqual("2Chr.1.1")
-		expect(p.parse("इतिहास २रा भाग 1:1").osis()).toEqual("2Chr.1.1")
-		expect(p.parse("2. Itihas 1:1").osis()).toEqual("2Chr.1.1")
-		expect(p.parse("2. इतिहास 1:1").osis()).toEqual("2Chr.1.1")
-		expect(p.parse("2 Itihas 1:1").osis()).toEqual("2Chr.1.1")
-		expect(p.parse("2 इतिहास 1:1").osis()).toEqual("2Chr.1.1")
-		expect(p.parse("2. इति 1:1").osis()).toEqual("2Chr.1.1")
-		expect(p.parse("2 इति 1:1").osis()).toEqual("2Chr.1.1")
-		expect(p.parse("2Chr 1:1").osis()).toEqual("2Chr.1.1")
+		expect(p.parse("इतिहास 2रा भाग 1:1").osis()).toEqual("2Chr.1.1", "parsing: 'इतिहास 2रा भाग 1:1'")
+		expect(p.parse("इतिहास २रा भाग 1:1").osis()).toEqual("2Chr.1.1", "parsing: 'इतिहास २रा भाग 1:1'")
+		expect(p.parse("2. Itihas 1:1").osis()).toEqual("2Chr.1.1", "parsing: '2. Itihas 1:1'")
+		expect(p.parse("2. इतिहास 1:1").osis()).toEqual("2Chr.1.1", "parsing: '2. इतिहास 1:1'")
+		expect(p.parse("2 Itihas 1:1").osis()).toEqual("2Chr.1.1", "parsing: '2 Itihas 1:1'")
+		expect(p.parse("2 इतिहास 1:1").osis()).toEqual("2Chr.1.1", "parsing: '2 इतिहास 1:1'")
+		expect(p.parse("2. इति 1:1").osis()).toEqual("2Chr.1.1", "parsing: '2. इति 1:1'")
+		expect(p.parse("2 इति 1:1").osis()).toEqual("2Chr.1.1", "parsing: '2 इति 1:1'")
+		expect(p.parse("2Chr 1:1").osis()).toEqual("2Chr.1.1", "parsing: '2Chr 1:1'")
 		;
       return true;
     });
@@ -807,25 +810,25 @@
         non_latin_digits_strategy: "replace"
       });
       
-		expect(p.parse("इतिहास 2रा भाग 1:1").osis()).toEqual("2Chr.1.1")
-		expect(p.parse("इतिहास २रा भाग 1:1").osis()).toEqual("2Chr.1.1")
-		expect(p.parse("2. Itihas 1:1").osis()).toEqual("2Chr.1.1")
-		expect(p.parse("2. इतिहास 1:1").osis()).toEqual("2Chr.1.1")
-		expect(p.parse("2 Itihas 1:1").osis()).toEqual("2Chr.1.1")
-		expect(p.parse("2 इतिहास 1:1").osis()).toEqual("2Chr.1.1")
-		expect(p.parse("2. इति 1:1").osis()).toEqual("2Chr.1.1")
-		expect(p.parse("2 इति 1:1").osis()).toEqual("2Chr.1.1")
-		expect(p.parse("2Chr 1:1").osis()).toEqual("2Chr.1.1")
+		expect(p.parse("इतिहास 2रा भाग 1:1").osis()).toEqual("2Chr.1.1", "parsing: 'इतिहास 2रा भाग 1:1'")
+		expect(p.parse("इतिहास २रा भाग 1:1").osis()).toEqual("2Chr.1.1", "parsing: 'इतिहास २रा भाग 1:1'")
+		expect(p.parse("2. Itihas 1:1").osis()).toEqual("2Chr.1.1", "parsing: '2. Itihas 1:1'")
+		expect(p.parse("2. इतिहास 1:1").osis()).toEqual("2Chr.1.1", "parsing: '2. इतिहास 1:1'")
+		expect(p.parse("2 Itihas 1:1").osis()).toEqual("2Chr.1.1", "parsing: '2 Itihas 1:1'")
+		expect(p.parse("2 इतिहास 1:1").osis()).toEqual("2Chr.1.1", "parsing: '2 इतिहास 1:1'")
+		expect(p.parse("2. इति 1:1").osis()).toEqual("2Chr.1.1", "parsing: '2. इति 1:1'")
+		expect(p.parse("2 इति 1:1").osis()).toEqual("2Chr.1.1", "parsing: '2 इति 1:1'")
+		expect(p.parse("2Chr 1:1").osis()).toEqual("2Chr.1.1", "parsing: '2Chr 1:1'")
 		p.include_apocrypha(false)
-		expect(p.parse("इतिहास 2रा भाग 1:1").osis()).toEqual("2Chr.1.1")
-		expect(p.parse("इतिहास २रा भाग 1:1").osis()).toEqual("2Chr.1.1")
-		expect(p.parse("2. ITIHAS 1:1").osis()).toEqual("2Chr.1.1")
-		expect(p.parse("2. इतिहास 1:1").osis()).toEqual("2Chr.1.1")
-		expect(p.parse("2 ITIHAS 1:1").osis()).toEqual("2Chr.1.1")
-		expect(p.parse("2 इतिहास 1:1").osis()).toEqual("2Chr.1.1")
-		expect(p.parse("2. इति 1:1").osis()).toEqual("2Chr.1.1")
-		expect(p.parse("2 इति 1:1").osis()).toEqual("2Chr.1.1")
-		expect(p.parse("2CHR 1:1").osis()).toEqual("2Chr.1.1")
+		expect(p.parse("इतिहास 2रा भाग 1:1").osis()).toEqual("2Chr.1.1", "parsing: 'इतिहास 2रा भाग 1:1'")
+		expect(p.parse("इतिहास २रा भाग 1:1").osis()).toEqual("2Chr.1.1", "parsing: 'इतिहास २रा भाग 1:1'")
+		expect(p.parse("2. ITIHAS 1:1").osis()).toEqual("2Chr.1.1", "parsing: '2. ITIHAS 1:1'")
+		expect(p.parse("2. इतिहास 1:1").osis()).toEqual("2Chr.1.1", "parsing: '2. इतिहास 1:1'")
+		expect(p.parse("2 ITIHAS 1:1").osis()).toEqual("2Chr.1.1", "parsing: '2 ITIHAS 1:1'")
+		expect(p.parse("2 इतिहास 1:1").osis()).toEqual("2Chr.1.1", "parsing: '2 इतिहास 1:1'")
+		expect(p.parse("2. इति 1:1").osis()).toEqual("2Chr.1.1", "parsing: '2. इति 1:1'")
+		expect(p.parse("2 इति 1:1").osis()).toEqual("2Chr.1.1", "parsing: '2 इति 1:1'")
+		expect(p.parse("2CHR 1:1").osis()).toEqual("2Chr.1.1", "parsing: '2CHR 1:1'")
 		;
       return true;
     });
@@ -835,7 +838,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -846,15 +849,15 @@
     });
     it("should handle book: 1Chr (hi)", function() {
       
-		expect(p.parse("इतिहास 1ला भाग 1:1").osis()).toEqual("1Chr.1.1")
-		expect(p.parse("इतिहास १ला भाग 1:1").osis()).toEqual("1Chr.1.1")
-		expect(p.parse("1. Itihas 1:1").osis()).toEqual("1Chr.1.1")
-		expect(p.parse("1. इतिहास 1:1").osis()).toEqual("1Chr.1.1")
-		expect(p.parse("1 Itihas 1:1").osis()).toEqual("1Chr.1.1")
-		expect(p.parse("1 इतिहास 1:1").osis()).toEqual("1Chr.1.1")
-		expect(p.parse("1. इति 1:1").osis()).toEqual("1Chr.1.1")
-		expect(p.parse("1 इति 1:1").osis()).toEqual("1Chr.1.1")
-		expect(p.parse("1Chr 1:1").osis()).toEqual("1Chr.1.1")
+		expect(p.parse("इतिहास 1ला भाग 1:1").osis()).toEqual("1Chr.1.1", "parsing: 'इतिहास 1ला भाग 1:1'")
+		expect(p.parse("इतिहास १ला भाग 1:1").osis()).toEqual("1Chr.1.1", "parsing: 'इतिहास १ला भाग 1:1'")
+		expect(p.parse("1. Itihas 1:1").osis()).toEqual("1Chr.1.1", "parsing: '1. Itihas 1:1'")
+		expect(p.parse("1. इतिहास 1:1").osis()).toEqual("1Chr.1.1", "parsing: '1. इतिहास 1:1'")
+		expect(p.parse("1 Itihas 1:1").osis()).toEqual("1Chr.1.1", "parsing: '1 Itihas 1:1'")
+		expect(p.parse("1 इतिहास 1:1").osis()).toEqual("1Chr.1.1", "parsing: '1 इतिहास 1:1'")
+		expect(p.parse("1. इति 1:1").osis()).toEqual("1Chr.1.1", "parsing: '1. इति 1:1'")
+		expect(p.parse("1 इति 1:1").osis()).toEqual("1Chr.1.1", "parsing: '1 इति 1:1'")
+		expect(p.parse("1Chr 1:1").osis()).toEqual("1Chr.1.1", "parsing: '1Chr 1:1'")
 		;
       return true;
     });
@@ -863,25 +866,25 @@
         non_latin_digits_strategy: "replace"
       });
       
-		expect(p.parse("इतिहास 1ला भाग 1:1").osis()).toEqual("1Chr.1.1")
-		expect(p.parse("इतिहास १ला भाग 1:1").osis()).toEqual("1Chr.1.1")
-		expect(p.parse("1. Itihas 1:1").osis()).toEqual("1Chr.1.1")
-		expect(p.parse("1. इतिहास 1:1").osis()).toEqual("1Chr.1.1")
-		expect(p.parse("1 Itihas 1:1").osis()).toEqual("1Chr.1.1")
-		expect(p.parse("1 इतिहास 1:1").osis()).toEqual("1Chr.1.1")
-		expect(p.parse("1. इति 1:1").osis()).toEqual("1Chr.1.1")
-		expect(p.parse("1 इति 1:1").osis()).toEqual("1Chr.1.1")
-		expect(p.parse("1Chr 1:1").osis()).toEqual("1Chr.1.1")
+		expect(p.parse("इतिहास 1ला भाग 1:1").osis()).toEqual("1Chr.1.1", "parsing: 'इतिहास 1ला भाग 1:1'")
+		expect(p.parse("इतिहास १ला भाग 1:1").osis()).toEqual("1Chr.1.1", "parsing: 'इतिहास १ला भाग 1:1'")
+		expect(p.parse("1. Itihas 1:1").osis()).toEqual("1Chr.1.1", "parsing: '1. Itihas 1:1'")
+		expect(p.parse("1. इतिहास 1:1").osis()).toEqual("1Chr.1.1", "parsing: '1. इतिहास 1:1'")
+		expect(p.parse("1 Itihas 1:1").osis()).toEqual("1Chr.1.1", "parsing: '1 Itihas 1:1'")
+		expect(p.parse("1 इतिहास 1:1").osis()).toEqual("1Chr.1.1", "parsing: '1 इतिहास 1:1'")
+		expect(p.parse("1. इति 1:1").osis()).toEqual("1Chr.1.1", "parsing: '1. इति 1:1'")
+		expect(p.parse("1 इति 1:1").osis()).toEqual("1Chr.1.1", "parsing: '1 इति 1:1'")
+		expect(p.parse("1Chr 1:1").osis()).toEqual("1Chr.1.1", "parsing: '1Chr 1:1'")
 		p.include_apocrypha(false)
-		expect(p.parse("इतिहास 1ला भाग 1:1").osis()).toEqual("1Chr.1.1")
-		expect(p.parse("इतिहास १ला भाग 1:1").osis()).toEqual("1Chr.1.1")
-		expect(p.parse("1. ITIHAS 1:1").osis()).toEqual("1Chr.1.1")
-		expect(p.parse("1. इतिहास 1:1").osis()).toEqual("1Chr.1.1")
-		expect(p.parse("1 ITIHAS 1:1").osis()).toEqual("1Chr.1.1")
-		expect(p.parse("1 इतिहास 1:1").osis()).toEqual("1Chr.1.1")
-		expect(p.parse("1. इति 1:1").osis()).toEqual("1Chr.1.1")
-		expect(p.parse("1 इति 1:1").osis()).toEqual("1Chr.1.1")
-		expect(p.parse("1CHR 1:1").osis()).toEqual("1Chr.1.1")
+		expect(p.parse("इतिहास 1ला भाग 1:1").osis()).toEqual("1Chr.1.1", "parsing: 'इतिहास 1ला भाग 1:1'")
+		expect(p.parse("इतिहास १ला भाग 1:1").osis()).toEqual("1Chr.1.1", "parsing: 'इतिहास १ला भाग 1:1'")
+		expect(p.parse("1. ITIHAS 1:1").osis()).toEqual("1Chr.1.1", "parsing: '1. ITIHAS 1:1'")
+		expect(p.parse("1. इतिहास 1:1").osis()).toEqual("1Chr.1.1", "parsing: '1. इतिहास 1:1'")
+		expect(p.parse("1 ITIHAS 1:1").osis()).toEqual("1Chr.1.1", "parsing: '1 ITIHAS 1:1'")
+		expect(p.parse("1 इतिहास 1:1").osis()).toEqual("1Chr.1.1", "parsing: '1 इतिहास 1:1'")
+		expect(p.parse("1. इति 1:1").osis()).toEqual("1Chr.1.1", "parsing: '1. इति 1:1'")
+		expect(p.parse("1 इति 1:1").osis()).toEqual("1Chr.1.1", "parsing: '1 इति 1:1'")
+		expect(p.parse("1CHR 1:1").osis()).toEqual("1Chr.1.1", "parsing: '1CHR 1:1'")
 		;
       return true;
     });
@@ -891,7 +894,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -902,13 +905,13 @@
     });
     return it("should handle book: Ezra (hi)", function() {
       
-		expect(p.parse("Aejra 1:1").osis()).toEqual("Ezra.1.1")
-		expect(p.parse("एज्रा 1:1").osis()).toEqual("Ezra.1.1")
-		expect(p.parse("Ezra 1:1").osis()).toEqual("Ezra.1.1")
+		expect(p.parse("Aejra 1:1").osis()).toEqual("Ezra.1.1", "parsing: 'Aejra 1:1'")
+		expect(p.parse("एज्रा 1:1").osis()).toEqual("Ezra.1.1", "parsing: 'एज्रा 1:1'")
+		expect(p.parse("Ezra 1:1").osis()).toEqual("Ezra.1.1", "parsing: 'Ezra 1:1'")
 		p.include_apocrypha(false)
-		expect(p.parse("AEJRA 1:1").osis()).toEqual("Ezra.1.1")
-		expect(p.parse("एज्रा 1:1").osis()).toEqual("Ezra.1.1")
-		expect(p.parse("EZRA 1:1").osis()).toEqual("Ezra.1.1")
+		expect(p.parse("AEJRA 1:1").osis()).toEqual("Ezra.1.1", "parsing: 'AEJRA 1:1'")
+		expect(p.parse("एज्रा 1:1").osis()).toEqual("Ezra.1.1", "parsing: 'एज्रा 1:1'")
+		expect(p.parse("EZRA 1:1").osis()).toEqual("Ezra.1.1", "parsing: 'EZRA 1:1'")
 		;
       return true;
     });
@@ -918,7 +921,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -929,19 +932,19 @@
     });
     return it("should handle book: Neh (hi)", function() {
       
-		expect(p.parse("न्हेम्याह 1:1").osis()).toEqual("Neh.1.1")
-		expect(p.parse("Nahemyah 1:1").osis()).toEqual("Neh.1.1")
-		expect(p.parse("नहेमायाह 1:1").osis()).toEqual("Neh.1.1")
-		expect(p.parse("नहेम्याह 1:1").osis()).toEqual("Neh.1.1")
-		expect(p.parse("नहेमा 1:1").osis()).toEqual("Neh.1.1")
-		expect(p.parse("Neh 1:1").osis()).toEqual("Neh.1.1")
+		expect(p.parse("न्हेम्याह 1:1").osis()).toEqual("Neh.1.1", "parsing: 'न्हेम्याह 1:1'")
+		expect(p.parse("Nahemyah 1:1").osis()).toEqual("Neh.1.1", "parsing: 'Nahemyah 1:1'")
+		expect(p.parse("नहेमायाह 1:1").osis()).toEqual("Neh.1.1", "parsing: 'नहेमायाह 1:1'")
+		expect(p.parse("नहेम्याह 1:1").osis()).toEqual("Neh.1.1", "parsing: 'नहेम्याह 1:1'")
+		expect(p.parse("नहेमा 1:1").osis()).toEqual("Neh.1.1", "parsing: 'नहेमा 1:1'")
+		expect(p.parse("Neh 1:1").osis()).toEqual("Neh.1.1", "parsing: 'Neh 1:1'")
 		p.include_apocrypha(false)
-		expect(p.parse("न्हेम्याह 1:1").osis()).toEqual("Neh.1.1")
-		expect(p.parse("NAHEMYAH 1:1").osis()).toEqual("Neh.1.1")
-		expect(p.parse("नहेमायाह 1:1").osis()).toEqual("Neh.1.1")
-		expect(p.parse("नहेम्याह 1:1").osis()).toEqual("Neh.1.1")
-		expect(p.parse("नहेमा 1:1").osis()).toEqual("Neh.1.1")
-		expect(p.parse("NEH 1:1").osis()).toEqual("Neh.1.1")
+		expect(p.parse("न्हेम्याह 1:1").osis()).toEqual("Neh.1.1", "parsing: 'न्हेम्याह 1:1'")
+		expect(p.parse("NAHEMYAH 1:1").osis()).toEqual("Neh.1.1", "parsing: 'NAHEMYAH 1:1'")
+		expect(p.parse("नहेमायाह 1:1").osis()).toEqual("Neh.1.1", "parsing: 'नहेमायाह 1:1'")
+		expect(p.parse("नहेम्याह 1:1").osis()).toEqual("Neh.1.1", "parsing: 'नहेम्याह 1:1'")
+		expect(p.parse("नहेमा 1:1").osis()).toEqual("Neh.1.1", "parsing: 'नहेमा 1:1'")
+		expect(p.parse("NEH 1:1").osis()).toEqual("Neh.1.1", "parsing: 'NEH 1:1'")
 		;
       return true;
     });
@@ -951,7 +954,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -962,7 +965,7 @@
     });
     return it("should handle book: GkEsth (hi)", function() {
       
-		expect(p.parse("GkEsth 1:1").osis()).toEqual("GkEsth.1.1")
+		expect(p.parse("GkEsth 1:1").osis()).toEqual("GkEsth.1.1", "parsing: 'GkEsth 1:1'")
 		;
       return true;
     });
@@ -972,7 +975,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -983,15 +986,15 @@
     });
     return it("should handle book: Esth (hi)", function() {
       
-		expect(p.parse("Aester 1:1").osis()).toEqual("Esth.1.1")
-		expect(p.parse("एस्तेर 1:1").osis()).toEqual("Esth.1.1")
-		expect(p.parse("ऐस्तेर 1:1").osis()).toEqual("Esth.1.1")
-		expect(p.parse("Esth 1:1").osis()).toEqual("Esth.1.1")
+		expect(p.parse("Aester 1:1").osis()).toEqual("Esth.1.1", "parsing: 'Aester 1:1'")
+		expect(p.parse("एस्तेर 1:1").osis()).toEqual("Esth.1.1", "parsing: 'एस्तेर 1:1'")
+		expect(p.parse("ऐस्तेर 1:1").osis()).toEqual("Esth.1.1", "parsing: 'ऐस्तेर 1:1'")
+		expect(p.parse("Esth 1:1").osis()).toEqual("Esth.1.1", "parsing: 'Esth 1:1'")
 		p.include_apocrypha(false)
-		expect(p.parse("AESTER 1:1").osis()).toEqual("Esth.1.1")
-		expect(p.parse("एस्तेर 1:1").osis()).toEqual("Esth.1.1")
-		expect(p.parse("ऐस्तेर 1:1").osis()).toEqual("Esth.1.1")
-		expect(p.parse("ESTH 1:1").osis()).toEqual("Esth.1.1")
+		expect(p.parse("AESTER 1:1").osis()).toEqual("Esth.1.1", "parsing: 'AESTER 1:1'")
+		expect(p.parse("एस्तेर 1:1").osis()).toEqual("Esth.1.1", "parsing: 'एस्तेर 1:1'")
+		expect(p.parse("ऐस्तेर 1:1").osis()).toEqual("Esth.1.1", "parsing: 'ऐस्तेर 1:1'")
+		expect(p.parse("ESTH 1:1").osis()).toEqual("Esth.1.1", "parsing: 'ESTH 1:1'")
 		;
       return true;
     });
@@ -1001,7 +1004,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -1012,15 +1015,15 @@
     });
     return it("should handle book: Job (hi)", function() {
       
-		expect(p.parse("Ayyoob 1:1").osis()).toEqual("Job.1.1")
-		expect(p.parse("अय्यूब 1:1").osis()).toEqual("Job.1.1")
-		expect(p.parse("अययुब 1:1").osis()).toEqual("Job.1.1")
-		expect(p.parse("Job 1:1").osis()).toEqual("Job.1.1")
+		expect(p.parse("Ayyoob 1:1").osis()).toEqual("Job.1.1", "parsing: 'Ayyoob 1:1'")
+		expect(p.parse("अय्यूब 1:1").osis()).toEqual("Job.1.1", "parsing: 'अय्यूब 1:1'")
+		expect(p.parse("अययुब 1:1").osis()).toEqual("Job.1.1", "parsing: 'अययुब 1:1'")
+		expect(p.parse("Job 1:1").osis()).toEqual("Job.1.1", "parsing: 'Job 1:1'")
 		p.include_apocrypha(false)
-		expect(p.parse("AYYOOB 1:1").osis()).toEqual("Job.1.1")
-		expect(p.parse("अय्यूब 1:1").osis()).toEqual("Job.1.1")
-		expect(p.parse("अययुब 1:1").osis()).toEqual("Job.1.1")
-		expect(p.parse("JOB 1:1").osis()).toEqual("Job.1.1")
+		expect(p.parse("AYYOOB 1:1").osis()).toEqual("Job.1.1", "parsing: 'AYYOOB 1:1'")
+		expect(p.parse("अय्यूब 1:1").osis()).toEqual("Job.1.1", "parsing: 'अय्यूब 1:1'")
+		expect(p.parse("अययुब 1:1").osis()).toEqual("Job.1.1", "parsing: 'अययुब 1:1'")
+		expect(p.parse("JOB 1:1").osis()).toEqual("Job.1.1", "parsing: 'JOB 1:1'")
 		;
       return true;
     });
@@ -1030,7 +1033,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -1041,17 +1044,17 @@
     });
     return it("should handle book: Ps (hi)", function() {
       
-		expect(p.parse("भजन-सहिन्ता 1:1").osis()).toEqual("Ps.1.1")
-		expect(p.parse("भजन संहिता 1:1").osis()).toEqual("Ps.1.1")
-		expect(p.parse("Bhjan 1:1").osis()).toEqual("Ps.1.1")
-		expect(p.parse("भजन 1:1").osis()).toEqual("Ps.1.1")
-		expect(p.parse("Ps 1:1").osis()).toEqual("Ps.1.1")
+		expect(p.parse("भजन-सहिन्ता 1:1").osis()).toEqual("Ps.1.1", "parsing: 'भजन-सहिन्ता 1:1'")
+		expect(p.parse("भजन संहिता 1:1").osis()).toEqual("Ps.1.1", "parsing: 'भजन संहिता 1:1'")
+		expect(p.parse("Bhjan 1:1").osis()).toEqual("Ps.1.1", "parsing: 'Bhjan 1:1'")
+		expect(p.parse("भजन 1:1").osis()).toEqual("Ps.1.1", "parsing: 'भजन 1:1'")
+		expect(p.parse("Ps 1:1").osis()).toEqual("Ps.1.1", "parsing: 'Ps 1:1'")
 		p.include_apocrypha(false)
-		expect(p.parse("भजन-सहिन्ता 1:1").osis()).toEqual("Ps.1.1")
-		expect(p.parse("भजन संहिता 1:1").osis()).toEqual("Ps.1.1")
-		expect(p.parse("BHJAN 1:1").osis()).toEqual("Ps.1.1")
-		expect(p.parse("भजन 1:1").osis()).toEqual("Ps.1.1")
-		expect(p.parse("PS 1:1").osis()).toEqual("Ps.1.1")
+		expect(p.parse("भजन-सहिन्ता 1:1").osis()).toEqual("Ps.1.1", "parsing: 'भजन-सहिन्ता 1:1'")
+		expect(p.parse("भजन संहिता 1:1").osis()).toEqual("Ps.1.1", "parsing: 'भजन संहिता 1:1'")
+		expect(p.parse("BHJAN 1:1").osis()).toEqual("Ps.1.1", "parsing: 'BHJAN 1:1'")
+		expect(p.parse("भजन 1:1").osis()).toEqual("Ps.1.1", "parsing: 'भजन 1:1'")
+		expect(p.parse("PS 1:1").osis()).toEqual("Ps.1.1", "parsing: 'PS 1:1'")
 		;
       return true;
     });
@@ -1061,7 +1064,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -1072,7 +1075,7 @@
     });
     return it("should handle book: PrAzar (hi)", function() {
       
-		expect(p.parse("PrAzar 1:1").osis()).toEqual("PrAzar.1.1")
+		expect(p.parse("PrAzar 1:1").osis()).toEqual("PrAzar.1.1", "parsing: 'PrAzar 1:1'")
 		;
       return true;
     });
@@ -1082,7 +1085,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -1093,19 +1096,19 @@
     });
     return it("should handle book: Prov (hi)", function() {
       
-		expect(p.parse("Neetivachan 1:1").osis()).toEqual("Prov.1.1")
-		expect(p.parse("नीति वचन 1:1").osis()).toEqual("Prov.1.1")
-		expect(p.parse("नीतिबचन 1:1").osis()).toEqual("Prov.1.1")
-		expect(p.parse("नीतिवचन 1:1").osis()).toEqual("Prov.1.1")
-		expect(p.parse("Prov 1:1").osis()).toEqual("Prov.1.1")
-		expect(p.parse("नीति 1:1").osis()).toEqual("Prov.1.1")
+		expect(p.parse("Neetivachan 1:1").osis()).toEqual("Prov.1.1", "parsing: 'Neetivachan 1:1'")
+		expect(p.parse("नीति वचन 1:1").osis()).toEqual("Prov.1.1", "parsing: 'नीति वचन 1:1'")
+		expect(p.parse("नीतिबचन 1:1").osis()).toEqual("Prov.1.1", "parsing: 'नीतिबचन 1:1'")
+		expect(p.parse("नीतिवचन 1:1").osis()).toEqual("Prov.1.1", "parsing: 'नीतिवचन 1:1'")
+		expect(p.parse("Prov 1:1").osis()).toEqual("Prov.1.1", "parsing: 'Prov 1:1'")
+		expect(p.parse("नीति 1:1").osis()).toEqual("Prov.1.1", "parsing: 'नीति 1:1'")
 		p.include_apocrypha(false)
-		expect(p.parse("NEETIVACHAN 1:1").osis()).toEqual("Prov.1.1")
-		expect(p.parse("नीति वचन 1:1").osis()).toEqual("Prov.1.1")
-		expect(p.parse("नीतिबचन 1:1").osis()).toEqual("Prov.1.1")
-		expect(p.parse("नीतिवचन 1:1").osis()).toEqual("Prov.1.1")
-		expect(p.parse("PROV 1:1").osis()).toEqual("Prov.1.1")
-		expect(p.parse("नीति 1:1").osis()).toEqual("Prov.1.1")
+		expect(p.parse("NEETIVACHAN 1:1").osis()).toEqual("Prov.1.1", "parsing: 'NEETIVACHAN 1:1'")
+		expect(p.parse("नीति वचन 1:1").osis()).toEqual("Prov.1.1", "parsing: 'नीति वचन 1:1'")
+		expect(p.parse("नीतिबचन 1:1").osis()).toEqual("Prov.1.1", "parsing: 'नीतिबचन 1:1'")
+		expect(p.parse("नीतिवचन 1:1").osis()).toEqual("Prov.1.1", "parsing: 'नीतिवचन 1:1'")
+		expect(p.parse("PROV 1:1").osis()).toEqual("Prov.1.1", "parsing: 'PROV 1:1'")
+		expect(p.parse("नीति 1:1").osis()).toEqual("Prov.1.1", "parsing: 'नीति 1:1'")
 		;
       return true;
     });
@@ -1115,7 +1118,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -1126,15 +1129,15 @@
     });
     return it("should handle book: Eccl (hi)", function() {
       
-		expect(p.parse("Sabhopadeshak 1:1").osis()).toEqual("Eccl.1.1")
-		expect(p.parse("सभोपदेशक 1:1").osis()).toEqual("Eccl.1.1")
-		expect(p.parse("Eccl 1:1").osis()).toEqual("Eccl.1.1")
-		expect(p.parse("सभो 1:1").osis()).toEqual("Eccl.1.1")
+		expect(p.parse("Sabhopadeshak 1:1").osis()).toEqual("Eccl.1.1", "parsing: 'Sabhopadeshak 1:1'")
+		expect(p.parse("सभोपदेशक 1:1").osis()).toEqual("Eccl.1.1", "parsing: 'सभोपदेशक 1:1'")
+		expect(p.parse("Eccl 1:1").osis()).toEqual("Eccl.1.1", "parsing: 'Eccl 1:1'")
+		expect(p.parse("सभो 1:1").osis()).toEqual("Eccl.1.1", "parsing: 'सभो 1:1'")
 		p.include_apocrypha(false)
-		expect(p.parse("SABHOPADESHAK 1:1").osis()).toEqual("Eccl.1.1")
-		expect(p.parse("सभोपदेशक 1:1").osis()).toEqual("Eccl.1.1")
-		expect(p.parse("ECCL 1:1").osis()).toEqual("Eccl.1.1")
-		expect(p.parse("सभो 1:1").osis()).toEqual("Eccl.1.1")
+		expect(p.parse("SABHOPADESHAK 1:1").osis()).toEqual("Eccl.1.1", "parsing: 'SABHOPADESHAK 1:1'")
+		expect(p.parse("सभोपदेशक 1:1").osis()).toEqual("Eccl.1.1", "parsing: 'सभोपदेशक 1:1'")
+		expect(p.parse("ECCL 1:1").osis()).toEqual("Eccl.1.1", "parsing: 'ECCL 1:1'")
+		expect(p.parse("सभो 1:1").osis()).toEqual("Eccl.1.1", "parsing: 'सभो 1:1'")
 		;
       return true;
     });
@@ -1144,7 +1147,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -1155,7 +1158,7 @@
     });
     return it("should handle book: SgThree (hi)", function() {
       
-		expect(p.parse("SgThree 1:1").osis()).toEqual("SgThree.1.1")
+		expect(p.parse("SgThree 1:1").osis()).toEqual("SgThree.1.1", "parsing: 'SgThree 1:1'")
 		;
       return true;
     });
@@ -1165,7 +1168,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -1176,17 +1179,17 @@
     });
     return it("should handle book: Song (hi)", function() {
       
-		expect(p.parse("Reshthageet 1:1").osis()).toEqual("Song.1.1")
-		expect(p.parse("स्रेस्ट गीत 1:1").osis()).toEqual("Song.1.1")
-		expect(p.parse("श्रेष्ठगीत 1:1").osis()).toEqual("Song.1.1")
-		expect(p.parse("श्रेष्ठ 1:1").osis()).toEqual("Song.1.1")
-		expect(p.parse("Song 1:1").osis()).toEqual("Song.1.1")
+		expect(p.parse("Reshthageet 1:1").osis()).toEqual("Song.1.1", "parsing: 'Reshthageet 1:1'")
+		expect(p.parse("स्रेस्ट गीत 1:1").osis()).toEqual("Song.1.1", "parsing: 'स्रेस्ट गीत 1:1'")
+		expect(p.parse("श्रेष्ठगीत 1:1").osis()).toEqual("Song.1.1", "parsing: 'श्रेष्ठगीत 1:1'")
+		expect(p.parse("श्रेष्ठ 1:1").osis()).toEqual("Song.1.1", "parsing: 'श्रेष्ठ 1:1'")
+		expect(p.parse("Song 1:1").osis()).toEqual("Song.1.1", "parsing: 'Song 1:1'")
 		p.include_apocrypha(false)
-		expect(p.parse("RESHTHAGEET 1:1").osis()).toEqual("Song.1.1")
-		expect(p.parse("स्रेस्ट गीत 1:1").osis()).toEqual("Song.1.1")
-		expect(p.parse("श्रेष्ठगीत 1:1").osis()).toEqual("Song.1.1")
-		expect(p.parse("श्रेष्ठ 1:1").osis()).toEqual("Song.1.1")
-		expect(p.parse("SONG 1:1").osis()).toEqual("Song.1.1")
+		expect(p.parse("RESHTHAGEET 1:1").osis()).toEqual("Song.1.1", "parsing: 'RESHTHAGEET 1:1'")
+		expect(p.parse("स्रेस्ट गीत 1:1").osis()).toEqual("Song.1.1", "parsing: 'स्रेस्ट गीत 1:1'")
+		expect(p.parse("श्रेष्ठगीत 1:1").osis()).toEqual("Song.1.1", "parsing: 'श्रेष्ठगीत 1:1'")
+		expect(p.parse("श्रेष्ठ 1:1").osis()).toEqual("Song.1.1", "parsing: 'श्रेष्ठ 1:1'")
+		expect(p.parse("SONG 1:1").osis()).toEqual("Song.1.1", "parsing: 'SONG 1:1'")
 		;
       return true;
     });
@@ -1196,7 +1199,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -1207,15 +1210,15 @@
     });
     return it("should handle book: Jer (hi)", function() {
       
-		expect(p.parse("Yirmayah 1:1").osis()).toEqual("Jer.1.1")
-		expect(p.parse("यिर्मयाह 1:1").osis()).toEqual("Jer.1.1")
-		expect(p.parse("यिर्म 1:1").osis()).toEqual("Jer.1.1")
-		expect(p.parse("Jer 1:1").osis()).toEqual("Jer.1.1")
+		expect(p.parse("Yirmayah 1:1").osis()).toEqual("Jer.1.1", "parsing: 'Yirmayah 1:1'")
+		expect(p.parse("यिर्मयाह 1:1").osis()).toEqual("Jer.1.1", "parsing: 'यिर्मयाह 1:1'")
+		expect(p.parse("यिर्म 1:1").osis()).toEqual("Jer.1.1", "parsing: 'यिर्म 1:1'")
+		expect(p.parse("Jer 1:1").osis()).toEqual("Jer.1.1", "parsing: 'Jer 1:1'")
 		p.include_apocrypha(false)
-		expect(p.parse("YIRMAYAH 1:1").osis()).toEqual("Jer.1.1")
-		expect(p.parse("यिर्मयाह 1:1").osis()).toEqual("Jer.1.1")
-		expect(p.parse("यिर्म 1:1").osis()).toEqual("Jer.1.1")
-		expect(p.parse("JER 1:1").osis()).toEqual("Jer.1.1")
+		expect(p.parse("YIRMAYAH 1:1").osis()).toEqual("Jer.1.1", "parsing: 'YIRMAYAH 1:1'")
+		expect(p.parse("यिर्मयाह 1:1").osis()).toEqual("Jer.1.1", "parsing: 'यिर्मयाह 1:1'")
+		expect(p.parse("यिर्म 1:1").osis()).toEqual("Jer.1.1", "parsing: 'यिर्म 1:1'")
+		expect(p.parse("JER 1:1").osis()).toEqual("Jer.1.1", "parsing: 'JER 1:1'")
 		;
       return true;
     });
@@ -1225,7 +1228,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -1236,15 +1239,15 @@
     });
     return it("should handle book: Ezek (hi)", function() {
       
-		expect(p.parse("Yahejakel 1:1").osis()).toEqual("Ezek.1.1")
-		expect(p.parse("यहेजकेल 1:1").osis()).toEqual("Ezek.1.1")
-		expect(p.parse("Ezek 1:1").osis()).toEqual("Ezek.1.1")
-		expect(p.parse("यहेज 1:1").osis()).toEqual("Ezek.1.1")
+		expect(p.parse("Yahejakel 1:1").osis()).toEqual("Ezek.1.1", "parsing: 'Yahejakel 1:1'")
+		expect(p.parse("यहेजकेल 1:1").osis()).toEqual("Ezek.1.1", "parsing: 'यहेजकेल 1:1'")
+		expect(p.parse("Ezek 1:1").osis()).toEqual("Ezek.1.1", "parsing: 'Ezek 1:1'")
+		expect(p.parse("यहेज 1:1").osis()).toEqual("Ezek.1.1", "parsing: 'यहेज 1:1'")
 		p.include_apocrypha(false)
-		expect(p.parse("YAHEJAKEL 1:1").osis()).toEqual("Ezek.1.1")
-		expect(p.parse("यहेजकेल 1:1").osis()).toEqual("Ezek.1.1")
-		expect(p.parse("EZEK 1:1").osis()).toEqual("Ezek.1.1")
-		expect(p.parse("यहेज 1:1").osis()).toEqual("Ezek.1.1")
+		expect(p.parse("YAHEJAKEL 1:1").osis()).toEqual("Ezek.1.1", "parsing: 'YAHEJAKEL 1:1'")
+		expect(p.parse("यहेजकेल 1:1").osis()).toEqual("Ezek.1.1", "parsing: 'यहेजकेल 1:1'")
+		expect(p.parse("EZEK 1:1").osis()).toEqual("Ezek.1.1", "parsing: 'EZEK 1:1'")
+		expect(p.parse("यहेज 1:1").osis()).toEqual("Ezek.1.1", "parsing: 'यहेज 1:1'")
 		;
       return true;
     });
@@ -1254,7 +1257,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -1265,17 +1268,17 @@
     });
     return it("should handle book: Dan (hi)", function() {
       
-		expect(p.parse("Daaniyyel 1:1").osis()).toEqual("Dan.1.1")
-		expect(p.parse("दानिय्येल 1:1").osis()).toEqual("Dan.1.1")
-		expect(p.parse("दानिय्यल 1:1").osis()).toEqual("Dan.1.1")
-		expect(p.parse("दानि 1:1").osis()).toEqual("Dan.1.1")
-		expect(p.parse("Dan 1:1").osis()).toEqual("Dan.1.1")
+		expect(p.parse("Daaniyyel 1:1").osis()).toEqual("Dan.1.1", "parsing: 'Daaniyyel 1:1'")
+		expect(p.parse("दानिय्येल 1:1").osis()).toEqual("Dan.1.1", "parsing: 'दानिय्येल 1:1'")
+		expect(p.parse("दानिय्यल 1:1").osis()).toEqual("Dan.1.1", "parsing: 'दानिय्यल 1:1'")
+		expect(p.parse("दानि 1:1").osis()).toEqual("Dan.1.1", "parsing: 'दानि 1:1'")
+		expect(p.parse("Dan 1:1").osis()).toEqual("Dan.1.1", "parsing: 'Dan 1:1'")
 		p.include_apocrypha(false)
-		expect(p.parse("DAANIYYEL 1:1").osis()).toEqual("Dan.1.1")
-		expect(p.parse("दानिय्येल 1:1").osis()).toEqual("Dan.1.1")
-		expect(p.parse("दानिय्यल 1:1").osis()).toEqual("Dan.1.1")
-		expect(p.parse("दानि 1:1").osis()).toEqual("Dan.1.1")
-		expect(p.parse("DAN 1:1").osis()).toEqual("Dan.1.1")
+		expect(p.parse("DAANIYYEL 1:1").osis()).toEqual("Dan.1.1", "parsing: 'DAANIYYEL 1:1'")
+		expect(p.parse("दानिय्येल 1:1").osis()).toEqual("Dan.1.1", "parsing: 'दानिय्येल 1:1'")
+		expect(p.parse("दानिय्यल 1:1").osis()).toEqual("Dan.1.1", "parsing: 'दानिय्यल 1:1'")
+		expect(p.parse("दानि 1:1").osis()).toEqual("Dan.1.1", "parsing: 'दानि 1:1'")
+		expect(p.parse("DAN 1:1").osis()).toEqual("Dan.1.1", "parsing: 'DAN 1:1'")
 		;
       return true;
     });
@@ -1285,7 +1288,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -1296,13 +1299,13 @@
     });
     return it("should handle book: Hos (hi)", function() {
       
-		expect(p.parse("Hosho 1:1").osis()).toEqual("Hos.1.1")
-		expect(p.parse("होशे 1:1").osis()).toEqual("Hos.1.1")
-		expect(p.parse("Hos 1:1").osis()).toEqual("Hos.1.1")
+		expect(p.parse("Hosho 1:1").osis()).toEqual("Hos.1.1", "parsing: 'Hosho 1:1'")
+		expect(p.parse("होशे 1:1").osis()).toEqual("Hos.1.1", "parsing: 'होशे 1:1'")
+		expect(p.parse("Hos 1:1").osis()).toEqual("Hos.1.1", "parsing: 'Hos 1:1'")
 		p.include_apocrypha(false)
-		expect(p.parse("HOSHO 1:1").osis()).toEqual("Hos.1.1")
-		expect(p.parse("होशे 1:1").osis()).toEqual("Hos.1.1")
-		expect(p.parse("HOS 1:1").osis()).toEqual("Hos.1.1")
+		expect(p.parse("HOSHO 1:1").osis()).toEqual("Hos.1.1", "parsing: 'HOSHO 1:1'")
+		expect(p.parse("होशे 1:1").osis()).toEqual("Hos.1.1", "parsing: 'होशे 1:1'")
+		expect(p.parse("HOS 1:1").osis()).toEqual("Hos.1.1", "parsing: 'HOS 1:1'")
 		;
       return true;
     });
@@ -1312,7 +1315,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -1323,13 +1326,13 @@
     });
     return it("should handle book: Joel (hi)", function() {
       
-		expect(p.parse("Yoael 1:1").osis()).toEqual("Joel.1.1")
-		expect(p.parse("Joel 1:1").osis()).toEqual("Joel.1.1")
-		expect(p.parse("योएल 1:1").osis()).toEqual("Joel.1.1")
+		expect(p.parse("Yoael 1:1").osis()).toEqual("Joel.1.1", "parsing: 'Yoael 1:1'")
+		expect(p.parse("Joel 1:1").osis()).toEqual("Joel.1.1", "parsing: 'Joel 1:1'")
+		expect(p.parse("योएल 1:1").osis()).toEqual("Joel.1.1", "parsing: 'योएल 1:1'")
 		p.include_apocrypha(false)
-		expect(p.parse("YOAEL 1:1").osis()).toEqual("Joel.1.1")
-		expect(p.parse("JOEL 1:1").osis()).toEqual("Joel.1.1")
-		expect(p.parse("योएल 1:1").osis()).toEqual("Joel.1.1")
+		expect(p.parse("YOAEL 1:1").osis()).toEqual("Joel.1.1", "parsing: 'YOAEL 1:1'")
+		expect(p.parse("JOEL 1:1").osis()).toEqual("Joel.1.1", "parsing: 'JOEL 1:1'")
+		expect(p.parse("योएल 1:1").osis()).toEqual("Joel.1.1", "parsing: 'योएल 1:1'")
 		;
       return true;
     });
@@ -1339,7 +1342,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -1350,11 +1353,11 @@
     });
     return it("should handle book: Amos (hi)", function() {
       
-		expect(p.parse("Amos 1:1").osis()).toEqual("Amos.1.1")
-		expect(p.parse("आमोस 1:1").osis()).toEqual("Amos.1.1")
+		expect(p.parse("Amos 1:1").osis()).toEqual("Amos.1.1", "parsing: 'Amos 1:1'")
+		expect(p.parse("आमोस 1:1").osis()).toEqual("Amos.1.1", "parsing: 'आमोस 1:1'")
 		p.include_apocrypha(false)
-		expect(p.parse("AMOS 1:1").osis()).toEqual("Amos.1.1")
-		expect(p.parse("आमोस 1:1").osis()).toEqual("Amos.1.1")
+		expect(p.parse("AMOS 1:1").osis()).toEqual("Amos.1.1", "parsing: 'AMOS 1:1'")
+		expect(p.parse("आमोस 1:1").osis()).toEqual("Amos.1.1", "parsing: 'आमोस 1:1'")
 		;
       return true;
     });
@@ -1364,7 +1367,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -1375,21 +1378,21 @@
     });
     return it("should handle book: Obad (hi)", function() {
       
-		expect(p.parse("Obadhah 1:1").osis()).toEqual("Obad.1.1")
-		expect(p.parse("ओबद्दाह 1:1").osis()).toEqual("Obad.1.1")
-		expect(p.parse("ओबद्याह 1:1").osis()).toEqual("Obad.1.1")
-		expect(p.parse("ओबेधाह 1:1").osis()).toEqual("Obad.1.1")
-		expect(p.parse("ओबधाह 1:1").osis()).toEqual("Obad.1.1")
-		expect(p.parse("Obad 1:1").osis()).toEqual("Obad.1.1")
-		expect(p.parse("ओब 1:1").osis()).toEqual("Obad.1.1")
+		expect(p.parse("Obadhah 1:1").osis()).toEqual("Obad.1.1", "parsing: 'Obadhah 1:1'")
+		expect(p.parse("ओबद्दाह 1:1").osis()).toEqual("Obad.1.1", "parsing: 'ओबद्दाह 1:1'")
+		expect(p.parse("ओबद्याह 1:1").osis()).toEqual("Obad.1.1", "parsing: 'ओबद्याह 1:1'")
+		expect(p.parse("ओबेधाह 1:1").osis()).toEqual("Obad.1.1", "parsing: 'ओबेधाह 1:1'")
+		expect(p.parse("ओबधाह 1:1").osis()).toEqual("Obad.1.1", "parsing: 'ओबधाह 1:1'")
+		expect(p.parse("Obad 1:1").osis()).toEqual("Obad.1.1", "parsing: 'Obad 1:1'")
+		expect(p.parse("ओब 1:1").osis()).toEqual("Obad.1.1", "parsing: 'ओब 1:1'")
 		p.include_apocrypha(false)
-		expect(p.parse("OBADHAH 1:1").osis()).toEqual("Obad.1.1")
-		expect(p.parse("ओबद्दाह 1:1").osis()).toEqual("Obad.1.1")
-		expect(p.parse("ओबद्याह 1:1").osis()).toEqual("Obad.1.1")
-		expect(p.parse("ओबेधाह 1:1").osis()).toEqual("Obad.1.1")
-		expect(p.parse("ओबधाह 1:1").osis()).toEqual("Obad.1.1")
-		expect(p.parse("OBAD 1:1").osis()).toEqual("Obad.1.1")
-		expect(p.parse("ओब 1:1").osis()).toEqual("Obad.1.1")
+		expect(p.parse("OBADHAH 1:1").osis()).toEqual("Obad.1.1", "parsing: 'OBADHAH 1:1'")
+		expect(p.parse("ओबद्दाह 1:1").osis()).toEqual("Obad.1.1", "parsing: 'ओबद्दाह 1:1'")
+		expect(p.parse("ओबद्याह 1:1").osis()).toEqual("Obad.1.1", "parsing: 'ओबद्याह 1:1'")
+		expect(p.parse("ओबेधाह 1:1").osis()).toEqual("Obad.1.1", "parsing: 'ओबेधाह 1:1'")
+		expect(p.parse("ओबधाह 1:1").osis()).toEqual("Obad.1.1", "parsing: 'ओबधाह 1:1'")
+		expect(p.parse("OBAD 1:1").osis()).toEqual("Obad.1.1", "parsing: 'OBAD 1:1'")
+		expect(p.parse("ओब 1:1").osis()).toEqual("Obad.1.1", "parsing: 'ओब 1:1'")
 		;
       return true;
     });
@@ -1399,7 +1402,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -1410,13 +1413,13 @@
     });
     return it("should handle book: Jonah (hi)", function() {
       
-		expect(p.parse("Jonah 1:1").osis()).toEqual("Jonah.1.1")
-		expect(p.parse("Yona 1:1").osis()).toEqual("Jonah.1.1")
-		expect(p.parse("योना 1:1").osis()).toEqual("Jonah.1.1")
+		expect(p.parse("Jonah 1:1").osis()).toEqual("Jonah.1.1", "parsing: 'Jonah 1:1'")
+		expect(p.parse("Yona 1:1").osis()).toEqual("Jonah.1.1", "parsing: 'Yona 1:1'")
+		expect(p.parse("योना 1:1").osis()).toEqual("Jonah.1.1", "parsing: 'योना 1:1'")
 		p.include_apocrypha(false)
-		expect(p.parse("JONAH 1:1").osis()).toEqual("Jonah.1.1")
-		expect(p.parse("YONA 1:1").osis()).toEqual("Jonah.1.1")
-		expect(p.parse("योना 1:1").osis()).toEqual("Jonah.1.1")
+		expect(p.parse("JONAH 1:1").osis()).toEqual("Jonah.1.1", "parsing: 'JONAH 1:1'")
+		expect(p.parse("YONA 1:1").osis()).toEqual("Jonah.1.1", "parsing: 'YONA 1:1'")
+		expect(p.parse("योना 1:1").osis()).toEqual("Jonah.1.1", "parsing: 'योना 1:1'")
 		;
       return true;
     });
@@ -1426,7 +1429,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -1437,13 +1440,13 @@
     });
     return it("should handle book: Mic (hi)", function() {
       
-		expect(p.parse("Meeka 1:1").osis()).toEqual("Mic.1.1")
-		expect(p.parse("मीका 1:1").osis()).toEqual("Mic.1.1")
-		expect(p.parse("Mic 1:1").osis()).toEqual("Mic.1.1")
+		expect(p.parse("Meeka 1:1").osis()).toEqual("Mic.1.1", "parsing: 'Meeka 1:1'")
+		expect(p.parse("मीका 1:1").osis()).toEqual("Mic.1.1", "parsing: 'मीका 1:1'")
+		expect(p.parse("Mic 1:1").osis()).toEqual("Mic.1.1", "parsing: 'Mic 1:1'")
 		p.include_apocrypha(false)
-		expect(p.parse("MEEKA 1:1").osis()).toEqual("Mic.1.1")
-		expect(p.parse("मीका 1:1").osis()).toEqual("Mic.1.1")
-		expect(p.parse("MIC 1:1").osis()).toEqual("Mic.1.1")
+		expect(p.parse("MEEKA 1:1").osis()).toEqual("Mic.1.1", "parsing: 'MEEKA 1:1'")
+		expect(p.parse("मीका 1:1").osis()).toEqual("Mic.1.1", "parsing: 'मीका 1:1'")
+		expect(p.parse("MIC 1:1").osis()).toEqual("Mic.1.1", "parsing: 'MIC 1:1'")
 		;
       return true;
     });
@@ -1453,7 +1456,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -1464,13 +1467,13 @@
     });
     return it("should handle book: Nah (hi)", function() {
       
-		expect(p.parse("Nahoom 1:1").osis()).toEqual("Nah.1.1")
-		expect(p.parse("नहूम 1:1").osis()).toEqual("Nah.1.1")
-		expect(p.parse("Nah 1:1").osis()).toEqual("Nah.1.1")
+		expect(p.parse("Nahoom 1:1").osis()).toEqual("Nah.1.1", "parsing: 'Nahoom 1:1'")
+		expect(p.parse("नहूम 1:1").osis()).toEqual("Nah.1.1", "parsing: 'नहूम 1:1'")
+		expect(p.parse("Nah 1:1").osis()).toEqual("Nah.1.1", "parsing: 'Nah 1:1'")
 		p.include_apocrypha(false)
-		expect(p.parse("NAHOOM 1:1").osis()).toEqual("Nah.1.1")
-		expect(p.parse("नहूम 1:1").osis()).toEqual("Nah.1.1")
-		expect(p.parse("NAH 1:1").osis()).toEqual("Nah.1.1")
+		expect(p.parse("NAHOOM 1:1").osis()).toEqual("Nah.1.1", "parsing: 'NAHOOM 1:1'")
+		expect(p.parse("नहूम 1:1").osis()).toEqual("Nah.1.1", "parsing: 'नहूम 1:1'")
+		expect(p.parse("NAH 1:1").osis()).toEqual("Nah.1.1", "parsing: 'NAH 1:1'")
 		;
       return true;
     });
@@ -1480,7 +1483,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -1491,15 +1494,15 @@
     });
     return it("should handle book: Hab (hi)", function() {
       
-		expect(p.parse("Habakkook 1:1").osis()).toEqual("Hab.1.1")
-		expect(p.parse("हबक्कूक 1:1").osis()).toEqual("Hab.1.1")
-		expect(p.parse("Hab 1:1").osis()).toEqual("Hab.1.1")
-		expect(p.parse("हबक 1:1").osis()).toEqual("Hab.1.1")
+		expect(p.parse("Habakkook 1:1").osis()).toEqual("Hab.1.1", "parsing: 'Habakkook 1:1'")
+		expect(p.parse("हबक्कूक 1:1").osis()).toEqual("Hab.1.1", "parsing: 'हबक्कूक 1:1'")
+		expect(p.parse("Hab 1:1").osis()).toEqual("Hab.1.1", "parsing: 'Hab 1:1'")
+		expect(p.parse("हबक 1:1").osis()).toEqual("Hab.1.1", "parsing: 'हबक 1:1'")
 		p.include_apocrypha(false)
-		expect(p.parse("HABAKKOOK 1:1").osis()).toEqual("Hab.1.1")
-		expect(p.parse("हबक्कूक 1:1").osis()).toEqual("Hab.1.1")
-		expect(p.parse("HAB 1:1").osis()).toEqual("Hab.1.1")
-		expect(p.parse("हबक 1:1").osis()).toEqual("Hab.1.1")
+		expect(p.parse("HABAKKOOK 1:1").osis()).toEqual("Hab.1.1", "parsing: 'HABAKKOOK 1:1'")
+		expect(p.parse("हबक्कूक 1:1").osis()).toEqual("Hab.1.1", "parsing: 'हबक्कूक 1:1'")
+		expect(p.parse("HAB 1:1").osis()).toEqual("Hab.1.1", "parsing: 'HAB 1:1'")
+		expect(p.parse("हबक 1:1").osis()).toEqual("Hab.1.1", "parsing: 'हबक 1:1'")
 		;
       return true;
     });
@@ -1509,7 +1512,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -1520,15 +1523,15 @@
     });
     return it("should handle book: Zeph (hi)", function() {
       
-		expect(p.parse("Sapanyah 1:1").osis()).toEqual("Zeph.1.1")
-		expect(p.parse("सपन्याह 1:1").osis()).toEqual("Zeph.1.1")
-		expect(p.parse("Zeph 1:1").osis()).toEqual("Zeph.1.1")
-		expect(p.parse("सपन 1:1").osis()).toEqual("Zeph.1.1")
+		expect(p.parse("Sapanyah 1:1").osis()).toEqual("Zeph.1.1", "parsing: 'Sapanyah 1:1'")
+		expect(p.parse("सपन्याह 1:1").osis()).toEqual("Zeph.1.1", "parsing: 'सपन्याह 1:1'")
+		expect(p.parse("Zeph 1:1").osis()).toEqual("Zeph.1.1", "parsing: 'Zeph 1:1'")
+		expect(p.parse("सपन 1:1").osis()).toEqual("Zeph.1.1", "parsing: 'सपन 1:1'")
 		p.include_apocrypha(false)
-		expect(p.parse("SAPANYAH 1:1").osis()).toEqual("Zeph.1.1")
-		expect(p.parse("सपन्याह 1:1").osis()).toEqual("Zeph.1.1")
-		expect(p.parse("ZEPH 1:1").osis()).toEqual("Zeph.1.1")
-		expect(p.parse("सपन 1:1").osis()).toEqual("Zeph.1.1")
+		expect(p.parse("SAPANYAH 1:1").osis()).toEqual("Zeph.1.1", "parsing: 'SAPANYAH 1:1'")
+		expect(p.parse("सपन्याह 1:1").osis()).toEqual("Zeph.1.1", "parsing: 'सपन्याह 1:1'")
+		expect(p.parse("ZEPH 1:1").osis()).toEqual("Zeph.1.1", "parsing: 'ZEPH 1:1'")
+		expect(p.parse("सपन 1:1").osis()).toEqual("Zeph.1.1", "parsing: 'सपन 1:1'")
 		;
       return true;
     });
@@ -1538,7 +1541,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -1549,15 +1552,15 @@
     });
     return it("should handle book: Hag (hi)", function() {
       
-		expect(p.parse("Haggaai 1:1").osis()).toEqual("Hag.1.1")
-		expect(p.parse("हाग्गे 1:1").osis()).toEqual("Hag.1.1")
-		expect(p.parse("हाग्गै 1:1").osis()).toEqual("Hag.1.1")
-		expect(p.parse("Hag 1:1").osis()).toEqual("Hag.1.1")
+		expect(p.parse("Haggaai 1:1").osis()).toEqual("Hag.1.1", "parsing: 'Haggaai 1:1'")
+		expect(p.parse("हाग्गे 1:1").osis()).toEqual("Hag.1.1", "parsing: 'हाग्गे 1:1'")
+		expect(p.parse("हाग्गै 1:1").osis()).toEqual("Hag.1.1", "parsing: 'हाग्गै 1:1'")
+		expect(p.parse("Hag 1:1").osis()).toEqual("Hag.1.1", "parsing: 'Hag 1:1'")
 		p.include_apocrypha(false)
-		expect(p.parse("HAGGAAI 1:1").osis()).toEqual("Hag.1.1")
-		expect(p.parse("हाग्गे 1:1").osis()).toEqual("Hag.1.1")
-		expect(p.parse("हाग्गै 1:1").osis()).toEqual("Hag.1.1")
-		expect(p.parse("HAG 1:1").osis()).toEqual("Hag.1.1")
+		expect(p.parse("HAGGAAI 1:1").osis()).toEqual("Hag.1.1", "parsing: 'HAGGAAI 1:1'")
+		expect(p.parse("हाग्गे 1:1").osis()).toEqual("Hag.1.1", "parsing: 'हाग्गे 1:1'")
+		expect(p.parse("हाग्गै 1:1").osis()).toEqual("Hag.1.1", "parsing: 'हाग्गै 1:1'")
+		expect(p.parse("HAG 1:1").osis()).toEqual("Hag.1.1", "parsing: 'HAG 1:1'")
 		;
       return true;
     });
@@ -1567,7 +1570,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -1578,15 +1581,15 @@
     });
     return it("should handle book: Zech (hi)", function() {
       
-		expect(p.parse("Jakaryah 1:1").osis()).toEqual("Zech.1.1")
-		expect(p.parse("जकयार्ह 1:1").osis()).toEqual("Zech.1.1")
-		expect(p.parse("जकर्याह 1:1").osis()).toEqual("Zech.1.1")
-		expect(p.parse("Zech 1:1").osis()).toEqual("Zech.1.1")
+		expect(p.parse("Jakaryah 1:1").osis()).toEqual("Zech.1.1", "parsing: 'Jakaryah 1:1'")
+		expect(p.parse("जकयार्ह 1:1").osis()).toEqual("Zech.1.1", "parsing: 'जकयार्ह 1:1'")
+		expect(p.parse("जकर्याह 1:1").osis()).toEqual("Zech.1.1", "parsing: 'जकर्याह 1:1'")
+		expect(p.parse("Zech 1:1").osis()).toEqual("Zech.1.1", "parsing: 'Zech 1:1'")
 		p.include_apocrypha(false)
-		expect(p.parse("JAKARYAH 1:1").osis()).toEqual("Zech.1.1")
-		expect(p.parse("जकयार्ह 1:1").osis()).toEqual("Zech.1.1")
-		expect(p.parse("जकर्याह 1:1").osis()).toEqual("Zech.1.1")
-		expect(p.parse("ZECH 1:1").osis()).toEqual("Zech.1.1")
+		expect(p.parse("JAKARYAH 1:1").osis()).toEqual("Zech.1.1", "parsing: 'JAKARYAH 1:1'")
+		expect(p.parse("जकयार्ह 1:1").osis()).toEqual("Zech.1.1", "parsing: 'जकयार्ह 1:1'")
+		expect(p.parse("जकर्याह 1:1").osis()).toEqual("Zech.1.1", "parsing: 'जकर्याह 1:1'")
+		expect(p.parse("ZECH 1:1").osis()).toEqual("Zech.1.1", "parsing: 'ZECH 1:1'")
 		;
       return true;
     });
@@ -1596,7 +1599,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -1607,13 +1610,13 @@
     });
     return it("should handle book: Mal (hi)", function() {
       
-		expect(p.parse("Malakee 1:1").osis()).toEqual("Mal.1.1")
-		expect(p.parse("मलाकी 1:1").osis()).toEqual("Mal.1.1")
-		expect(p.parse("Mal 1:1").osis()).toEqual("Mal.1.1")
+		expect(p.parse("Malakee 1:1").osis()).toEqual("Mal.1.1", "parsing: 'Malakee 1:1'")
+		expect(p.parse("मलाकी 1:1").osis()).toEqual("Mal.1.1", "parsing: 'मलाकी 1:1'")
+		expect(p.parse("Mal 1:1").osis()).toEqual("Mal.1.1", "parsing: 'Mal 1:1'")
 		p.include_apocrypha(false)
-		expect(p.parse("MALAKEE 1:1").osis()).toEqual("Mal.1.1")
-		expect(p.parse("मलाकी 1:1").osis()).toEqual("Mal.1.1")
-		expect(p.parse("MAL 1:1").osis()).toEqual("Mal.1.1")
+		expect(p.parse("MALAKEE 1:1").osis()).toEqual("Mal.1.1", "parsing: 'MALAKEE 1:1'")
+		expect(p.parse("मलाकी 1:1").osis()).toEqual("Mal.1.1", "parsing: 'मलाकी 1:1'")
+		expect(p.parse("MAL 1:1").osis()).toEqual("Mal.1.1", "parsing: 'MAL 1:1'")
 		;
       return true;
     });
@@ -1623,7 +1626,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -1634,13 +1637,13 @@
     });
     return it("should handle book: Matt (hi)", function() {
       
-		expect(p.parse("Mattee 1:1").osis()).toEqual("Matt.1.1")
-		expect(p.parse("मत्ती 1:1").osis()).toEqual("Matt.1.1")
-		expect(p.parse("Matt 1:1").osis()).toEqual("Matt.1.1")
+		expect(p.parse("Mattee 1:1").osis()).toEqual("Matt.1.1", "parsing: 'Mattee 1:1'")
+		expect(p.parse("मत्ती 1:1").osis()).toEqual("Matt.1.1", "parsing: 'मत्ती 1:1'")
+		expect(p.parse("Matt 1:1").osis()).toEqual("Matt.1.1", "parsing: 'Matt 1:1'")
 		p.include_apocrypha(false)
-		expect(p.parse("MATTEE 1:1").osis()).toEqual("Matt.1.1")
-		expect(p.parse("मत्ती 1:1").osis()).toEqual("Matt.1.1")
-		expect(p.parse("MATT 1:1").osis()).toEqual("Matt.1.1")
+		expect(p.parse("MATTEE 1:1").osis()).toEqual("Matt.1.1", "parsing: 'MATTEE 1:1'")
+		expect(p.parse("मत्ती 1:1").osis()).toEqual("Matt.1.1", "parsing: 'मत्ती 1:1'")
+		expect(p.parse("MATT 1:1").osis()).toEqual("Matt.1.1", "parsing: 'MATT 1:1'")
 		;
       return true;
     });
@@ -1650,7 +1653,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -1661,13 +1664,13 @@
     });
     return it("should handle book: Mark (hi)", function() {
       
-		expect(p.parse("Marakus 1:1").osis()).toEqual("Mark.1.1")
-		expect(p.parse("मरकुस 1:1").osis()).toEqual("Mark.1.1")
-		expect(p.parse("Mark 1:1").osis()).toEqual("Mark.1.1")
+		expect(p.parse("Marakus 1:1").osis()).toEqual("Mark.1.1", "parsing: 'Marakus 1:1'")
+		expect(p.parse("मरकुस 1:1").osis()).toEqual("Mark.1.1", "parsing: 'मरकुस 1:1'")
+		expect(p.parse("Mark 1:1").osis()).toEqual("Mark.1.1", "parsing: 'Mark 1:1'")
 		p.include_apocrypha(false)
-		expect(p.parse("MARAKUS 1:1").osis()).toEqual("Mark.1.1")
-		expect(p.parse("मरकुस 1:1").osis()).toEqual("Mark.1.1")
-		expect(p.parse("MARK 1:1").osis()).toEqual("Mark.1.1")
+		expect(p.parse("MARAKUS 1:1").osis()).toEqual("Mark.1.1", "parsing: 'MARAKUS 1:1'")
+		expect(p.parse("मरकुस 1:1").osis()).toEqual("Mark.1.1", "parsing: 'मरकुस 1:1'")
+		expect(p.parse("MARK 1:1").osis()).toEqual("Mark.1.1", "parsing: 'MARK 1:1'")
 		;
       return true;
     });
@@ -1677,7 +1680,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -1688,13 +1691,13 @@
     });
     return it("should handle book: Luke (hi)", function() {
       
-		expect(p.parse("Looka 1:1").osis()).toEqual("Luke.1.1")
-		expect(p.parse("Luke 1:1").osis()).toEqual("Luke.1.1")
-		expect(p.parse("लूका 1:1").osis()).toEqual("Luke.1.1")
+		expect(p.parse("Looka 1:1").osis()).toEqual("Luke.1.1", "parsing: 'Looka 1:1'")
+		expect(p.parse("Luke 1:1").osis()).toEqual("Luke.1.1", "parsing: 'Luke 1:1'")
+		expect(p.parse("लूका 1:1").osis()).toEqual("Luke.1.1", "parsing: 'लूका 1:1'")
 		p.include_apocrypha(false)
-		expect(p.parse("LOOKA 1:1").osis()).toEqual("Luke.1.1")
-		expect(p.parse("LUKE 1:1").osis()).toEqual("Luke.1.1")
-		expect(p.parse("लूका 1:1").osis()).toEqual("Luke.1.1")
+		expect(p.parse("LOOKA 1:1").osis()).toEqual("Luke.1.1", "parsing: 'LOOKA 1:1'")
+		expect(p.parse("LUKE 1:1").osis()).toEqual("Luke.1.1", "parsing: 'LUKE 1:1'")
+		expect(p.parse("लूका 1:1").osis()).toEqual("Luke.1.1", "parsing: 'लूका 1:1'")
 		;
       return true;
     });
@@ -1704,7 +1707,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -1715,21 +1718,21 @@
     });
     return it("should handle book: 1John (hi)", function() {
       
-		expect(p.parse("1. Yoohanna 1:1").osis()).toEqual("1John.1.1")
-		expect(p.parse("1 Yoohanna 1:1").osis()).toEqual("1John.1.1")
-		expect(p.parse("1. युहत्रा 1:1").osis()).toEqual("1John.1.1")
-		expect(p.parse("1. यूहन्ना 1:1").osis()).toEqual("1John.1.1")
-		expect(p.parse("1 युहत्रा 1:1").osis()).toEqual("1John.1.1")
-		expect(p.parse("1 यूहन्ना 1:1").osis()).toEqual("1John.1.1")
-		expect(p.parse("1John 1:1").osis()).toEqual("1John.1.1")
+		expect(p.parse("1. Yoohanna 1:1").osis()).toEqual("1John.1.1", "parsing: '1. Yoohanna 1:1'")
+		expect(p.parse("1 Yoohanna 1:1").osis()).toEqual("1John.1.1", "parsing: '1 Yoohanna 1:1'")
+		expect(p.parse("1. युहत्रा 1:1").osis()).toEqual("1John.1.1", "parsing: '1. युहत्रा 1:1'")
+		expect(p.parse("1. यूहन्ना 1:1").osis()).toEqual("1John.1.1", "parsing: '1. यूहन्ना 1:1'")
+		expect(p.parse("1 युहत्रा 1:1").osis()).toEqual("1John.1.1", "parsing: '1 युहत्रा 1:1'")
+		expect(p.parse("1 यूहन्ना 1:1").osis()).toEqual("1John.1.1", "parsing: '1 यूहन्ना 1:1'")
+		expect(p.parse("1John 1:1").osis()).toEqual("1John.1.1", "parsing: '1John 1:1'")
 		p.include_apocrypha(false)
-		expect(p.parse("1. YOOHANNA 1:1").osis()).toEqual("1John.1.1")
-		expect(p.parse("1 YOOHANNA 1:1").osis()).toEqual("1John.1.1")
-		expect(p.parse("1. युहत्रा 1:1").osis()).toEqual("1John.1.1")
-		expect(p.parse("1. यूहन्ना 1:1").osis()).toEqual("1John.1.1")
-		expect(p.parse("1 युहत्रा 1:1").osis()).toEqual("1John.1.1")
-		expect(p.parse("1 यूहन्ना 1:1").osis()).toEqual("1John.1.1")
-		expect(p.parse("1JOHN 1:1").osis()).toEqual("1John.1.1")
+		expect(p.parse("1. YOOHANNA 1:1").osis()).toEqual("1John.1.1", "parsing: '1. YOOHANNA 1:1'")
+		expect(p.parse("1 YOOHANNA 1:1").osis()).toEqual("1John.1.1", "parsing: '1 YOOHANNA 1:1'")
+		expect(p.parse("1. युहत्रा 1:1").osis()).toEqual("1John.1.1", "parsing: '1. युहत्रा 1:1'")
+		expect(p.parse("1. यूहन्ना 1:1").osis()).toEqual("1John.1.1", "parsing: '1. यूहन्ना 1:1'")
+		expect(p.parse("1 युहत्रा 1:1").osis()).toEqual("1John.1.1", "parsing: '1 युहत्रा 1:1'")
+		expect(p.parse("1 यूहन्ना 1:1").osis()).toEqual("1John.1.1", "parsing: '1 यूहन्ना 1:1'")
+		expect(p.parse("1JOHN 1:1").osis()).toEqual("1John.1.1", "parsing: '1JOHN 1:1'")
 		;
       return true;
     });
@@ -1739,7 +1742,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -1750,21 +1753,21 @@
     });
     return it("should handle book: 2John (hi)", function() {
       
-		expect(p.parse("2. Yoohanna 1:1").osis()).toEqual("2John.1.1")
-		expect(p.parse("2 Yoohanna 1:1").osis()).toEqual("2John.1.1")
-		expect(p.parse("2. युहत्रा 1:1").osis()).toEqual("2John.1.1")
-		expect(p.parse("2. यूहन्ना 1:1").osis()).toEqual("2John.1.1")
-		expect(p.parse("2 युहत्रा 1:1").osis()).toEqual("2John.1.1")
-		expect(p.parse("2 यूहन्ना 1:1").osis()).toEqual("2John.1.1")
-		expect(p.parse("2John 1:1").osis()).toEqual("2John.1.1")
+		expect(p.parse("2. Yoohanna 1:1").osis()).toEqual("2John.1.1", "parsing: '2. Yoohanna 1:1'")
+		expect(p.parse("2 Yoohanna 1:1").osis()).toEqual("2John.1.1", "parsing: '2 Yoohanna 1:1'")
+		expect(p.parse("2. युहत्रा 1:1").osis()).toEqual("2John.1.1", "parsing: '2. युहत्रा 1:1'")
+		expect(p.parse("2. यूहन्ना 1:1").osis()).toEqual("2John.1.1", "parsing: '2. यूहन्ना 1:1'")
+		expect(p.parse("2 युहत्रा 1:1").osis()).toEqual("2John.1.1", "parsing: '2 युहत्रा 1:1'")
+		expect(p.parse("2 यूहन्ना 1:1").osis()).toEqual("2John.1.1", "parsing: '2 यूहन्ना 1:1'")
+		expect(p.parse("2John 1:1").osis()).toEqual("2John.1.1", "parsing: '2John 1:1'")
 		p.include_apocrypha(false)
-		expect(p.parse("2. YOOHANNA 1:1").osis()).toEqual("2John.1.1")
-		expect(p.parse("2 YOOHANNA 1:1").osis()).toEqual("2John.1.1")
-		expect(p.parse("2. युहत्रा 1:1").osis()).toEqual("2John.1.1")
-		expect(p.parse("2. यूहन्ना 1:1").osis()).toEqual("2John.1.1")
-		expect(p.parse("2 युहत्रा 1:1").osis()).toEqual("2John.1.1")
-		expect(p.parse("2 यूहन्ना 1:1").osis()).toEqual("2John.1.1")
-		expect(p.parse("2JOHN 1:1").osis()).toEqual("2John.1.1")
+		expect(p.parse("2. YOOHANNA 1:1").osis()).toEqual("2John.1.1", "parsing: '2. YOOHANNA 1:1'")
+		expect(p.parse("2 YOOHANNA 1:1").osis()).toEqual("2John.1.1", "parsing: '2 YOOHANNA 1:1'")
+		expect(p.parse("2. युहत्रा 1:1").osis()).toEqual("2John.1.1", "parsing: '2. युहत्रा 1:1'")
+		expect(p.parse("2. यूहन्ना 1:1").osis()).toEqual("2John.1.1", "parsing: '2. यूहन्ना 1:1'")
+		expect(p.parse("2 युहत्रा 1:1").osis()).toEqual("2John.1.1", "parsing: '2 युहत्रा 1:1'")
+		expect(p.parse("2 यूहन्ना 1:1").osis()).toEqual("2John.1.1", "parsing: '2 यूहन्ना 1:1'")
+		expect(p.parse("2JOHN 1:1").osis()).toEqual("2John.1.1", "parsing: '2JOHN 1:1'")
 		;
       return true;
     });
@@ -1774,7 +1777,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -1785,21 +1788,21 @@
     });
     return it("should handle book: 3John (hi)", function() {
       
-		expect(p.parse("3. Yoohanna 1:1").osis()).toEqual("3John.1.1")
-		expect(p.parse("3 Yoohanna 1:1").osis()).toEqual("3John.1.1")
-		expect(p.parse("3. युहत्रा 1:1").osis()).toEqual("3John.1.1")
-		expect(p.parse("3. यूहन्ना 1:1").osis()).toEqual("3John.1.1")
-		expect(p.parse("3 युहत्रा 1:1").osis()).toEqual("3John.1.1")
-		expect(p.parse("3 यूहन्ना 1:1").osis()).toEqual("3John.1.1")
-		expect(p.parse("3John 1:1").osis()).toEqual("3John.1.1")
+		expect(p.parse("3. Yoohanna 1:1").osis()).toEqual("3John.1.1", "parsing: '3. Yoohanna 1:1'")
+		expect(p.parse("3 Yoohanna 1:1").osis()).toEqual("3John.1.1", "parsing: '3 Yoohanna 1:1'")
+		expect(p.parse("3. युहत्रा 1:1").osis()).toEqual("3John.1.1", "parsing: '3. युहत्रा 1:1'")
+		expect(p.parse("3. यूहन्ना 1:1").osis()).toEqual("3John.1.1", "parsing: '3. यूहन्ना 1:1'")
+		expect(p.parse("3 युहत्रा 1:1").osis()).toEqual("3John.1.1", "parsing: '3 युहत्रा 1:1'")
+		expect(p.parse("3 यूहन्ना 1:1").osis()).toEqual("3John.1.1", "parsing: '3 यूहन्ना 1:1'")
+		expect(p.parse("3John 1:1").osis()).toEqual("3John.1.1", "parsing: '3John 1:1'")
 		p.include_apocrypha(false)
-		expect(p.parse("3. YOOHANNA 1:1").osis()).toEqual("3John.1.1")
-		expect(p.parse("3 YOOHANNA 1:1").osis()).toEqual("3John.1.1")
-		expect(p.parse("3. युहत्रा 1:1").osis()).toEqual("3John.1.1")
-		expect(p.parse("3. यूहन्ना 1:1").osis()).toEqual("3John.1.1")
-		expect(p.parse("3 युहत्रा 1:1").osis()).toEqual("3John.1.1")
-		expect(p.parse("3 यूहन्ना 1:1").osis()).toEqual("3John.1.1")
-		expect(p.parse("3JOHN 1:1").osis()).toEqual("3John.1.1")
+		expect(p.parse("3. YOOHANNA 1:1").osis()).toEqual("3John.1.1", "parsing: '3. YOOHANNA 1:1'")
+		expect(p.parse("3 YOOHANNA 1:1").osis()).toEqual("3John.1.1", "parsing: '3 YOOHANNA 1:1'")
+		expect(p.parse("3. युहत्रा 1:1").osis()).toEqual("3John.1.1", "parsing: '3. युहत्रा 1:1'")
+		expect(p.parse("3. यूहन्ना 1:1").osis()).toEqual("3John.1.1", "parsing: '3. यूहन्ना 1:1'")
+		expect(p.parse("3 युहत्रा 1:1").osis()).toEqual("3John.1.1", "parsing: '3 युहत्रा 1:1'")
+		expect(p.parse("3 यूहन्ना 1:1").osis()).toEqual("3John.1.1", "parsing: '3 यूहन्ना 1:1'")
+		expect(p.parse("3JOHN 1:1").osis()).toEqual("3John.1.1", "parsing: '3JOHN 1:1'")
 		;
       return true;
     });
@@ -1809,7 +1812,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -1820,15 +1823,19 @@
     });
     return it("should handle book: John (hi)", function() {
       
-		expect(p.parse("Yuhanna 1:1").osis()).toEqual("John.1.1")
-		expect(p.parse("युहत्रा 1:1").osis()).toEqual("John.1.1")
-		expect(p.parse("यूहन्ना 1:1").osis()).toEqual("John.1.1")
-		expect(p.parse("John 1:1").osis()).toEqual("John.1.1")
+		expect(p.parse("Yuhanna 1:1").osis()).toEqual("John.1.1", "parsing: 'Yuhanna 1:1'")
+		expect(p.parse("यहुन्ना 1:1").osis()).toEqual("John.1.1", "parsing: 'यहुन्ना 1:1'")
+		expect(p.parse("यहून्ना 1:1").osis()).toEqual("John.1.1", "parsing: 'यहून्ना 1:1'")
+		expect(p.parse("युहत्रा 1:1").osis()).toEqual("John.1.1", "parsing: 'युहत्रा 1:1'")
+		expect(p.parse("यूहन्ना 1:1").osis()).toEqual("John.1.1", "parsing: 'यूहन्ना 1:1'")
+		expect(p.parse("John 1:1").osis()).toEqual("John.1.1", "parsing: 'John 1:1'")
 		p.include_apocrypha(false)
-		expect(p.parse("YUHANNA 1:1").osis()).toEqual("John.1.1")
-		expect(p.parse("युहत्रा 1:1").osis()).toEqual("John.1.1")
-		expect(p.parse("यूहन्ना 1:1").osis()).toEqual("John.1.1")
-		expect(p.parse("JOHN 1:1").osis()).toEqual("John.1.1")
+		expect(p.parse("YUHANNA 1:1").osis()).toEqual("John.1.1", "parsing: 'YUHANNA 1:1'")
+		expect(p.parse("यहुन्ना 1:1").osis()).toEqual("John.1.1", "parsing: 'यहुन्ना 1:1'")
+		expect(p.parse("यहून्ना 1:1").osis()).toEqual("John.1.1", "parsing: 'यहून्ना 1:1'")
+		expect(p.parse("युहत्रा 1:1").osis()).toEqual("John.1.1", "parsing: 'युहत्रा 1:1'")
+		expect(p.parse("यूहन्ना 1:1").osis()).toEqual("John.1.1", "parsing: 'यूहन्ना 1:1'")
+		expect(p.parse("JOHN 1:1").osis()).toEqual("John.1.1", "parsing: 'JOHN 1:1'")
 		;
       return true;
     });
@@ -1838,7 +1845,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -1849,25 +1856,25 @@
     });
     return it("should handle book: Acts (hi)", function() {
       
-		expect(p.parse("प्रेरितों के कामों 1:1").osis()).toEqual("Acts.1.1")
-		expect(p.parse("Praeriton Ke Kam 1:1").osis()).toEqual("Acts.1.1")
-		expect(p.parse("प्रेरितों के काम 1:1").osis()).toEqual("Acts.1.1")
-		expect(p.parse("मसीह-दूत 1:1").osis()).toEqual("Acts.1.1")
-		expect(p.parse("प्र. क 1:1").osis()).toEqual("Acts.1.1")
-		expect(p.parse("प्र क 1:1").osis()).toEqual("Acts.1.1")
-		expect(p.parse("प्र.क 1:1").osis()).toEqual("Acts.1.1")
-		expect(p.parse("Acts 1:1").osis()).toEqual("Acts.1.1")
-		expect(p.parse("प्रक 1:1").osis()).toEqual("Acts.1.1")
+		expect(p.parse("प्रेरितों के कामों 1:1").osis()).toEqual("Acts.1.1", "parsing: 'प्रेरितों के कामों 1:1'")
+		expect(p.parse("Praeriton Ke Kam 1:1").osis()).toEqual("Acts.1.1", "parsing: 'Praeriton Ke Kam 1:1'")
+		expect(p.parse("प्रेरितों के काम 1:1").osis()).toEqual("Acts.1.1", "parsing: 'प्रेरितों के काम 1:1'")
+		expect(p.parse("मसीह-दूत 1:1").osis()).toEqual("Acts.1.1", "parsing: 'मसीह-दूत 1:1'")
+		expect(p.parse("प्र. क 1:1").osis()).toEqual("Acts.1.1", "parsing: 'प्र. क 1:1'")
+		expect(p.parse("प्र क 1:1").osis()).toEqual("Acts.1.1", "parsing: 'प्र क 1:1'")
+		expect(p.parse("प्र.क 1:1").osis()).toEqual("Acts.1.1", "parsing: 'प्र.क 1:1'")
+		expect(p.parse("Acts 1:1").osis()).toEqual("Acts.1.1", "parsing: 'Acts 1:1'")
+		expect(p.parse("प्रक 1:1").osis()).toEqual("Acts.1.1", "parsing: 'प्रक 1:1'")
 		p.include_apocrypha(false)
-		expect(p.parse("प्रेरितों के कामों 1:1").osis()).toEqual("Acts.1.1")
-		expect(p.parse("PRAERITON KE KAM 1:1").osis()).toEqual("Acts.1.1")
-		expect(p.parse("प्रेरितों के काम 1:1").osis()).toEqual("Acts.1.1")
-		expect(p.parse("मसीह-दूत 1:1").osis()).toEqual("Acts.1.1")
-		expect(p.parse("प्र. क 1:1").osis()).toEqual("Acts.1.1")
-		expect(p.parse("प्र क 1:1").osis()).toEqual("Acts.1.1")
-		expect(p.parse("प्र.क 1:1").osis()).toEqual("Acts.1.1")
-		expect(p.parse("ACTS 1:1").osis()).toEqual("Acts.1.1")
-		expect(p.parse("प्रक 1:1").osis()).toEqual("Acts.1.1")
+		expect(p.parse("प्रेरितों के कामों 1:1").osis()).toEqual("Acts.1.1", "parsing: 'प्रेरितों के कामों 1:1'")
+		expect(p.parse("PRAERITON KE KAM 1:1").osis()).toEqual("Acts.1.1", "parsing: 'PRAERITON KE KAM 1:1'")
+		expect(p.parse("प्रेरितों के काम 1:1").osis()).toEqual("Acts.1.1", "parsing: 'प्रेरितों के काम 1:1'")
+		expect(p.parse("मसीह-दूत 1:1").osis()).toEqual("Acts.1.1", "parsing: 'मसीह-दूत 1:1'")
+		expect(p.parse("प्र. क 1:1").osis()).toEqual("Acts.1.1", "parsing: 'प्र. क 1:1'")
+		expect(p.parse("प्र क 1:1").osis()).toEqual("Acts.1.1", "parsing: 'प्र क 1:1'")
+		expect(p.parse("प्र.क 1:1").osis()).toEqual("Acts.1.1", "parsing: 'प्र.क 1:1'")
+		expect(p.parse("ACTS 1:1").osis()).toEqual("Acts.1.1", "parsing: 'ACTS 1:1'")
+		expect(p.parse("प्रक 1:1").osis()).toEqual("Acts.1.1", "parsing: 'प्रक 1:1'")
 		;
       return true;
     });
@@ -1877,7 +1884,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -1888,17 +1895,17 @@
     });
     return it("should handle book: Rom (hi)", function() {
       
-		expect(p.parse("Romiyon 1:1").osis()).toEqual("Rom.1.1")
-		expect(p.parse("रोमियों 1:1").osis()).toEqual("Rom.1.1")
-		expect(p.parse("रोमियो 1:1").osis()).toEqual("Rom.1.1")
-		expect(p.parse("रोमी 1:1").osis()).toEqual("Rom.1.1")
-		expect(p.parse("Rom 1:1").osis()).toEqual("Rom.1.1")
+		expect(p.parse("Romiyon 1:1").osis()).toEqual("Rom.1.1", "parsing: 'Romiyon 1:1'")
+		expect(p.parse("रोमियों 1:1").osis()).toEqual("Rom.1.1", "parsing: 'रोमियों 1:1'")
+		expect(p.parse("रोमियो 1:1").osis()).toEqual("Rom.1.1", "parsing: 'रोमियो 1:1'")
+		expect(p.parse("रोमी 1:1").osis()).toEqual("Rom.1.1", "parsing: 'रोमी 1:1'")
+		expect(p.parse("Rom 1:1").osis()).toEqual("Rom.1.1", "parsing: 'Rom 1:1'")
 		p.include_apocrypha(false)
-		expect(p.parse("ROMIYON 1:1").osis()).toEqual("Rom.1.1")
-		expect(p.parse("रोमियों 1:1").osis()).toEqual("Rom.1.1")
-		expect(p.parse("रोमियो 1:1").osis()).toEqual("Rom.1.1")
-		expect(p.parse("रोमी 1:1").osis()).toEqual("Rom.1.1")
-		expect(p.parse("ROM 1:1").osis()).toEqual("Rom.1.1")
+		expect(p.parse("ROMIYON 1:1").osis()).toEqual("Rom.1.1", "parsing: 'ROMIYON 1:1'")
+		expect(p.parse("रोमियों 1:1").osis()).toEqual("Rom.1.1", "parsing: 'रोमियों 1:1'")
+		expect(p.parse("रोमियो 1:1").osis()).toEqual("Rom.1.1", "parsing: 'रोमियो 1:1'")
+		expect(p.parse("रोमी 1:1").osis()).toEqual("Rom.1.1", "parsing: 'रोमी 1:1'")
+		expect(p.parse("ROM 1:1").osis()).toEqual("Rom.1.1", "parsing: 'ROM 1:1'")
 		;
       return true;
     });
@@ -1908,7 +1915,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -1919,37 +1926,37 @@
     });
     return it("should handle book: 2Cor (hi)", function() {
       
-		expect(p.parse("2. Kurinthiayon 1:1").osis()).toEqual("2Cor.1.1")
-		expect(p.parse("2. कुरिन्यि़यों 1:1").osis()).toEqual("2Cor.1.1")
-		expect(p.parse("2 Kurinthiayon 1:1").osis()).toEqual("2Cor.1.1")
-		expect(p.parse("2 कुरिन्यि़यों 1:1").osis()).toEqual("2Cor.1.1")
-		expect(p.parse("2. कुरिन्थियों 1:1").osis()).toEqual("2Cor.1.1")
-		expect(p.parse("2 कुरिन्थियों 1:1").osis()).toEqual("2Cor.1.1")
-		expect(p.parse("2. कुरन्थियों 1:1").osis()).toEqual("2Cor.1.1")
-		expect(p.parse("2. कुरिन्थियो 1:1").osis()).toEqual("2Cor.1.1")
-		expect(p.parse("2 कुरन्थियों 1:1").osis()).toEqual("2Cor.1.1")
-		expect(p.parse("2 कुरिन्थियो 1:1").osis()).toEqual("2Cor.1.1")
-		expect(p.parse("2. कोरिन्‍थी 1:1").osis()).toEqual("2Cor.1.1")
-		expect(p.parse("2 कोरिन्‍थी 1:1").osis()).toEqual("2Cor.1.1")
-		expect(p.parse("2. कुरिन्थ 1:1").osis()).toEqual("2Cor.1.1")
-		expect(p.parse("2 कुरिन्थ 1:1").osis()).toEqual("2Cor.1.1")
-		expect(p.parse("2Cor 1:1").osis()).toEqual("2Cor.1.1")
+		expect(p.parse("2. Kurinthiayon 1:1").osis()).toEqual("2Cor.1.1", "parsing: '2. Kurinthiayon 1:1'")
+		expect(p.parse("2. कुरिन्यि़यों 1:1").osis()).toEqual("2Cor.1.1", "parsing: '2. कुरिन्यि़यों 1:1'")
+		expect(p.parse("2 Kurinthiayon 1:1").osis()).toEqual("2Cor.1.1", "parsing: '2 Kurinthiayon 1:1'")
+		expect(p.parse("2 कुरिन्यि़यों 1:1").osis()).toEqual("2Cor.1.1", "parsing: '2 कुरिन्यि़यों 1:1'")
+		expect(p.parse("2. कुरिन्थियों 1:1").osis()).toEqual("2Cor.1.1", "parsing: '2. कुरिन्थियों 1:1'")
+		expect(p.parse("2 कुरिन्थियों 1:1").osis()).toEqual("2Cor.1.1", "parsing: '2 कुरिन्थियों 1:1'")
+		expect(p.parse("2. कुरन्थियों 1:1").osis()).toEqual("2Cor.1.1", "parsing: '2. कुरन्थियों 1:1'")
+		expect(p.parse("2. कुरिन्थियो 1:1").osis()).toEqual("2Cor.1.1", "parsing: '2. कुरिन्थियो 1:1'")
+		expect(p.parse("2 कुरन्थियों 1:1").osis()).toEqual("2Cor.1.1", "parsing: '2 कुरन्थियों 1:1'")
+		expect(p.parse("2 कुरिन्थियो 1:1").osis()).toEqual("2Cor.1.1", "parsing: '2 कुरिन्थियो 1:1'")
+		expect(p.parse("2. कोरिन्‍थी 1:1").osis()).toEqual("2Cor.1.1", "parsing: '2. कोरिन्‍थी 1:1'")
+		expect(p.parse("2 कोरिन्‍थी 1:1").osis()).toEqual("2Cor.1.1", "parsing: '2 कोरिन्‍थी 1:1'")
+		expect(p.parse("2. कुरिन्थ 1:1").osis()).toEqual("2Cor.1.1", "parsing: '2. कुरिन्थ 1:1'")
+		expect(p.parse("2 कुरिन्थ 1:1").osis()).toEqual("2Cor.1.1", "parsing: '2 कुरिन्थ 1:1'")
+		expect(p.parse("2Cor 1:1").osis()).toEqual("2Cor.1.1", "parsing: '2Cor 1:1'")
 		p.include_apocrypha(false)
-		expect(p.parse("2. KURINTHIAYON 1:1").osis()).toEqual("2Cor.1.1")
-		expect(p.parse("2. कुरिन्यि़यों 1:1").osis()).toEqual("2Cor.1.1")
-		expect(p.parse("2 KURINTHIAYON 1:1").osis()).toEqual("2Cor.1.1")
-		expect(p.parse("2 कुरिन्यि़यों 1:1").osis()).toEqual("2Cor.1.1")
-		expect(p.parse("2. कुरिन्थियों 1:1").osis()).toEqual("2Cor.1.1")
-		expect(p.parse("2 कुरिन्थियों 1:1").osis()).toEqual("2Cor.1.1")
-		expect(p.parse("2. कुरन्थियों 1:1").osis()).toEqual("2Cor.1.1")
-		expect(p.parse("2. कुरिन्थियो 1:1").osis()).toEqual("2Cor.1.1")
-		expect(p.parse("2 कुरन्थियों 1:1").osis()).toEqual("2Cor.1.1")
-		expect(p.parse("2 कुरिन्थियो 1:1").osis()).toEqual("2Cor.1.1")
-		expect(p.parse("2. कोरिन्‍थी 1:1").osis()).toEqual("2Cor.1.1")
-		expect(p.parse("2 कोरिन्‍थी 1:1").osis()).toEqual("2Cor.1.1")
-		expect(p.parse("2. कुरिन्थ 1:1").osis()).toEqual("2Cor.1.1")
-		expect(p.parse("2 कुरिन्थ 1:1").osis()).toEqual("2Cor.1.1")
-		expect(p.parse("2COR 1:1").osis()).toEqual("2Cor.1.1")
+		expect(p.parse("2. KURINTHIAYON 1:1").osis()).toEqual("2Cor.1.1", "parsing: '2. KURINTHIAYON 1:1'")
+		expect(p.parse("2. कुरिन्यि़यों 1:1").osis()).toEqual("2Cor.1.1", "parsing: '2. कुरिन्यि़यों 1:1'")
+		expect(p.parse("2 KURINTHIAYON 1:1").osis()).toEqual("2Cor.1.1", "parsing: '2 KURINTHIAYON 1:1'")
+		expect(p.parse("2 कुरिन्यि़यों 1:1").osis()).toEqual("2Cor.1.1", "parsing: '2 कुरिन्यि़यों 1:1'")
+		expect(p.parse("2. कुरिन्थियों 1:1").osis()).toEqual("2Cor.1.1", "parsing: '2. कुरिन्थियों 1:1'")
+		expect(p.parse("2 कुरिन्थियों 1:1").osis()).toEqual("2Cor.1.1", "parsing: '2 कुरिन्थियों 1:1'")
+		expect(p.parse("2. कुरन्थियों 1:1").osis()).toEqual("2Cor.1.1", "parsing: '2. कुरन्थियों 1:1'")
+		expect(p.parse("2. कुरिन्थियो 1:1").osis()).toEqual("2Cor.1.1", "parsing: '2. कुरिन्थियो 1:1'")
+		expect(p.parse("2 कुरन्थियों 1:1").osis()).toEqual("2Cor.1.1", "parsing: '2 कुरन्थियों 1:1'")
+		expect(p.parse("2 कुरिन्थियो 1:1").osis()).toEqual("2Cor.1.1", "parsing: '2 कुरिन्थियो 1:1'")
+		expect(p.parse("2. कोरिन्‍थी 1:1").osis()).toEqual("2Cor.1.1", "parsing: '2. कोरिन्‍थी 1:1'")
+		expect(p.parse("2 कोरिन्‍थी 1:1").osis()).toEqual("2Cor.1.1", "parsing: '2 कोरिन्‍थी 1:1'")
+		expect(p.parse("2. कुरिन्थ 1:1").osis()).toEqual("2Cor.1.1", "parsing: '2. कुरिन्थ 1:1'")
+		expect(p.parse("2 कुरिन्थ 1:1").osis()).toEqual("2Cor.1.1", "parsing: '2 कुरिन्थ 1:1'")
+		expect(p.parse("2COR 1:1").osis()).toEqual("2Cor.1.1", "parsing: '2COR 1:1'")
 		;
       return true;
     });
@@ -1959,7 +1966,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -1970,37 +1977,37 @@
     });
     return it("should handle book: 1Cor (hi)", function() {
       
-		expect(p.parse("1. Kurinthiayon 1:1").osis()).toEqual("1Cor.1.1")
-		expect(p.parse("1. कुरिन्यि़यों 1:1").osis()).toEqual("1Cor.1.1")
-		expect(p.parse("1 Kurinthiayon 1:1").osis()).toEqual("1Cor.1.1")
-		expect(p.parse("1 कुरिन्यि़यों 1:1").osis()).toEqual("1Cor.1.1")
-		expect(p.parse("1. कुरिन्थियों 1:1").osis()).toEqual("1Cor.1.1")
-		expect(p.parse("1 कुरिन्थियों 1:1").osis()).toEqual("1Cor.1.1")
-		expect(p.parse("1. कुरन्थियों 1:1").osis()).toEqual("1Cor.1.1")
-		expect(p.parse("1. कुरिन्थियो 1:1").osis()).toEqual("1Cor.1.1")
-		expect(p.parse("1 कुरन्थियों 1:1").osis()).toEqual("1Cor.1.1")
-		expect(p.parse("1 कुरिन्थियो 1:1").osis()).toEqual("1Cor.1.1")
-		expect(p.parse("1. कोरिन्‍थी 1:1").osis()).toEqual("1Cor.1.1")
-		expect(p.parse("1 कोरिन्‍थी 1:1").osis()).toEqual("1Cor.1.1")
-		expect(p.parse("1. कुरिन्थ 1:1").osis()).toEqual("1Cor.1.1")
-		expect(p.parse("1 कुरिन्थ 1:1").osis()).toEqual("1Cor.1.1")
-		expect(p.parse("1Cor 1:1").osis()).toEqual("1Cor.1.1")
+		expect(p.parse("1. Kurinthiayon 1:1").osis()).toEqual("1Cor.1.1", "parsing: '1. Kurinthiayon 1:1'")
+		expect(p.parse("1. कुरिन्यि़यों 1:1").osis()).toEqual("1Cor.1.1", "parsing: '1. कुरिन्यि़यों 1:1'")
+		expect(p.parse("1 Kurinthiayon 1:1").osis()).toEqual("1Cor.1.1", "parsing: '1 Kurinthiayon 1:1'")
+		expect(p.parse("1 कुरिन्यि़यों 1:1").osis()).toEqual("1Cor.1.1", "parsing: '1 कुरिन्यि़यों 1:1'")
+		expect(p.parse("1. कुरिन्थियों 1:1").osis()).toEqual("1Cor.1.1", "parsing: '1. कुरिन्थियों 1:1'")
+		expect(p.parse("1 कुरिन्थियों 1:1").osis()).toEqual("1Cor.1.1", "parsing: '1 कुरिन्थियों 1:1'")
+		expect(p.parse("1. कुरन्थियों 1:1").osis()).toEqual("1Cor.1.1", "parsing: '1. कुरन्थियों 1:1'")
+		expect(p.parse("1. कुरिन्थियो 1:1").osis()).toEqual("1Cor.1.1", "parsing: '1. कुरिन्थियो 1:1'")
+		expect(p.parse("1 कुरन्थियों 1:1").osis()).toEqual("1Cor.1.1", "parsing: '1 कुरन्थियों 1:1'")
+		expect(p.parse("1 कुरिन्थियो 1:1").osis()).toEqual("1Cor.1.1", "parsing: '1 कुरिन्थियो 1:1'")
+		expect(p.parse("1. कोरिन्‍थी 1:1").osis()).toEqual("1Cor.1.1", "parsing: '1. कोरिन्‍थी 1:1'")
+		expect(p.parse("1 कोरिन्‍थी 1:1").osis()).toEqual("1Cor.1.1", "parsing: '1 कोरिन्‍थी 1:1'")
+		expect(p.parse("1. कुरिन्थ 1:1").osis()).toEqual("1Cor.1.1", "parsing: '1. कुरिन्थ 1:1'")
+		expect(p.parse("1 कुरिन्थ 1:1").osis()).toEqual("1Cor.1.1", "parsing: '1 कुरिन्थ 1:1'")
+		expect(p.parse("1Cor 1:1").osis()).toEqual("1Cor.1.1", "parsing: '1Cor 1:1'")
 		p.include_apocrypha(false)
-		expect(p.parse("1. KURINTHIAYON 1:1").osis()).toEqual("1Cor.1.1")
-		expect(p.parse("1. कुरिन्यि़यों 1:1").osis()).toEqual("1Cor.1.1")
-		expect(p.parse("1 KURINTHIAYON 1:1").osis()).toEqual("1Cor.1.1")
-		expect(p.parse("1 कुरिन्यि़यों 1:1").osis()).toEqual("1Cor.1.1")
-		expect(p.parse("1. कुरिन्थियों 1:1").osis()).toEqual("1Cor.1.1")
-		expect(p.parse("1 कुरिन्थियों 1:1").osis()).toEqual("1Cor.1.1")
-		expect(p.parse("1. कुरन्थियों 1:1").osis()).toEqual("1Cor.1.1")
-		expect(p.parse("1. कुरिन्थियो 1:1").osis()).toEqual("1Cor.1.1")
-		expect(p.parse("1 कुरन्थियों 1:1").osis()).toEqual("1Cor.1.1")
-		expect(p.parse("1 कुरिन्थियो 1:1").osis()).toEqual("1Cor.1.1")
-		expect(p.parse("1. कोरिन्‍थी 1:1").osis()).toEqual("1Cor.1.1")
-		expect(p.parse("1 कोरिन्‍थी 1:1").osis()).toEqual("1Cor.1.1")
-		expect(p.parse("1. कुरिन्थ 1:1").osis()).toEqual("1Cor.1.1")
-		expect(p.parse("1 कुरिन्थ 1:1").osis()).toEqual("1Cor.1.1")
-		expect(p.parse("1COR 1:1").osis()).toEqual("1Cor.1.1")
+		expect(p.parse("1. KURINTHIAYON 1:1").osis()).toEqual("1Cor.1.1", "parsing: '1. KURINTHIAYON 1:1'")
+		expect(p.parse("1. कुरिन्यि़यों 1:1").osis()).toEqual("1Cor.1.1", "parsing: '1. कुरिन्यि़यों 1:1'")
+		expect(p.parse("1 KURINTHIAYON 1:1").osis()).toEqual("1Cor.1.1", "parsing: '1 KURINTHIAYON 1:1'")
+		expect(p.parse("1 कुरिन्यि़यों 1:1").osis()).toEqual("1Cor.1.1", "parsing: '1 कुरिन्यि़यों 1:1'")
+		expect(p.parse("1. कुरिन्थियों 1:1").osis()).toEqual("1Cor.1.1", "parsing: '1. कुरिन्थियों 1:1'")
+		expect(p.parse("1 कुरिन्थियों 1:1").osis()).toEqual("1Cor.1.1", "parsing: '1 कुरिन्थियों 1:1'")
+		expect(p.parse("1. कुरन्थियों 1:1").osis()).toEqual("1Cor.1.1", "parsing: '1. कुरन्थियों 1:1'")
+		expect(p.parse("1. कुरिन्थियो 1:1").osis()).toEqual("1Cor.1.1", "parsing: '1. कुरिन्थियो 1:1'")
+		expect(p.parse("1 कुरन्थियों 1:1").osis()).toEqual("1Cor.1.1", "parsing: '1 कुरन्थियों 1:1'")
+		expect(p.parse("1 कुरिन्थियो 1:1").osis()).toEqual("1Cor.1.1", "parsing: '1 कुरिन्थियो 1:1'")
+		expect(p.parse("1. कोरिन्‍थी 1:1").osis()).toEqual("1Cor.1.1", "parsing: '1. कोरिन्‍थी 1:1'")
+		expect(p.parse("1 कोरिन्‍थी 1:1").osis()).toEqual("1Cor.1.1", "parsing: '1 कोरिन्‍थी 1:1'")
+		expect(p.parse("1. कुरिन्थ 1:1").osis()).toEqual("1Cor.1.1", "parsing: '1. कुरिन्थ 1:1'")
+		expect(p.parse("1 कुरिन्थ 1:1").osis()).toEqual("1Cor.1.1", "parsing: '1 कुरिन्थ 1:1'")
+		expect(p.parse("1COR 1:1").osis()).toEqual("1Cor.1.1", "parsing: '1COR 1:1'")
 		;
       return true;
     });
@@ -2010,7 +2017,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -2021,19 +2028,19 @@
     });
     return it("should handle book: Gal (hi)", function() {
       
-		expect(p.parse("Galatiyon 1:1").osis()).toEqual("Gal.1.1")
-		expect(p.parse("गलातियों 1:1").osis()).toEqual("Gal.1.1")
-		expect(p.parse("गलतियों 1:1").osis()).toEqual("Gal.1.1")
-		expect(p.parse("गलाति 1:1").osis()).toEqual("Gal.1.1")
-		expect(p.parse("गलाती 1:1").osis()).toEqual("Gal.1.1")
-		expect(p.parse("Gal 1:1").osis()).toEqual("Gal.1.1")
+		expect(p.parse("Galatiyon 1:1").osis()).toEqual("Gal.1.1", "parsing: 'Galatiyon 1:1'")
+		expect(p.parse("गलातियों 1:1").osis()).toEqual("Gal.1.1", "parsing: 'गलातियों 1:1'")
+		expect(p.parse("गलतियों 1:1").osis()).toEqual("Gal.1.1", "parsing: 'गलतियों 1:1'")
+		expect(p.parse("गलाति 1:1").osis()).toEqual("Gal.1.1", "parsing: 'गलाति 1:1'")
+		expect(p.parse("गलाती 1:1").osis()).toEqual("Gal.1.1", "parsing: 'गलाती 1:1'")
+		expect(p.parse("Gal 1:1").osis()).toEqual("Gal.1.1", "parsing: 'Gal 1:1'")
 		p.include_apocrypha(false)
-		expect(p.parse("GALATIYON 1:1").osis()).toEqual("Gal.1.1")
-		expect(p.parse("गलातियों 1:1").osis()).toEqual("Gal.1.1")
-		expect(p.parse("गलतियों 1:1").osis()).toEqual("Gal.1.1")
-		expect(p.parse("गलाति 1:1").osis()).toEqual("Gal.1.1")
-		expect(p.parse("गलाती 1:1").osis()).toEqual("Gal.1.1")
-		expect(p.parse("GAL 1:1").osis()).toEqual("Gal.1.1")
+		expect(p.parse("GALATIYON 1:1").osis()).toEqual("Gal.1.1", "parsing: 'GALATIYON 1:1'")
+		expect(p.parse("गलातियों 1:1").osis()).toEqual("Gal.1.1", "parsing: 'गलातियों 1:1'")
+		expect(p.parse("गलतियों 1:1").osis()).toEqual("Gal.1.1", "parsing: 'गलतियों 1:1'")
+		expect(p.parse("गलाति 1:1").osis()).toEqual("Gal.1.1", "parsing: 'गलाति 1:1'")
+		expect(p.parse("गलाती 1:1").osis()).toEqual("Gal.1.1", "parsing: 'गलाती 1:1'")
+		expect(p.parse("GAL 1:1").osis()).toEqual("Gal.1.1", "parsing: 'GAL 1:1'")
 		;
       return true;
     });
@@ -2043,7 +2050,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -2054,17 +2061,17 @@
     });
     return it("should handle book: Eph (hi)", function() {
       
-		expect(p.parse("Iafisiyon 1:1").osis()).toEqual("Eph.1.1")
-		expect(p.parse("इफिसियों 1:1").osis()).toEqual("Eph.1.1")
-		expect(p.parse("इफिसि 1:1").osis()).toEqual("Eph.1.1")
-		expect(p.parse("इफिसी 1:1").osis()).toEqual("Eph.1.1")
-		expect(p.parse("Eph 1:1").osis()).toEqual("Eph.1.1")
+		expect(p.parse("Iafisiyon 1:1").osis()).toEqual("Eph.1.1", "parsing: 'Iafisiyon 1:1'")
+		expect(p.parse("इफिसियों 1:1").osis()).toEqual("Eph.1.1", "parsing: 'इफिसियों 1:1'")
+		expect(p.parse("इफिसि 1:1").osis()).toEqual("Eph.1.1", "parsing: 'इफिसि 1:1'")
+		expect(p.parse("इफिसी 1:1").osis()).toEqual("Eph.1.1", "parsing: 'इफिसी 1:1'")
+		expect(p.parse("Eph 1:1").osis()).toEqual("Eph.1.1", "parsing: 'Eph 1:1'")
 		p.include_apocrypha(false)
-		expect(p.parse("IAFISIYON 1:1").osis()).toEqual("Eph.1.1")
-		expect(p.parse("इफिसियों 1:1").osis()).toEqual("Eph.1.1")
-		expect(p.parse("इफिसि 1:1").osis()).toEqual("Eph.1.1")
-		expect(p.parse("इफिसी 1:1").osis()).toEqual("Eph.1.1")
-		expect(p.parse("EPH 1:1").osis()).toEqual("Eph.1.1")
+		expect(p.parse("IAFISIYON 1:1").osis()).toEqual("Eph.1.1", "parsing: 'IAFISIYON 1:1'")
+		expect(p.parse("इफिसियों 1:1").osis()).toEqual("Eph.1.1", "parsing: 'इफिसियों 1:1'")
+		expect(p.parse("इफिसि 1:1").osis()).toEqual("Eph.1.1", "parsing: 'इफिसि 1:1'")
+		expect(p.parse("इफिसी 1:1").osis()).toEqual("Eph.1.1", "parsing: 'इफिसी 1:1'")
+		expect(p.parse("EPH 1:1").osis()).toEqual("Eph.1.1", "parsing: 'EPH 1:1'")
 		;
       return true;
     });
@@ -2074,7 +2081,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -2085,17 +2092,17 @@
     });
     return it("should handle book: Phil (hi)", function() {
       
-		expect(p.parse("Filippaiyon 1:1").osis()).toEqual("Phil.1.1")
-		expect(p.parse("फिलिप्पियों 1:1").osis()).toEqual("Phil.1.1")
-		expect(p.parse("फिलिप्‍पी 1:1").osis()).toEqual("Phil.1.1")
-		expect(p.parse("फिलिप्पि 1:1").osis()).toEqual("Phil.1.1")
-		expect(p.parse("Phil 1:1").osis()).toEqual("Phil.1.1")
+		expect(p.parse("Filippaiyon 1:1").osis()).toEqual("Phil.1.1", "parsing: 'Filippaiyon 1:1'")
+		expect(p.parse("फिलिप्पियों 1:1").osis()).toEqual("Phil.1.1", "parsing: 'फिलिप्पियों 1:1'")
+		expect(p.parse("फिलिप्‍पी 1:1").osis()).toEqual("Phil.1.1", "parsing: 'फिलिप्‍पी 1:1'")
+		expect(p.parse("फिलिप्पि 1:1").osis()).toEqual("Phil.1.1", "parsing: 'फिलिप्पि 1:1'")
+		expect(p.parse("Phil 1:1").osis()).toEqual("Phil.1.1", "parsing: 'Phil 1:1'")
 		p.include_apocrypha(false)
-		expect(p.parse("FILIPPAIYON 1:1").osis()).toEqual("Phil.1.1")
-		expect(p.parse("फिलिप्पियों 1:1").osis()).toEqual("Phil.1.1")
-		expect(p.parse("फिलिप्‍पी 1:1").osis()).toEqual("Phil.1.1")
-		expect(p.parse("फिलिप्पि 1:1").osis()).toEqual("Phil.1.1")
-		expect(p.parse("PHIL 1:1").osis()).toEqual("Phil.1.1")
+		expect(p.parse("FILIPPAIYON 1:1").osis()).toEqual("Phil.1.1", "parsing: 'FILIPPAIYON 1:1'")
+		expect(p.parse("फिलिप्पियों 1:1").osis()).toEqual("Phil.1.1", "parsing: 'फिलिप्पियों 1:1'")
+		expect(p.parse("फिलिप्‍पी 1:1").osis()).toEqual("Phil.1.1", "parsing: 'फिलिप्‍पी 1:1'")
+		expect(p.parse("फिलिप्पि 1:1").osis()).toEqual("Phil.1.1", "parsing: 'फिलिप्पि 1:1'")
+		expect(p.parse("PHIL 1:1").osis()).toEqual("Phil.1.1", "parsing: 'PHIL 1:1'")
 		;
       return true;
     });
@@ -2105,7 +2112,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -2116,17 +2123,17 @@
     });
     return it("should handle book: Col (hi)", function() {
       
-		expect(p.parse("Kulussaiyon 1:1").osis()).toEqual("Col.1.1")
-		expect(p.parse("कुलुस्सियों 1:1").osis()).toEqual("Col.1.1")
-		expect(p.parse("कुलुस्‍सी 1:1").osis()).toEqual("Col.1.1")
-		expect(p.parse("कुलुस्सि 1:1").osis()).toEqual("Col.1.1")
-		expect(p.parse("Col 1:1").osis()).toEqual("Col.1.1")
+		expect(p.parse("Kulussaiyon 1:1").osis()).toEqual("Col.1.1", "parsing: 'Kulussaiyon 1:1'")
+		expect(p.parse("कुलुस्सियों 1:1").osis()).toEqual("Col.1.1", "parsing: 'कुलुस्सियों 1:1'")
+		expect(p.parse("कुलुस्‍सी 1:1").osis()).toEqual("Col.1.1", "parsing: 'कुलुस्‍सी 1:1'")
+		expect(p.parse("कुलुस्सि 1:1").osis()).toEqual("Col.1.1", "parsing: 'कुलुस्सि 1:1'")
+		expect(p.parse("Col 1:1").osis()).toEqual("Col.1.1", "parsing: 'Col 1:1'")
 		p.include_apocrypha(false)
-		expect(p.parse("KULUSSAIYON 1:1").osis()).toEqual("Col.1.1")
-		expect(p.parse("कुलुस्सियों 1:1").osis()).toEqual("Col.1.1")
-		expect(p.parse("कुलुस्‍सी 1:1").osis()).toEqual("Col.1.1")
-		expect(p.parse("कुलुस्सि 1:1").osis()).toEqual("Col.1.1")
-		expect(p.parse("COL 1:1").osis()).toEqual("Col.1.1")
+		expect(p.parse("KULUSSAIYON 1:1").osis()).toEqual("Col.1.1", "parsing: 'KULUSSAIYON 1:1'")
+		expect(p.parse("कुलुस्सियों 1:1").osis()).toEqual("Col.1.1", "parsing: 'कुलुस्सियों 1:1'")
+		expect(p.parse("कुलुस्‍सी 1:1").osis()).toEqual("Col.1.1", "parsing: 'कुलुस्‍सी 1:1'")
+		expect(p.parse("कुलुस्सि 1:1").osis()).toEqual("Col.1.1", "parsing: 'कुलुस्सि 1:1'")
+		expect(p.parse("COL 1:1").osis()).toEqual("Col.1.1", "parsing: 'COL 1:1'")
 		;
       return true;
     });
@@ -2136,7 +2143,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -2147,25 +2154,25 @@
     });
     return it("should handle book: 2Thess (hi)", function() {
       
-		expect(p.parse("2. Thaissaluneekiyon 1:1").osis()).toEqual("2Thess.1.1")
-		expect(p.parse("2 Thaissaluneekiyon 1:1").osis()).toEqual("2Thess.1.1")
-		expect(p.parse("2. थिस्सलुनीकियों 1:1").osis()).toEqual("2Thess.1.1")
-		expect(p.parse("2 थिस्सलुनीकियों 1:1").osis()).toEqual("2Thess.1.1")
-		expect(p.parse("2. थिसलुनिकी 1:1").osis()).toEqual("2Thess.1.1")
-		expect(p.parse("2 थिसलुनिकी 1:1").osis()).toEqual("2Thess.1.1")
-		expect(p.parse("2. थिस्स 1:1").osis()).toEqual("2Thess.1.1")
-		expect(p.parse("2 थिस्स 1:1").osis()).toEqual("2Thess.1.1")
-		expect(p.parse("2Thess 1:1").osis()).toEqual("2Thess.1.1")
+		expect(p.parse("2. Thaissaluneekiyon 1:1").osis()).toEqual("2Thess.1.1", "parsing: '2. Thaissaluneekiyon 1:1'")
+		expect(p.parse("2 Thaissaluneekiyon 1:1").osis()).toEqual("2Thess.1.1", "parsing: '2 Thaissaluneekiyon 1:1'")
+		expect(p.parse("2. थिस्सलुनीकियों 1:1").osis()).toEqual("2Thess.1.1", "parsing: '2. थिस्सलुनीकियों 1:1'")
+		expect(p.parse("2 थिस्सलुनीकियों 1:1").osis()).toEqual("2Thess.1.1", "parsing: '2 थिस्सलुनीकियों 1:1'")
+		expect(p.parse("2. थिसलुनिकी 1:1").osis()).toEqual("2Thess.1.1", "parsing: '2. थिसलुनिकी 1:1'")
+		expect(p.parse("2 थिसलुनिकी 1:1").osis()).toEqual("2Thess.1.1", "parsing: '2 थिसलुनिकी 1:1'")
+		expect(p.parse("2. थिस्स 1:1").osis()).toEqual("2Thess.1.1", "parsing: '2. थिस्स 1:1'")
+		expect(p.parse("2 थिस्स 1:1").osis()).toEqual("2Thess.1.1", "parsing: '2 थिस्स 1:1'")
+		expect(p.parse("2Thess 1:1").osis()).toEqual("2Thess.1.1", "parsing: '2Thess 1:1'")
 		p.include_apocrypha(false)
-		expect(p.parse("2. THAISSALUNEEKIYON 1:1").osis()).toEqual("2Thess.1.1")
-		expect(p.parse("2 THAISSALUNEEKIYON 1:1").osis()).toEqual("2Thess.1.1")
-		expect(p.parse("2. थिस्सलुनीकियों 1:1").osis()).toEqual("2Thess.1.1")
-		expect(p.parse("2 थिस्सलुनीकियों 1:1").osis()).toEqual("2Thess.1.1")
-		expect(p.parse("2. थिसलुनिकी 1:1").osis()).toEqual("2Thess.1.1")
-		expect(p.parse("2 थिसलुनिकी 1:1").osis()).toEqual("2Thess.1.1")
-		expect(p.parse("2. थिस्स 1:1").osis()).toEqual("2Thess.1.1")
-		expect(p.parse("2 थिस्स 1:1").osis()).toEqual("2Thess.1.1")
-		expect(p.parse("2THESS 1:1").osis()).toEqual("2Thess.1.1")
+		expect(p.parse("2. THAISSALUNEEKIYON 1:1").osis()).toEqual("2Thess.1.1", "parsing: '2. THAISSALUNEEKIYON 1:1'")
+		expect(p.parse("2 THAISSALUNEEKIYON 1:1").osis()).toEqual("2Thess.1.1", "parsing: '2 THAISSALUNEEKIYON 1:1'")
+		expect(p.parse("2. थिस्सलुनीकियों 1:1").osis()).toEqual("2Thess.1.1", "parsing: '2. थिस्सलुनीकियों 1:1'")
+		expect(p.parse("2 थिस्सलुनीकियों 1:1").osis()).toEqual("2Thess.1.1", "parsing: '2 थिस्सलुनीकियों 1:1'")
+		expect(p.parse("2. थिसलुनिकी 1:1").osis()).toEqual("2Thess.1.1", "parsing: '2. थिसलुनिकी 1:1'")
+		expect(p.parse("2 थिसलुनिकी 1:1").osis()).toEqual("2Thess.1.1", "parsing: '2 थिसलुनिकी 1:1'")
+		expect(p.parse("2. थिस्स 1:1").osis()).toEqual("2Thess.1.1", "parsing: '2. थिस्स 1:1'")
+		expect(p.parse("2 थिस्स 1:1").osis()).toEqual("2Thess.1.1", "parsing: '2 थिस्स 1:1'")
+		expect(p.parse("2THESS 1:1").osis()).toEqual("2Thess.1.1", "parsing: '2THESS 1:1'")
 		;
       return true;
     });
@@ -2175,7 +2182,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -2186,25 +2193,25 @@
     });
     return it("should handle book: 1Thess (hi)", function() {
       
-		expect(p.parse("1. Thaissaluneekiyon 1:1").osis()).toEqual("1Thess.1.1")
-		expect(p.parse("1 Thaissaluneekiyon 1:1").osis()).toEqual("1Thess.1.1")
-		expect(p.parse("1. थिस्सलुनीकियों 1:1").osis()).toEqual("1Thess.1.1")
-		expect(p.parse("1 थिस्सलुनीकियों 1:1").osis()).toEqual("1Thess.1.1")
-		expect(p.parse("1. थिसलुनिकी 1:1").osis()).toEqual("1Thess.1.1")
-		expect(p.parse("1 थिसलुनिकी 1:1").osis()).toEqual("1Thess.1.1")
-		expect(p.parse("1. थिस्स 1:1").osis()).toEqual("1Thess.1.1")
-		expect(p.parse("1 थिस्स 1:1").osis()).toEqual("1Thess.1.1")
-		expect(p.parse("1Thess 1:1").osis()).toEqual("1Thess.1.1")
+		expect(p.parse("1. Thaissaluneekiyon 1:1").osis()).toEqual("1Thess.1.1", "parsing: '1. Thaissaluneekiyon 1:1'")
+		expect(p.parse("1 Thaissaluneekiyon 1:1").osis()).toEqual("1Thess.1.1", "parsing: '1 Thaissaluneekiyon 1:1'")
+		expect(p.parse("1. थिस्सलुनीकियों 1:1").osis()).toEqual("1Thess.1.1", "parsing: '1. थिस्सलुनीकियों 1:1'")
+		expect(p.parse("1 थिस्सलुनीकियों 1:1").osis()).toEqual("1Thess.1.1", "parsing: '1 थिस्सलुनीकियों 1:1'")
+		expect(p.parse("1. थिसलुनिकी 1:1").osis()).toEqual("1Thess.1.1", "parsing: '1. थिसलुनिकी 1:1'")
+		expect(p.parse("1 थिसलुनिकी 1:1").osis()).toEqual("1Thess.1.1", "parsing: '1 थिसलुनिकी 1:1'")
+		expect(p.parse("1. थिस्स 1:1").osis()).toEqual("1Thess.1.1", "parsing: '1. थिस्स 1:1'")
+		expect(p.parse("1 थिस्स 1:1").osis()).toEqual("1Thess.1.1", "parsing: '1 थिस्स 1:1'")
+		expect(p.parse("1Thess 1:1").osis()).toEqual("1Thess.1.1", "parsing: '1Thess 1:1'")
 		p.include_apocrypha(false)
-		expect(p.parse("1. THAISSALUNEEKIYON 1:1").osis()).toEqual("1Thess.1.1")
-		expect(p.parse("1 THAISSALUNEEKIYON 1:1").osis()).toEqual("1Thess.1.1")
-		expect(p.parse("1. थिस्सलुनीकियों 1:1").osis()).toEqual("1Thess.1.1")
-		expect(p.parse("1 थिस्सलुनीकियों 1:1").osis()).toEqual("1Thess.1.1")
-		expect(p.parse("1. थिसलुनिकी 1:1").osis()).toEqual("1Thess.1.1")
-		expect(p.parse("1 थिसलुनिकी 1:1").osis()).toEqual("1Thess.1.1")
-		expect(p.parse("1. थिस्स 1:1").osis()).toEqual("1Thess.1.1")
-		expect(p.parse("1 थिस्स 1:1").osis()).toEqual("1Thess.1.1")
-		expect(p.parse("1THESS 1:1").osis()).toEqual("1Thess.1.1")
+		expect(p.parse("1. THAISSALUNEEKIYON 1:1").osis()).toEqual("1Thess.1.1", "parsing: '1. THAISSALUNEEKIYON 1:1'")
+		expect(p.parse("1 THAISSALUNEEKIYON 1:1").osis()).toEqual("1Thess.1.1", "parsing: '1 THAISSALUNEEKIYON 1:1'")
+		expect(p.parse("1. थिस्सलुनीकियों 1:1").osis()).toEqual("1Thess.1.1", "parsing: '1. थिस्सलुनीकियों 1:1'")
+		expect(p.parse("1 थिस्सलुनीकियों 1:1").osis()).toEqual("1Thess.1.1", "parsing: '1 थिस्सलुनीकियों 1:1'")
+		expect(p.parse("1. थिसलुनिकी 1:1").osis()).toEqual("1Thess.1.1", "parsing: '1. थिसलुनिकी 1:1'")
+		expect(p.parse("1 थिसलुनिकी 1:1").osis()).toEqual("1Thess.1.1", "parsing: '1 थिसलुनिकी 1:1'")
+		expect(p.parse("1. थिस्स 1:1").osis()).toEqual("1Thess.1.1", "parsing: '1. थिस्स 1:1'")
+		expect(p.parse("1 थिस्स 1:1").osis()).toEqual("1Thess.1.1", "parsing: '1 थिस्स 1:1'")
+		expect(p.parse("1THESS 1:1").osis()).toEqual("1Thess.1.1", "parsing: '1THESS 1:1'")
 		;
       return true;
     });
@@ -2214,7 +2221,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -2225,29 +2232,29 @@
     });
     return it("should handle book: 2Tim (hi)", function() {
       
-		expect(p.parse("2. Teemuathaiyus 1:1").osis()).toEqual("2Tim.1.1")
-		expect(p.parse("2 Teemuathaiyus 1:1").osis()).toEqual("2Tim.1.1")
-		expect(p.parse("2. तीमुाथैयुस 1:1").osis()).toEqual("2Tim.1.1")
-		expect(p.parse("2 तीमुाथैयुस 1:1").osis()).toEqual("2Tim.1.1")
-		expect(p.parse("2. तिमुथियुस 1:1").osis()).toEqual("2Tim.1.1")
-		expect(p.parse("2. तीमुथियुस 1:1").osis()).toEqual("2Tim.1.1")
-		expect(p.parse("2 तिमुथियुस 1:1").osis()).toEqual("2Tim.1.1")
-		expect(p.parse("2 तीमुथियुस 1:1").osis()).toEqual("2Tim.1.1")
-		expect(p.parse("2. तीम 1:1").osis()).toEqual("2Tim.1.1")
-		expect(p.parse("2 तीम 1:1").osis()).toEqual("2Tim.1.1")
-		expect(p.parse("2Tim 1:1").osis()).toEqual("2Tim.1.1")
+		expect(p.parse("2. Teemuathaiyus 1:1").osis()).toEqual("2Tim.1.1", "parsing: '2. Teemuathaiyus 1:1'")
+		expect(p.parse("2 Teemuathaiyus 1:1").osis()).toEqual("2Tim.1.1", "parsing: '2 Teemuathaiyus 1:1'")
+		expect(p.parse("2. तीमुाथैयुस 1:1").osis()).toEqual("2Tim.1.1", "parsing: '2. तीमुाथैयुस 1:1'")
+		expect(p.parse("2 तीमुाथैयुस 1:1").osis()).toEqual("2Tim.1.1", "parsing: '2 तीमुाथैयुस 1:1'")
+		expect(p.parse("2. तिमुथियुस 1:1").osis()).toEqual("2Tim.1.1", "parsing: '2. तिमुथियुस 1:1'")
+		expect(p.parse("2. तीमुथियुस 1:1").osis()).toEqual("2Tim.1.1", "parsing: '2. तीमुथियुस 1:1'")
+		expect(p.parse("2 तिमुथियुस 1:1").osis()).toEqual("2Tim.1.1", "parsing: '2 तिमुथियुस 1:1'")
+		expect(p.parse("2 तीमुथियुस 1:1").osis()).toEqual("2Tim.1.1", "parsing: '2 तीमुथियुस 1:1'")
+		expect(p.parse("2. तीम 1:1").osis()).toEqual("2Tim.1.1", "parsing: '2. तीम 1:1'")
+		expect(p.parse("2 तीम 1:1").osis()).toEqual("2Tim.1.1", "parsing: '2 तीम 1:1'")
+		expect(p.parse("2Tim 1:1").osis()).toEqual("2Tim.1.1", "parsing: '2Tim 1:1'")
 		p.include_apocrypha(false)
-		expect(p.parse("2. TEEMUATHAIYUS 1:1").osis()).toEqual("2Tim.1.1")
-		expect(p.parse("2 TEEMUATHAIYUS 1:1").osis()).toEqual("2Tim.1.1")
-		expect(p.parse("2. तीमुाथैयुस 1:1").osis()).toEqual("2Tim.1.1")
-		expect(p.parse("2 तीमुाथैयुस 1:1").osis()).toEqual("2Tim.1.1")
-		expect(p.parse("2. तिमुथियुस 1:1").osis()).toEqual("2Tim.1.1")
-		expect(p.parse("2. तीमुथियुस 1:1").osis()).toEqual("2Tim.1.1")
-		expect(p.parse("2 तिमुथियुस 1:1").osis()).toEqual("2Tim.1.1")
-		expect(p.parse("2 तीमुथियुस 1:1").osis()).toEqual("2Tim.1.1")
-		expect(p.parse("2. तीम 1:1").osis()).toEqual("2Tim.1.1")
-		expect(p.parse("2 तीम 1:1").osis()).toEqual("2Tim.1.1")
-		expect(p.parse("2TIM 1:1").osis()).toEqual("2Tim.1.1")
+		expect(p.parse("2. TEEMUATHAIYUS 1:1").osis()).toEqual("2Tim.1.1", "parsing: '2. TEEMUATHAIYUS 1:1'")
+		expect(p.parse("2 TEEMUATHAIYUS 1:1").osis()).toEqual("2Tim.1.1", "parsing: '2 TEEMUATHAIYUS 1:1'")
+		expect(p.parse("2. तीमुाथैयुस 1:1").osis()).toEqual("2Tim.1.1", "parsing: '2. तीमुाथैयुस 1:1'")
+		expect(p.parse("2 तीमुाथैयुस 1:1").osis()).toEqual("2Tim.1.1", "parsing: '2 तीमुाथैयुस 1:1'")
+		expect(p.parse("2. तिमुथियुस 1:1").osis()).toEqual("2Tim.1.1", "parsing: '2. तिमुथियुस 1:1'")
+		expect(p.parse("2. तीमुथियुस 1:1").osis()).toEqual("2Tim.1.1", "parsing: '2. तीमुथियुस 1:1'")
+		expect(p.parse("2 तिमुथियुस 1:1").osis()).toEqual("2Tim.1.1", "parsing: '2 तिमुथियुस 1:1'")
+		expect(p.parse("2 तीमुथियुस 1:1").osis()).toEqual("2Tim.1.1", "parsing: '2 तीमुथियुस 1:1'")
+		expect(p.parse("2. तीम 1:1").osis()).toEqual("2Tim.1.1", "parsing: '2. तीम 1:1'")
+		expect(p.parse("2 तीम 1:1").osis()).toEqual("2Tim.1.1", "parsing: '2 तीम 1:1'")
+		expect(p.parse("2TIM 1:1").osis()).toEqual("2Tim.1.1", "parsing: '2TIM 1:1'")
 		;
       return true;
     });
@@ -2257,7 +2264,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -2268,29 +2275,29 @@
     });
     return it("should handle book: 1Tim (hi)", function() {
       
-		expect(p.parse("1. Teemuathaiyus 1:1").osis()).toEqual("1Tim.1.1")
-		expect(p.parse("1 Teemuathaiyus 1:1").osis()).toEqual("1Tim.1.1")
-		expect(p.parse("1. तीमुाथैयुस 1:1").osis()).toEqual("1Tim.1.1")
-		expect(p.parse("1 तीमुाथैयुस 1:1").osis()).toEqual("1Tim.1.1")
-		expect(p.parse("1. तिमुथियुस 1:1").osis()).toEqual("1Tim.1.1")
-		expect(p.parse("1. तीमुथियुस 1:1").osis()).toEqual("1Tim.1.1")
-		expect(p.parse("1 तिमुथियुस 1:1").osis()).toEqual("1Tim.1.1")
-		expect(p.parse("1 तीमुथियुस 1:1").osis()).toEqual("1Tim.1.1")
-		expect(p.parse("1. तीम 1:1").osis()).toEqual("1Tim.1.1")
-		expect(p.parse("1 तीम 1:1").osis()).toEqual("1Tim.1.1")
-		expect(p.parse("1Tim 1:1").osis()).toEqual("1Tim.1.1")
+		expect(p.parse("1. Teemuathaiyus 1:1").osis()).toEqual("1Tim.1.1", "parsing: '1. Teemuathaiyus 1:1'")
+		expect(p.parse("1 Teemuathaiyus 1:1").osis()).toEqual("1Tim.1.1", "parsing: '1 Teemuathaiyus 1:1'")
+		expect(p.parse("1. तीमुाथैयुस 1:1").osis()).toEqual("1Tim.1.1", "parsing: '1. तीमुाथैयुस 1:1'")
+		expect(p.parse("1 तीमुाथैयुस 1:1").osis()).toEqual("1Tim.1.1", "parsing: '1 तीमुाथैयुस 1:1'")
+		expect(p.parse("1. तिमुथियुस 1:1").osis()).toEqual("1Tim.1.1", "parsing: '1. तिमुथियुस 1:1'")
+		expect(p.parse("1. तीमुथियुस 1:1").osis()).toEqual("1Tim.1.1", "parsing: '1. तीमुथियुस 1:1'")
+		expect(p.parse("1 तिमुथियुस 1:1").osis()).toEqual("1Tim.1.1", "parsing: '1 तिमुथियुस 1:1'")
+		expect(p.parse("1 तीमुथियुस 1:1").osis()).toEqual("1Tim.1.1", "parsing: '1 तीमुथियुस 1:1'")
+		expect(p.parse("1. तीम 1:1").osis()).toEqual("1Tim.1.1", "parsing: '1. तीम 1:1'")
+		expect(p.parse("1 तीम 1:1").osis()).toEqual("1Tim.1.1", "parsing: '1 तीम 1:1'")
+		expect(p.parse("1Tim 1:1").osis()).toEqual("1Tim.1.1", "parsing: '1Tim 1:1'")
 		p.include_apocrypha(false)
-		expect(p.parse("1. TEEMUATHAIYUS 1:1").osis()).toEqual("1Tim.1.1")
-		expect(p.parse("1 TEEMUATHAIYUS 1:1").osis()).toEqual("1Tim.1.1")
-		expect(p.parse("1. तीमुाथैयुस 1:1").osis()).toEqual("1Tim.1.1")
-		expect(p.parse("1 तीमुाथैयुस 1:1").osis()).toEqual("1Tim.1.1")
-		expect(p.parse("1. तिमुथियुस 1:1").osis()).toEqual("1Tim.1.1")
-		expect(p.parse("1. तीमुथियुस 1:1").osis()).toEqual("1Tim.1.1")
-		expect(p.parse("1 तिमुथियुस 1:1").osis()).toEqual("1Tim.1.1")
-		expect(p.parse("1 तीमुथियुस 1:1").osis()).toEqual("1Tim.1.1")
-		expect(p.parse("1. तीम 1:1").osis()).toEqual("1Tim.1.1")
-		expect(p.parse("1 तीम 1:1").osis()).toEqual("1Tim.1.1")
-		expect(p.parse("1TIM 1:1").osis()).toEqual("1Tim.1.1")
+		expect(p.parse("1. TEEMUATHAIYUS 1:1").osis()).toEqual("1Tim.1.1", "parsing: '1. TEEMUATHAIYUS 1:1'")
+		expect(p.parse("1 TEEMUATHAIYUS 1:1").osis()).toEqual("1Tim.1.1", "parsing: '1 TEEMUATHAIYUS 1:1'")
+		expect(p.parse("1. तीमुाथैयुस 1:1").osis()).toEqual("1Tim.1.1", "parsing: '1. तीमुाथैयुस 1:1'")
+		expect(p.parse("1 तीमुाथैयुस 1:1").osis()).toEqual("1Tim.1.1", "parsing: '1 तीमुाथैयुस 1:1'")
+		expect(p.parse("1. तिमुथियुस 1:1").osis()).toEqual("1Tim.1.1", "parsing: '1. तिमुथियुस 1:1'")
+		expect(p.parse("1. तीमुथियुस 1:1").osis()).toEqual("1Tim.1.1", "parsing: '1. तीमुथियुस 1:1'")
+		expect(p.parse("1 तिमुथियुस 1:1").osis()).toEqual("1Tim.1.1", "parsing: '1 तिमुथियुस 1:1'")
+		expect(p.parse("1 तीमुथियुस 1:1").osis()).toEqual("1Tim.1.1", "parsing: '1 तीमुथियुस 1:1'")
+		expect(p.parse("1. तीम 1:1").osis()).toEqual("1Tim.1.1", "parsing: '1. तीम 1:1'")
+		expect(p.parse("1 तीम 1:1").osis()).toEqual("1Tim.1.1", "parsing: '1 तीम 1:1'")
+		expect(p.parse("1TIM 1:1").osis()).toEqual("1Tim.1.1", "parsing: '1TIM 1:1'")
 		;
       return true;
     });
@@ -2300,7 +2307,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -2311,13 +2318,13 @@
     });
     return it("should handle book: Titus (hi)", function() {
       
-		expect(p.parse("Teetus 1:1").osis()).toEqual("Titus.1.1")
-		expect(p.parse("Titus 1:1").osis()).toEqual("Titus.1.1")
-		expect(p.parse("तीतुस 1:1").osis()).toEqual("Titus.1.1")
+		expect(p.parse("Teetus 1:1").osis()).toEqual("Titus.1.1", "parsing: 'Teetus 1:1'")
+		expect(p.parse("Titus 1:1").osis()).toEqual("Titus.1.1", "parsing: 'Titus 1:1'")
+		expect(p.parse("तीतुस 1:1").osis()).toEqual("Titus.1.1", "parsing: 'तीतुस 1:1'")
 		p.include_apocrypha(false)
-		expect(p.parse("TEETUS 1:1").osis()).toEqual("Titus.1.1")
-		expect(p.parse("TITUS 1:1").osis()).toEqual("Titus.1.1")
-		expect(p.parse("तीतुस 1:1").osis()).toEqual("Titus.1.1")
+		expect(p.parse("TEETUS 1:1").osis()).toEqual("Titus.1.1", "parsing: 'TEETUS 1:1'")
+		expect(p.parse("TITUS 1:1").osis()).toEqual("Titus.1.1", "parsing: 'TITUS 1:1'")
+		expect(p.parse("तीतुस 1:1").osis()).toEqual("Titus.1.1", "parsing: 'तीतुस 1:1'")
 		;
       return true;
     });
@@ -2327,7 +2334,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -2338,15 +2345,15 @@
     });
     return it("should handle book: Phlm (hi)", function() {
       
-		expect(p.parse("Filemon 1:1").osis()).toEqual("Phlm.1.1")
-		expect(p.parse("फिलेमोन 1:1").osis()).toEqual("Phlm.1.1")
-		expect(p.parse("Phlm 1:1").osis()).toEqual("Phlm.1.1")
-		expect(p.parse("फले 1:1").osis()).toEqual("Phlm.1.1")
+		expect(p.parse("Filemon 1:1").osis()).toEqual("Phlm.1.1", "parsing: 'Filemon 1:1'")
+		expect(p.parse("फिलेमोन 1:1").osis()).toEqual("Phlm.1.1", "parsing: 'फिलेमोन 1:1'")
+		expect(p.parse("Phlm 1:1").osis()).toEqual("Phlm.1.1", "parsing: 'Phlm 1:1'")
+		expect(p.parse("फले 1:1").osis()).toEqual("Phlm.1.1", "parsing: 'फले 1:1'")
 		p.include_apocrypha(false)
-		expect(p.parse("FILEMON 1:1").osis()).toEqual("Phlm.1.1")
-		expect(p.parse("फिलेमोन 1:1").osis()).toEqual("Phlm.1.1")
-		expect(p.parse("PHLM 1:1").osis()).toEqual("Phlm.1.1")
-		expect(p.parse("फले 1:1").osis()).toEqual("Phlm.1.1")
+		expect(p.parse("FILEMON 1:1").osis()).toEqual("Phlm.1.1", "parsing: 'FILEMON 1:1'")
+		expect(p.parse("फिलेमोन 1:1").osis()).toEqual("Phlm.1.1", "parsing: 'फिलेमोन 1:1'")
+		expect(p.parse("PHLM 1:1").osis()).toEqual("Phlm.1.1", "parsing: 'PHLM 1:1'")
+		expect(p.parse("फले 1:1").osis()).toEqual("Phlm.1.1", "parsing: 'फले 1:1'")
 		;
       return true;
     });
@@ -2356,7 +2363,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -2367,17 +2374,17 @@
     });
     return it("should handle book: Heb (hi)", function() {
       
-		expect(p.parse("Ibraaaniyon 1:1").osis()).toEqual("Heb.1.1")
-		expect(p.parse("इब्रानियों 1:1").osis()).toEqual("Heb.1.1")
-		expect(p.parse("इब्रानि 1:1").osis()).toEqual("Heb.1.1")
-		expect(p.parse("इब्रानी 1:1").osis()).toEqual("Heb.1.1")
-		expect(p.parse("Heb 1:1").osis()).toEqual("Heb.1.1")
+		expect(p.parse("Ibraaaniyon 1:1").osis()).toEqual("Heb.1.1", "parsing: 'Ibraaaniyon 1:1'")
+		expect(p.parse("इब्रानियों 1:1").osis()).toEqual("Heb.1.1", "parsing: 'इब्रानियों 1:1'")
+		expect(p.parse("इब्रानि 1:1").osis()).toEqual("Heb.1.1", "parsing: 'इब्रानि 1:1'")
+		expect(p.parse("इब्रानी 1:1").osis()).toEqual("Heb.1.1", "parsing: 'इब्रानी 1:1'")
+		expect(p.parse("Heb 1:1").osis()).toEqual("Heb.1.1", "parsing: 'Heb 1:1'")
 		p.include_apocrypha(false)
-		expect(p.parse("IBRAAANIYON 1:1").osis()).toEqual("Heb.1.1")
-		expect(p.parse("इब्रानियों 1:1").osis()).toEqual("Heb.1.1")
-		expect(p.parse("इब्रानि 1:1").osis()).toEqual("Heb.1.1")
-		expect(p.parse("इब्रानी 1:1").osis()).toEqual("Heb.1.1")
-		expect(p.parse("HEB 1:1").osis()).toEqual("Heb.1.1")
+		expect(p.parse("IBRAAANIYON 1:1").osis()).toEqual("Heb.1.1", "parsing: 'IBRAAANIYON 1:1'")
+		expect(p.parse("इब्रानियों 1:1").osis()).toEqual("Heb.1.1", "parsing: 'इब्रानियों 1:1'")
+		expect(p.parse("इब्रानि 1:1").osis()).toEqual("Heb.1.1", "parsing: 'इब्रानि 1:1'")
+		expect(p.parse("इब्रानी 1:1").osis()).toEqual("Heb.1.1", "parsing: 'इब्रानी 1:1'")
+		expect(p.parse("HEB 1:1").osis()).toEqual("Heb.1.1", "parsing: 'HEB 1:1'")
 		;
       return true;
     });
@@ -2387,7 +2394,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -2398,13 +2405,13 @@
     });
     return it("should handle book: Jas (hi)", function() {
       
-		expect(p.parse("Yakoob 1:1").osis()).toEqual("Jas.1.1")
-		expect(p.parse("याकूब 1:1").osis()).toEqual("Jas.1.1")
-		expect(p.parse("Jas 1:1").osis()).toEqual("Jas.1.1")
+		expect(p.parse("Yakoob 1:1").osis()).toEqual("Jas.1.1", "parsing: 'Yakoob 1:1'")
+		expect(p.parse("याकूब 1:1").osis()).toEqual("Jas.1.1", "parsing: 'याकूब 1:1'")
+		expect(p.parse("Jas 1:1").osis()).toEqual("Jas.1.1", "parsing: 'Jas 1:1'")
 		p.include_apocrypha(false)
-		expect(p.parse("YAKOOB 1:1").osis()).toEqual("Jas.1.1")
-		expect(p.parse("याकूब 1:1").osis()).toEqual("Jas.1.1")
-		expect(p.parse("JAS 1:1").osis()).toEqual("Jas.1.1")
+		expect(p.parse("YAKOOB 1:1").osis()).toEqual("Jas.1.1", "parsing: 'YAKOOB 1:1'")
+		expect(p.parse("याकूब 1:1").osis()).toEqual("Jas.1.1", "parsing: 'याकूब 1:1'")
+		expect(p.parse("JAS 1:1").osis()).toEqual("Jas.1.1", "parsing: 'JAS 1:1'")
 		;
       return true;
     });
@@ -2414,7 +2421,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -2425,25 +2432,25 @@
     });
     return it("should handle book: 2Pet (hi)", function() {
       
-		expect(p.parse("2. Pataras 1:1").osis()).toEqual("2Pet.1.1")
-		expect(p.parse("2 Pataras 1:1").osis()).toEqual("2Pet.1.1")
-		expect(p.parse("2. पत्रुस 1:1").osis()).toEqual("2Pet.1.1")
-		expect(p.parse("2 पत्रुस 1:1").osis()).toEqual("2Pet.1.1")
-		expect(p.parse("2. पतरस 1:1").osis()).toEqual("2Pet.1.1")
-		expect(p.parse("2 पतरस 1:1").osis()).toEqual("2Pet.1.1")
-		expect(p.parse("2. पतर 1:1").osis()).toEqual("2Pet.1.1")
-		expect(p.parse("2 पतर 1:1").osis()).toEqual("2Pet.1.1")
-		expect(p.parse("2Pet 1:1").osis()).toEqual("2Pet.1.1")
+		expect(p.parse("2. Pataras 1:1").osis()).toEqual("2Pet.1.1", "parsing: '2. Pataras 1:1'")
+		expect(p.parse("2 Pataras 1:1").osis()).toEqual("2Pet.1.1", "parsing: '2 Pataras 1:1'")
+		expect(p.parse("2. पत्रुस 1:1").osis()).toEqual("2Pet.1.1", "parsing: '2. पत्रुस 1:1'")
+		expect(p.parse("2 पत्रुस 1:1").osis()).toEqual("2Pet.1.1", "parsing: '2 पत्रुस 1:1'")
+		expect(p.parse("2. पतरस 1:1").osis()).toEqual("2Pet.1.1", "parsing: '2. पतरस 1:1'")
+		expect(p.parse("2 पतरस 1:1").osis()).toEqual("2Pet.1.1", "parsing: '2 पतरस 1:1'")
+		expect(p.parse("2. पतर 1:1").osis()).toEqual("2Pet.1.1", "parsing: '2. पतर 1:1'")
+		expect(p.parse("2 पतर 1:1").osis()).toEqual("2Pet.1.1", "parsing: '2 पतर 1:1'")
+		expect(p.parse("2Pet 1:1").osis()).toEqual("2Pet.1.1", "parsing: '2Pet 1:1'")
 		p.include_apocrypha(false)
-		expect(p.parse("2. PATARAS 1:1").osis()).toEqual("2Pet.1.1")
-		expect(p.parse("2 PATARAS 1:1").osis()).toEqual("2Pet.1.1")
-		expect(p.parse("2. पत्रुस 1:1").osis()).toEqual("2Pet.1.1")
-		expect(p.parse("2 पत्रुस 1:1").osis()).toEqual("2Pet.1.1")
-		expect(p.parse("2. पतरस 1:1").osis()).toEqual("2Pet.1.1")
-		expect(p.parse("2 पतरस 1:1").osis()).toEqual("2Pet.1.1")
-		expect(p.parse("2. पतर 1:1").osis()).toEqual("2Pet.1.1")
-		expect(p.parse("2 पतर 1:1").osis()).toEqual("2Pet.1.1")
-		expect(p.parse("2PET 1:1").osis()).toEqual("2Pet.1.1")
+		expect(p.parse("2. PATARAS 1:1").osis()).toEqual("2Pet.1.1", "parsing: '2. PATARAS 1:1'")
+		expect(p.parse("2 PATARAS 1:1").osis()).toEqual("2Pet.1.1", "parsing: '2 PATARAS 1:1'")
+		expect(p.parse("2. पत्रुस 1:1").osis()).toEqual("2Pet.1.1", "parsing: '2. पत्रुस 1:1'")
+		expect(p.parse("2 पत्रुस 1:1").osis()).toEqual("2Pet.1.1", "parsing: '2 पत्रुस 1:1'")
+		expect(p.parse("2. पतरस 1:1").osis()).toEqual("2Pet.1.1", "parsing: '2. पतरस 1:1'")
+		expect(p.parse("2 पतरस 1:1").osis()).toEqual("2Pet.1.1", "parsing: '2 पतरस 1:1'")
+		expect(p.parse("2. पतर 1:1").osis()).toEqual("2Pet.1.1", "parsing: '2. पतर 1:1'")
+		expect(p.parse("2 पतर 1:1").osis()).toEqual("2Pet.1.1", "parsing: '2 पतर 1:1'")
+		expect(p.parse("2PET 1:1").osis()).toEqual("2Pet.1.1", "parsing: '2PET 1:1'")
 		;
       return true;
     });
@@ -2453,7 +2460,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -2464,25 +2471,25 @@
     });
     return it("should handle book: 1Pet (hi)", function() {
       
-		expect(p.parse("1. Pataras 1:1").osis()).toEqual("1Pet.1.1")
-		expect(p.parse("1 Pataras 1:1").osis()).toEqual("1Pet.1.1")
-		expect(p.parse("1. पत्रुस 1:1").osis()).toEqual("1Pet.1.1")
-		expect(p.parse("1 पत्रुस 1:1").osis()).toEqual("1Pet.1.1")
-		expect(p.parse("1. पतरस 1:1").osis()).toEqual("1Pet.1.1")
-		expect(p.parse("1 पतरस 1:1").osis()).toEqual("1Pet.1.1")
-		expect(p.parse("1. पतर 1:1").osis()).toEqual("1Pet.1.1")
-		expect(p.parse("1 पतर 1:1").osis()).toEqual("1Pet.1.1")
-		expect(p.parse("1Pet 1:1").osis()).toEqual("1Pet.1.1")
+		expect(p.parse("1. Pataras 1:1").osis()).toEqual("1Pet.1.1", "parsing: '1. Pataras 1:1'")
+		expect(p.parse("1 Pataras 1:1").osis()).toEqual("1Pet.1.1", "parsing: '1 Pataras 1:1'")
+		expect(p.parse("1. पत्रुस 1:1").osis()).toEqual("1Pet.1.1", "parsing: '1. पत्रुस 1:1'")
+		expect(p.parse("1 पत्रुस 1:1").osis()).toEqual("1Pet.1.1", "parsing: '1 पत्रुस 1:1'")
+		expect(p.parse("1. पतरस 1:1").osis()).toEqual("1Pet.1.1", "parsing: '1. पतरस 1:1'")
+		expect(p.parse("1 पतरस 1:1").osis()).toEqual("1Pet.1.1", "parsing: '1 पतरस 1:1'")
+		expect(p.parse("1. पतर 1:1").osis()).toEqual("1Pet.1.1", "parsing: '1. पतर 1:1'")
+		expect(p.parse("1 पतर 1:1").osis()).toEqual("1Pet.1.1", "parsing: '1 पतर 1:1'")
+		expect(p.parse("1Pet 1:1").osis()).toEqual("1Pet.1.1", "parsing: '1Pet 1:1'")
 		p.include_apocrypha(false)
-		expect(p.parse("1. PATARAS 1:1").osis()).toEqual("1Pet.1.1")
-		expect(p.parse("1 PATARAS 1:1").osis()).toEqual("1Pet.1.1")
-		expect(p.parse("1. पत्रुस 1:1").osis()).toEqual("1Pet.1.1")
-		expect(p.parse("1 पत्रुस 1:1").osis()).toEqual("1Pet.1.1")
-		expect(p.parse("1. पतरस 1:1").osis()).toEqual("1Pet.1.1")
-		expect(p.parse("1 पतरस 1:1").osis()).toEqual("1Pet.1.1")
-		expect(p.parse("1. पतर 1:1").osis()).toEqual("1Pet.1.1")
-		expect(p.parse("1 पतर 1:1").osis()).toEqual("1Pet.1.1")
-		expect(p.parse("1PET 1:1").osis()).toEqual("1Pet.1.1")
+		expect(p.parse("1. PATARAS 1:1").osis()).toEqual("1Pet.1.1", "parsing: '1. PATARAS 1:1'")
+		expect(p.parse("1 PATARAS 1:1").osis()).toEqual("1Pet.1.1", "parsing: '1 PATARAS 1:1'")
+		expect(p.parse("1. पत्रुस 1:1").osis()).toEqual("1Pet.1.1", "parsing: '1. पत्रुस 1:1'")
+		expect(p.parse("1 पत्रुस 1:1").osis()).toEqual("1Pet.1.1", "parsing: '1 पत्रुस 1:1'")
+		expect(p.parse("1. पतरस 1:1").osis()).toEqual("1Pet.1.1", "parsing: '1. पतरस 1:1'")
+		expect(p.parse("1 पतरस 1:1").osis()).toEqual("1Pet.1.1", "parsing: '1 पतरस 1:1'")
+		expect(p.parse("1. पतर 1:1").osis()).toEqual("1Pet.1.1", "parsing: '1. पतर 1:1'")
+		expect(p.parse("1 पतर 1:1").osis()).toEqual("1Pet.1.1", "parsing: '1 पतर 1:1'")
+		expect(p.parse("1PET 1:1").osis()).toEqual("1Pet.1.1", "parsing: '1PET 1:1'")
 		;
       return true;
     });
@@ -2492,7 +2499,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -2503,13 +2510,13 @@
     });
     return it("should handle book: Jude (hi)", function() {
       
-		expect(p.parse("Yahooda 1:1").osis()).toEqual("Jude.1.1")
-		expect(p.parse("यहूदा 1:1").osis()).toEqual("Jude.1.1")
-		expect(p.parse("Jude 1:1").osis()).toEqual("Jude.1.1")
+		expect(p.parse("Yahooda 1:1").osis()).toEqual("Jude.1.1", "parsing: 'Yahooda 1:1'")
+		expect(p.parse("यहूदा 1:1").osis()).toEqual("Jude.1.1", "parsing: 'यहूदा 1:1'")
+		expect(p.parse("Jude 1:1").osis()).toEqual("Jude.1.1", "parsing: 'Jude 1:1'")
 		p.include_apocrypha(false)
-		expect(p.parse("YAHOODA 1:1").osis()).toEqual("Jude.1.1")
-		expect(p.parse("यहूदा 1:1").osis()).toEqual("Jude.1.1")
-		expect(p.parse("JUDE 1:1").osis()).toEqual("Jude.1.1")
+		expect(p.parse("YAHOODA 1:1").osis()).toEqual("Jude.1.1", "parsing: 'YAHOODA 1:1'")
+		expect(p.parse("यहूदा 1:1").osis()).toEqual("Jude.1.1", "parsing: 'यहूदा 1:1'")
+		expect(p.parse("JUDE 1:1").osis()).toEqual("Jude.1.1", "parsing: 'JUDE 1:1'")
 		;
       return true;
     });
@@ -2519,7 +2526,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -2530,7 +2537,7 @@
     });
     return it("should handle book: Tob (hi)", function() {
       
-		expect(p.parse("Tob 1:1").osis()).toEqual("Tob.1.1")
+		expect(p.parse("Tob 1:1").osis()).toEqual("Tob.1.1", "parsing: 'Tob 1:1'")
 		;
       return true;
     });
@@ -2540,7 +2547,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -2551,7 +2558,7 @@
     });
     return it("should handle book: Jdt (hi)", function() {
       
-		expect(p.parse("Jdt 1:1").osis()).toEqual("Jdt.1.1")
+		expect(p.parse("Jdt 1:1").osis()).toEqual("Jdt.1.1", "parsing: 'Jdt 1:1'")
 		;
       return true;
     });
@@ -2561,7 +2568,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -2572,7 +2579,7 @@
     });
     return it("should handle book: Bar (hi)", function() {
       
-		expect(p.parse("Bar 1:1").osis()).toEqual("Bar.1.1")
+		expect(p.parse("Bar 1:1").osis()).toEqual("Bar.1.1", "parsing: 'Bar 1:1'")
 		;
       return true;
     });
@@ -2582,7 +2589,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -2593,7 +2600,7 @@
     });
     return it("should handle book: Sus (hi)", function() {
       
-		expect(p.parse("Sus 1:1").osis()).toEqual("Sus.1.1")
+		expect(p.parse("Sus 1:1").osis()).toEqual("Sus.1.1", "parsing: 'Sus 1:1'")
 		;
       return true;
     });
@@ -2603,7 +2610,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -2614,7 +2621,7 @@
     });
     return it("should handle book: 2Macc (hi)", function() {
       
-		expect(p.parse("2Macc 1:1").osis()).toEqual("2Macc.1.1")
+		expect(p.parse("2Macc 1:1").osis()).toEqual("2Macc.1.1", "parsing: '2Macc 1:1'")
 		;
       return true;
     });
@@ -2624,7 +2631,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -2635,7 +2642,7 @@
     });
     return it("should handle book: 3Macc (hi)", function() {
       
-		expect(p.parse("3Macc 1:1").osis()).toEqual("3Macc.1.1")
+		expect(p.parse("3Macc 1:1").osis()).toEqual("3Macc.1.1", "parsing: '3Macc 1:1'")
 		;
       return true;
     });
@@ -2645,7 +2652,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -2656,7 +2663,7 @@
     });
     return it("should handle book: 4Macc (hi)", function() {
       
-		expect(p.parse("4Macc 1:1").osis()).toEqual("4Macc.1.1")
+		expect(p.parse("4Macc 1:1").osis()).toEqual("4Macc.1.1", "parsing: '4Macc 1:1'")
 		;
       return true;
     });
@@ -2666,7 +2673,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -2677,7 +2684,7 @@
     });
     return it("should handle book: 1Macc (hi)", function() {
       
-		expect(p.parse("1Macc 1:1").osis()).toEqual("1Macc.1.1")
+		expect(p.parse("1Macc 1:1").osis()).toEqual("1Macc.1.1", "parsing: '1Macc 1:1'")
 		;
       return true;
     });
@@ -2687,7 +2694,7 @@
     var p;
     p = {};
     beforeEach(function() {
-      p = new bcv_parser;
+      p = new bcv_parser();
       p.set_options({
         book_alone_strategy: "ignore",
         book_sequence_strategy: "ignore",
@@ -2700,29 +2707,29 @@
       return expect(p.languages).toEqual(["hi"]);
     });
     it("should handle ranges (hi)", function() {
-      expect(p.parse("Titus 1:1 to 2").osis()).toEqual("Titus.1.1-Titus.1.2");
-      expect(p.parse("Matt 1to2").osis()).toEqual("Matt.1-Matt.2");
-      return expect(p.parse("Phlm 2 TO 3").osis()).toEqual("Phlm.1.2-Phlm.1.3");
+      expect(p.parse("Titus 1:1 to 2").osis()).toEqual("Titus.1.1-Titus.1.2", "parsing: 'Titus 1:1 to 2'");
+      expect(p.parse("Matt 1to2").osis()).toEqual("Matt.1-Matt.2", "parsing: 'Matt 1to2'");
+      return expect(p.parse("Phlm 2 TO 3").osis()).toEqual("Phlm.1.2-Phlm.1.3", "parsing: 'Phlm 2 TO 3'");
     });
     it("should handle chapters (hi)", function() {
-      expect(p.parse("Titus 1:1, chapter 2").osis()).toEqual("Titus.1.1,Titus.2");
-      return expect(p.parse("Matt 3:4 CHAPTER 6").osis()).toEqual("Matt.3.4,Matt.6");
+      expect(p.parse("Titus 1:1, chapter 2").osis()).toEqual("Titus.1.1,Titus.2", "parsing: 'Titus 1:1, chapter 2'");
+      return expect(p.parse("Matt 3:4 CHAPTER 6").osis()).toEqual("Matt.3.4,Matt.6", "parsing: 'Matt 3:4 CHAPTER 6'");
     });
     it("should handle verses (hi)", function() {
-      expect(p.parse("Exod 1:1 verse 3").osis()).toEqual("Exod.1.1,Exod.1.3");
-      return expect(p.parse("Phlm VERSE 6").osis()).toEqual("Phlm.1.6");
+      expect(p.parse("Exod 1:1 verse 3").osis()).toEqual("Exod.1.1,Exod.1.3", "parsing: 'Exod 1:1 verse 3'");
+      return expect(p.parse("Phlm VERSE 6").osis()).toEqual("Phlm.1.6", "parsing: 'Phlm VERSE 6'");
     });
     it("should handle 'and' (hi)", function() {
-      expect(p.parse("Exod 1:1 and 3").osis()).toEqual("Exod.1.1,Exod.1.3");
-      return expect(p.parse("Phlm 2 AND 6").osis()).toEqual("Phlm.1.2,Phlm.1.6");
+      expect(p.parse("Exod 1:1 and 3").osis()).toEqual("Exod.1.1,Exod.1.3", "parsing: 'Exod 1:1 and 3'");
+      return expect(p.parse("Phlm 2 AND 6").osis()).toEqual("Phlm.1.2,Phlm.1.6", "parsing: 'Phlm 2 AND 6'");
     });
     it("should handle titles (hi)", function() {
-      expect(p.parse("Ps 3 title, 4:2, 5:title").osis()).toEqual("Ps.3.1,Ps.4.2,Ps.5.1");
-      return expect(p.parse("PS 3 TITLE, 4:2, 5:TITLE").osis()).toEqual("Ps.3.1,Ps.4.2,Ps.5.1");
+      expect(p.parse("Ps 3 title, 4:2, 5:title").osis()).toEqual("Ps.3.1,Ps.4.2,Ps.5.1", "parsing: 'Ps 3 title, 4:2, 5:title'");
+      return expect(p.parse("PS 3 TITLE, 4:2, 5:TITLE").osis()).toEqual("Ps.3.1,Ps.4.2,Ps.5.1", "parsing: 'PS 3 TITLE, 4:2, 5:TITLE'");
     });
     it("should handle 'ff' (hi)", function() {
-      expect(p.parse("Rev 3ff, 4:2ff").osis()).toEqual("Rev.3-Rev.22,Rev.4.2-Rev.4.11");
-      return expect(p.parse("REV 3 FF, 4:2 FF").osis()).toEqual("Rev.3-Rev.22,Rev.4.2-Rev.4.11");
+      expect(p.parse("Rev 3ff, 4:2ff").osis()).toEqual("Rev.3-Rev.22,Rev.4.2-Rev.4.11", "parsing: 'Rev 3ff, 4:2ff'");
+      return expect(p.parse("REV 3 FF, 4:2 FF").osis()).toEqual("Rev.3-Rev.22,Rev.4.2-Rev.4.11", "parsing: 'REV 3 FF, 4:2 FF'");
     });
     it("should handle translations (hi)", function() {
       expect(p.parse("Lev 1 (ERV)").osis_and_translations()).toEqual([["Lev.1", "ERV"]]);
@@ -2733,14 +2740,14 @@
         book_alone_strategy: "full",
         book_range_strategy: "include"
       });
-      return expect(p.parse("1 to 3  Yoohanna").osis()).toEqual("1John.1-3John.1");
+      return expect(p.parse("1 to 3  Yoohanna").osis()).toEqual("1John.1-3John.1", "parsing: '1 to 3  Yoohanna'");
     });
     return it("should handle boundaries (hi)", function() {
       p.set_options({
         book_alone_strategy: "full"
       });
-      expect(p.parse("\u2014Matt\u2014").osis()).toEqual("Matt.1-Matt.28");
-      return expect(p.parse("\u201cMatt 1:1\u201d").osis()).toEqual("Matt.1.1");
+      expect(p.parse("\u2014Matt\u2014").osis()).toEqual("Matt.1-Matt.28", "parsing: '\u2014Matt\u2014'");
+      return expect(p.parse("\u201cMatt 1:1\u201d").osis()).toEqual("Matt.1.1", "parsing: '\u201cMatt 1:1\u201d'");
     });
   });
 

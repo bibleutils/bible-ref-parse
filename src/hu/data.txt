@@ -36,7 +36,7 @@ Ezra	Ezsdrás	Ezs?d
 Neh	Nehemiás	Neh
 Esth	Eszter	Eszt
 Job	Jób
-Ps	Zsoltárok	Zsolt
+Ps	Zsoltárok	Zsolt	Zsol
 Prov	Példabeszédek	Péld
 Eccl	Prédikátor	Préd
 Song	Salamon éneke	Énekek éneke	Én
@@ -44,7 +44,7 @@ Isa	Izajás	Éz?saiás	Iz	Ézs
 Jer	Jeremiás	Jer
 Lam	Jeremiás siralmai	Siralmak	Siralm?	Jeremiás sir
 Ezek	Ezékiel	Ez
-Dan	Dániel	Dán
+Dan	Dániel	Dn	Dán
 Hos	Ozeás	Oz	Hóseás	Hós
 Joel	Jóel	Joel	Jóél	Jo
 Amos	Ámós	Ámosz	Ám	Ámos
@@ -54,15 +54,15 @@ Mic	Mikeás	Mik
 Nah	Náhum	Náh
 Hab	Habakuk	Habakkuk	Hab
 Zeph	Szofoniás	Zofóniás	Szefaniás	Szof	Sofoniás
-Hag	Aggeus	Haggai	Haggeus	Ag
+Hag	Aggeus	Haggai	Haggeus	Agg	Ag
 Zech	Zakariás	Zak
 Mal	Malakiás	Mal
 Matt	Máté	Mt
 Mark	Márk	Mk
 Luke	Lukács	Lk
 John	János	Jn
-Acts	Cselekedetek	Apostolok cselekedetei	Az apostolok cselekedetei	Az ApCsel	Ap. Csel	Apostolok
-Rom	Rómaiakhoz	Róma?
+Acts	Cselekedetek	Apostolok cselekedetei	Az apostolok cselekedetei	Apcs	Az ApCsel	Ap. Csel	Apostolok
+Rom	Rómaiakhoz	Róma?	Rm
 1Cor	$FIRST Korinthusiakhoz	$FIRST Kor	$FIRST Korintusi	$FIRST Korinthus
 2Cor	$SECOND Korinthusiakhoz	$SECOND Kor	$SECOND Korintusi	$SECOND Korinthus
 Gal	Galatákhoz	Galata	Gal
@@ -77,8 +77,8 @@ Titus	Titusz?hoz	Titusz?	Tit
 Phlm	Filemonhoz	Philemonhoz	Filemon	Filem
 Heb	Héber levél	Zsidókhoz írt levél	Zsidókhoz	Zsidók	Zsid
 Jas	Jakab	Jak
-1Pet	$FIRST Péter	$FIRST Pét
-2Pet	$SECOND Péter	$SECOND Pét
+1Pet	$FIRST Péter	$FIRST Pét	$FIRST Pt	1Pt
+2Pet	$SECOND Péter	$SECOND Pét	$SECOND Pt	2Pt
 1John	$FIRST János	János I	$FIRST Jn
 2John	$SECOND János	János II	$SECOND Jn
 3John	$THIRD János	János III	$THIRD Jn
@@ -235,7 +235,7 @@ PrMan	Manassze imája	Manassé imádsága
 *Luke	Lukács	Lk
 *John	János	Jn
 *Acts	Cselekedetek	ApCsel
-*Rom	Rómaiakhoz	Róm
+*Rom	Rómaiakhoz	Rm	Róm
 *1Cor	1 Korinthusiakhoz	1 Kor
 *2Cor	2 Korinthusiakhoz	2 Kor
 *Gal	Galatákhoz	Gal

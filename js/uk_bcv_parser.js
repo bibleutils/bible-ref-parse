@@ -3216,7 +3216,7 @@
       },
       {
         osis: ["Dan"],
-        regexp: RegExp(`(^|${bcv_parser.prototype.regexps.pre_book})((?:Книга[\\s\\xa0]*пророка[\\s\\xa0]*Дани[ії]ла|Дани[ії]ла|Дан(?:и[ії]л)?|Dany[i\\xEF]l|Dan))(?:(?=[\\d\\s\\xa0.:,;\\x1e\\x1f&\\(\\)\\uff08\\uff09\\[\\]/"'\\*=~\\-\\u2013\\u2014])|$)`,
+        regexp: RegExp(`(^|${bcv_parser.prototype.regexps.pre_book})((?:Книга[\\s\\xa0]*пророка[\\s\\xa0]*Дани[ії]ла|Дани[ії]ла|Дані[ії]ла|Дан(?:и[ії]л)?|Dany[i\\xEF]l|Dan))(?:(?=[\\d\\s\\xa0.:,;\\x1e\\x1f&\\(\\)\\uff08\\uff09\\[\\]/"'\\*=~\\-\\u2013\\u2014])|$)`,
       "gi")
       },
       {

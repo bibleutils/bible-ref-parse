@@ -388,6 +388,7 @@ Josh	Jš
 Jude	Poslanica Jude apostola
 Jude	Judina poslanica
 Jude	Judina
+Jude	Juda
 Jude	Jude
 Jude	Jd
 Judg	Knjiga o Sucima
