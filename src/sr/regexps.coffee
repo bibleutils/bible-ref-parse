@@ -207,7 +207,7 @@ bcv_parser::regexps.get_books = (include_apocrypha, case_sensitive) ->
 	,
 		osis: ["Ps"]
 		regexp: ///(^|#{bcv_parser::regexps.pre_book})(
-		(?:Пс(?:ал(?:ми(?:[\s\xa0]*Давидови)?|ам))?|Ps)
+		(?:Пс(?:ал(?:ми(?:[\s\xa0]*Давидови)?|ам))?|Ps(?:alam)?)
 			)(?:(?=[\d\s\xa0.:,;\x1e\x1f&\(\)\uff08\uff09\[\]/"'\*=~\-\u2013\u2014])|$)///gi
 	,
 		osis: ["PrAzar"]
@@ -368,7 +368,7 @@ bcv_parser::regexps.get_books = (include_apocrypha, case_sensitive) ->
 	,
 		osis: ["John"]
 		regexp: ///(^|#{bcv_parser::regexps.pre_book})(
-		(?:Ј(?:еванђеље[\s\xa0]*по[\s\xa0]*Јовану|(?:ова)?н)|Еванђеље[\s\xa0]*по[\s\xa0]*Јовану|John)
+		(?:Ј(?:еванђеље[\s\xa0]*по[\s\xa0]*Јовану|(?:ова)?н)|Еванђеље[\s\xa0]*по[\s\xa0]*Јовану|Jo(?:va|h)n)
 			)(?:(?=[\d\s\xa0.:,;\x1e\x1f&\(\)\uff08\uff09\[\]/"'\*=~\-\u2013\u2014])|$)///gi
 	,
 		osis: ["Acts"]

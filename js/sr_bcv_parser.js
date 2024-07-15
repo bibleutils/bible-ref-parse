@@ -3174,7 +3174,7 @@
       },
       {
         osis: ["Ps"],
-        regexp: RegExp(`(^|${bcv_parser.prototype.regexps.pre_book})((?:Пс(?:ал(?:ми(?:[\\s\\xa0]*Давидови)?|ам))?|Ps))(?:(?=[\\d\\s\\xa0.:,;\\x1e\\x1f&\\(\\)\\uff08\\uff09\\[\\]/"'\\*=~\\-\\u2013\\u2014])|$)`,
+        regexp: RegExp(`(^|${bcv_parser.prototype.regexps.pre_book})((?:Пс(?:ал(?:ми(?:[\\s\\xa0]*Давидови)?|ам))?|Ps(?:alam)?))(?:(?=[\\d\\s\\xa0.:,;\\x1e\\x1f&\\(\\)\\uff08\\uff09\\[\\]/"'\\*=~\\-\\u2013\\u2014])|$)`,
       "gi")
       },
       {
@@ -3328,7 +3328,7 @@
       },
       {
         osis: ["John"],
-        regexp: RegExp(`(^|${bcv_parser.prototype.regexps.pre_book})((?:Ј(?:еванђеље[\\s\\xa0]*по[\\s\\xa0]*Јовану|(?:ова)?н)|Еванђеље[\\s\\xa0]*по[\\s\\xa0]*Јовану|John))(?:(?=[\\d\\s\\xa0.:,;\\x1e\\x1f&\\(\\)\\uff08\\uff09\\[\\]/"'\\*=~\\-\\u2013\\u2014])|$)`,
+        regexp: RegExp(`(^|${bcv_parser.prototype.regexps.pre_book})((?:Ј(?:еванђеље[\\s\\xa0]*по[\\s\\xa0]*Јовану|(?:ова)?н)|Еванђеље[\\s\\xa0]*по[\\s\\xa0]*Јовану|Jo(?:va|h)n))(?:(?=[\\d\\s\\xa0.:,;\\x1e\\x1f&\\(\\)\\uff08\\uff09\\[\\]/"'\\*=~\\-\\u2013\\u2014])|$)`,
       "gi")
       },
       {

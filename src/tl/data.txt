@@ -17,7 +17,7 @@ $UNICODE_BLOCK	Latin
 Gen	[GH]enesis	Gen
 Exod	Exodo	Exodus	Exo	Ex
 Lev	Le[bv]itico	Lebitikus	Le[bv]
-Num	Mga Bilang	B[ae]midbar	Bil	Blg
+Num	Mga Bilang	B[ae]midbar	Bil	Blg	Bilang
 Deut	Deuteronomiy?o	D[ei]?yuteronomyo	Deuteronomi?y?a	Deuteronomio?	Dt	Deut
 Josh	Josué	Joshua	Jos
 Judg	Mga Hukom	Huk	Hukom

@@ -823,6 +823,7 @@ Neh	Neh
 Num	Mga Bilang
 Num	Bamidbar
 Num	Bemidbar
+Num	Bilang
 Num	Bil
 Num	Blg
 Num	Num

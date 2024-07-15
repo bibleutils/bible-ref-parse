@@ -547,6 +547,7 @@ Joel	Јоил
 Joel	Јоиљ
 John	Јеванђеље по Јовану
 John	Еванђеље по Јовану
+John	Jovan
 John	Јован
 John	John
 John	Јн
@@ -651,6 +652,7 @@ Prov	Изреке
 Prov	Prov
 Prov	Пр
 Ps	Псалми Давидови
+Ps	Psalam
 Ps	Псалам
 Ps	Псалми
 Ps	Ps
