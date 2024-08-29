@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+    "outDir": "./dist",  // Adjust as needed
+    "rootDir": "./bin",
+    "sourceMap": true,
+    "strict": true
+  },
+  "include": ["bin/**/*"],
+  "exclude": ["node_modules", "**/*.spec.ts"]
+}

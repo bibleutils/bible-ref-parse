@@ -3,3 +3,4 @@ node_modules
 /js/_bcv_parser.js
 .idea
 .DS_Store
+.vscode
