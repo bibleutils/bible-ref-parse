@@ -5,7 +5,8 @@
     "outDir": "./dist",  // Adjust as needed
     "rootDir": "./bin",
     "sourceMap": true,
-    "strict": true
+    "strict": true,
+    "types": ["node"]
   },
   "include": ["bin/**/*"],
   "exclude": ["node_modules", "**/*.spec.ts"]

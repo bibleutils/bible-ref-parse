@@ -47,6 +47,7 @@
   "packageManager": "yarn@1.22.19+sha1.4ba7fc5c6e704fce2066ecbfb0b0d8976fe62447",
   "dependencies": {
     "base-64": "^1.0.0",
-    "json5": "^2.2.3"
+    "json5": "^2.2.3",
+    "ts-node": "^10.9.2"
   }
 }
