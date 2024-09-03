@@ -22,6 +22,7 @@ let coffeeFiles: string[];
 let outputJsFile: string;
 let specFile: string;
 let specJsFile: string;
+let specTestJsFile: string;
 
 if (isWindows) {
   console.log('Script is running on Windows');
@@ -42,7 +43,8 @@ if (isWindows) {
 
   // spec files
   specFile = path.win32.join(`${scriptPath}/../src/${lang}/spec.coffee`);
-  specJsFile = path.win32.join(`${scriptPath}/../test/js/${lang}.spec.js`);
+  specJsFile = path.win32.join(`${scriptPath}/../src/${lang}/spec.js`);
+  specTestJsFile = path.win32.join(`${scriptPath}/../test/js/${lang}.spec.js`);
 } else if (isMac || isLinux) {
   console.log('Script is running on Mac/Linux/Unix');
   
@@ -62,7 +64,8 @@ if (isWindows) {
 
   // spec files
   specFile = path.win32.join(`${scriptPath}/../src/${lang}/spec.coffee`);
-  specJsFile = path.win32.join(`${scriptPath}/../test/js/${lang}.spec.js`);
+  specJsFile = path.win32.join(`${scriptPath}/../src/${lang}/spec.js`);
+  specTestJsFile = path.win32.join(`${scriptPath}/../test/js/${lang}.spec.js`);
 } else {
   console.log('Unknown OS');
   process.exit(1);
@@ -76,7 +79,7 @@ try {
   // Add PEG.js global variables
   addPegjsGlobal(tempGrammarFile);
   
-  // console.log('Joining...');
+  console.log('Joining...');
   if(isWindows){
     const commaSeparatedPaths = coffeeFiles.map(file => "'" + file.replace("'", "''") + "'").join(', ');
     cmd = `powershell -Command "Get-Content -Path @(${commaSeparatedPaths}) | npx coffee --no-header --compile --stdio | Out-File -FilePath '${outputJsFile}' -Encoding utf8"`;
@@ -94,10 +97,12 @@ try {
   cmd = `npx coffee --no-header -c ${specFile}`;
   childProcess.execSync(cmd);
 
-  if(isWindows)
-    cmd = `powershell -Command "Move-Item -Path (${specFile} -replace '.coffee', '.js') -Destination ${specJsFile}"`;
+  if(isWindows) {
+    cmd = `powershell -Command "Move-Item -Path ${specJsFile} -Destination ${specTestJsFile}"`;
+    // cmd = `powershell -Command "Rename-Item -Path ${specFile} -NewName ${specJsFile}"`;
+  }
   else
-    cmd = `mv ${specFile.replace('.coffee', '.js')} ${specJsFile}`;
+    cmd = `mv ${specFile} ${specTestJsFile}`;
 
   childProcess.execSync(cmd);
   
