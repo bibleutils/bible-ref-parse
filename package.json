@@ -27,9 +27,9 @@
   },
   "homepage": "https://github.com/bibleutils/bible-ref-parse",
   "scripts": {
-    "add-language-legacy": "cd bin && perl 01.add_lang.pl",
+    "add-language": "cd bin && perl 01.add_lang.pl",
+    "add-language-new": "cd bin && tsc 01.add_lang.ts",
     "compile-language-legacy": "cd bin && perl 02.compile.pl",
-    "add-language": "cd bin && tsc 01.add_lang.ts",
     "compile-language": "cd bin && tsc 02.compile.ts",
     "build-language": "bash -c 'npm run add-language $0 && npm run compile-language $0'",
     "test-language": "bash -c 'npx jasmine-node test/js/$0.spec.js'",
