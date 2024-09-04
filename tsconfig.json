@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
     "target": "es6",
-    "module": "commonjs",
-    "outDir": "./dist",  // Adjust as needed
-    "rootDir": "./bin",
+    "module": "CommonJS",
+    "noEmit": true,
+    "noEmitOnError": true,
     "sourceMap": true,
     "strict": true,
     "types": ["node"]

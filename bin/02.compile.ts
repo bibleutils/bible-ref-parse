@@ -1,12 +1,14 @@
 import * as fs from 'fs';
-import { dirname } from 'path';
 import * as childProcess from 'child_process';
-import path = require('path');
+import * as path from 'path';
 import { platform } from 'process';
 
 
-const scriptPath = dirname(process.argv[1]);
+const scriptPath = path.resolve(__dirname, '..');
 const lang = process.argv[2];
+
+console.log(`Script Path: ${scriptPath}`);
+console.log(`Language: ${lang}`);
 
 if (!lang) {
   console.error('Please specify a language identifier as the first argument');
@@ -28,48 +30,54 @@ if (isWindows) {
   console.log('Script is running on Windows');
   
   // Grammer files
-  tempGrammarFile = path.win32.join(scriptPath, '../', `temp_${lang}_grammar.js`);
-  grammarFile = path.win32.join(scriptPath, '../', 'src', lang, 'grammar.pegjs');
+  tempGrammarFile = path.win32.join(scriptPath, `temp_${lang}_grammar.js`);
+  grammarFile = path.win32.join(scriptPath, 'src', lang, 'grammar.pegjs');
 
   // CoffeeScript files
   coffeeFiles = [
-    path.win32.join(`${scriptPath}/../src/core/bcv_parser.coffee`),
-    path.win32.join(`${scriptPath}/../src/core/bcv_passage.coffee`),
-    path.win32.join(`${scriptPath}/../src/core/bcv_utils.coffee`),
-    path.win32.join(`${scriptPath}/../src/${lang}/translations.coffee`),
-    path.win32.join(`${scriptPath}/../src/${lang}/regexps.coffee`),
+    path.win32.join(`${scriptPath}/src/core/bcv_parser.coffee`),
+    path.win32.join(`${scriptPath}/src/core/bcv_passage.coffee`),
+    path.win32.join(`${scriptPath}/src/core/bcv_utils.coffee`),
+    path.win32.join(`${scriptPath}/src/${lang}/translations.coffee`),
+    path.win32.join(`${scriptPath}/src/${lang}/regexps.coffee`),
   ];
-  outputJsFile = path.win32.join(`${scriptPath}/../js/${lang}_bcv_parser.js`);
+  outputJsFile = path.win32.join(`${scriptPath}/js/${lang}_bcv_parser.js`);
 
   // spec files
-  specFile = path.win32.join(`${scriptPath}/../src/${lang}/spec.coffee`);
-  specJsFile = path.win32.join(`${scriptPath}/../src/${lang}/spec.js`);
-  specTestJsFile = path.win32.join(`${scriptPath}/../test/js/${lang}.spec.js`);
+  specFile = path.win32.join(`${scriptPath}/src/${lang}/spec.coffee`);
+  specJsFile = path.win32.join(`${scriptPath}/src/${lang}/spec.js`);
+  specTestJsFile = path.win32.join(`${scriptPath}/test/js/${lang}.spec.js`);
 } else if (isMac || isLinux) {
   console.log('Script is running on Mac/Linux/Unix');
   
   // Grammer files
-  tempGrammarFile = path.posix.join(scriptPath, '../', `temp_${lang}_grammar.js`);
-  grammarFile = path.posix.join(scriptPath, '../', 'src', lang, 'grammar.pegjs');
+  tempGrammarFile = path.posix.join(scriptPath, `temp_${lang}_grammar.js`);
+  grammarFile = path.posix.join(scriptPath, 'src', lang, 'grammar.pegjs');
   
   // CoffeeScript files
   coffeeFiles = [
-    path.win32.join(`${scriptPath}/../src/core/bcv_parser.coffee`),
-    path.win32.join(`${scriptPath}/../src/core/bcv_passage.coffee`),
-    path.win32.join(`${scriptPath}/../src/core/bcv_utils.coffee`),
-    path.win32.join(`${scriptPath}/../src/${lang}/translations.coffee`),
-    path.win32.join(`${scriptPath}/../src/${lang}/regexps.coffee`),
+    path.win32.join(`${scriptPath}/src/core/bcv_parser.coffee`),
+    path.win32.join(`${scriptPath}/src/core/bcv_passage.coffee`),
+    path.win32.join(`${scriptPath}/src/core/bcv_utils.coffee`),
+    path.win32.join(`${scriptPath}/src/${lang}/translations.coffee`),
+    path.win32.join(`${scriptPath}/src/${lang}/regexps.coffee`),
   ];
-  outputJsFile = path.win32.join(`${scriptPath}/../js/${lang}_bcv_parser.js`);
+  outputJsFile = path.win32.join(`${scriptPath}/js/${lang}_bcv_parser.js`);
 
   // spec files
-  specFile = path.win32.join(`${scriptPath}/../src/${lang}/spec.coffee`);
-  specJsFile = path.win32.join(`${scriptPath}/../src/${lang}/spec.js`);
-  specTestJsFile = path.win32.join(`${scriptPath}/../test/js/${lang}.spec.js`);
+  specFile = path.win32.join(`${scriptPath}/src/${lang}/spec.coffee`);
+  specJsFile = path.win32.join(`${scriptPath}/src/${lang}/spec.js`);
+  specTestJsFile = path.win32.join(`${scriptPath}/test/js/${lang}.spec.js`);
 } else {
   console.log('Unknown OS');
   process.exit(1);
 }
+
+  console.log(`Temp Grammer File: ${tempGrammarFile}`);
+  console.log(`Grammer File: ${grammarFile}`);
+  console.log(`Spec File: ${specFile}`);
+  console.log(`Spec JS File: ${specJsFile}`);
+  console.log(`Spec Test JS File: ${specTestJsFile}`);
 
 let cmd: string = `npx pegjs --format globals --export-var grammar -o ${tempGrammarFile} ${grammarFile}`;
 try {
@@ -122,7 +130,7 @@ function addPegjsGlobal(file: string) {
 
 function addPeg(prefix: string): void {
     // Read the content of the temp grammar file
-    const pegFilePath = `${scriptPath}/../temp_${prefix}${lang}_grammar.js`;
+    const pegFilePath = `${scriptPath}/temp_${prefix}${lang}_grammar.js`;
     let peg;
     if(fs.existsSync(pegFilePath))
       peg = fs.readFileSync(pegFilePath, 'utf-8');
@@ -198,7 +206,7 @@ if ("punctuation_strategy" in options && options.punctuation_strategy === "eu") 
     }
 
     // Merge the modified PEG content into the destination file
-    mergeFile(`${scriptPath}/../js/#PREFIX${lang}_bcv_parser.js`, peg, prefix);
+    mergeFile(`${scriptPath}/js/#PREFIX${lang}_bcv_parser.js`, peg, prefix);
 }
 
 function mergeFile(file: string, peg: string, prefix: string): void {
