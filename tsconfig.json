@@ -1,13 +1,22 @@
 {
   "compilerOptions": {
-    "target": "es6",
-    "module": "CommonJS",
-    "noEmit": true,
-    "noEmitOnError": true,
+    "allowJs": true,
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "target": "esnext",
+    "isolatedModules": true,
+    "declaration": false,
+    "allowSyntheticDefaultImports": true,
     "sourceMap": true,
-    "strict": true,
-    "types": ["node"]
+    "resolveJsonModule": true,
+    "strictNullChecks": false,
+    "noImplicitAny": false,
+    "lib": ["esnext", "dom"],
+    "types": ["node", "jest", "@types/jest"],
+    "outDir": "./dist"
   },
-  "include": ["bin/**/*"],
-  "exclude": ["node_modules", "**/*.spec.ts"]
+  "include": ["src/**/*", "src/**/*.json", "bin/**/*"],
+  "exclude": ["node_modules", "dist"]
 }
+
+// "suppressExcessPropertyErrors": true,       // Removing due to deprecation warning. Please refer https://www.typescriptlang.org/tsconfig/#suppressExcessPropertyErrors
