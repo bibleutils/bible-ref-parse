@@ -27,7 +27,7 @@ let specJsFile: string;
 let specTestJsFile: string;
 
 if (isWindows) {
-  console.log('Script is running on Windows');
+  console.log('Script is running on Windows - ', platform);
   
   // Grammer files
   tempGrammarFile = path.win32.join(scriptPath, `temp_${lang}_grammar.js`);
@@ -79,13 +79,19 @@ if (isWindows) {
   console.log(`Spec JS File: ${specJsFile}`);
   console.log(`Spec Test JS File: ${specTestJsFile}`);
 
-let cmd: string = `npx pegjs --format globals --export-var grammar -o ${tempGrammarFile} ${grammarFile}`;
+let cmd: string = `pegjs --format globals --export-var grammar -o ${tempGrammarFile} ${grammarFile}`;
 try {
   // Run PEG.js to generate grammar file
-  childProcess.execSync(cmd);
+  if(isWindows){
+    cmd = `powershell -Command "npx pegjs --format globals --export-var grammar -o ${tempGrammarFile} ${grammarFile}"`
+  }
+  console.log('Test1 ->', cmd);
+  let output = childProcess.execSync(cmd);
+  console.log(output);
   
   // Add PEG.js global variables
   addPegjsGlobal(tempGrammarFile);
+  console.log('Test4');
   
   console.log('Joining...');
   if(isWindows){
@@ -95,7 +101,8 @@ try {
     cmd = `bash -c cat ${coffeeFiles.join(' ')} | coffee --no-header --compile --stdio > ${outputJsFile}`;
   }
   
-  childProcess.execSync(cmd);
+  output = childProcess.execSync(cmd);
+  console.log(output);
 
   // Add PEG.js code to output JS file
   addPeg('');
@@ -103,7 +110,8 @@ try {
   
   // Compile spec CoffeeScript file
   cmd = `npx coffee --no-header -c ${specFile}`;
-  childProcess.execSync(cmd);
+  output = childProcess.execSync(cmd);
+  console.log(output);
 
   if(isWindows) {
     cmd = `powershell -Command "Move-Item -Path ${specJsFile} -Destination ${specTestJsFile}"`;
@@ -112,7 +120,8 @@ try {
   else
     cmd = `mv ${specFile} ${specTestJsFile}`;
 
-  childProcess.execSync(cmd);
+  output = childProcess.execSync(cmd);
+  console.log(output);
   
   // Remove temporary grammar file
   fs.unlinkSync(tempGrammarFile);
@@ -124,7 +133,9 @@ try {
 function addPegjsGlobal(file: string) {
   const content = fs.readFileSync(file, 'utf-8');
   const modifiedContent = `var grammar;\n${content}`;
+  console.log('Test2');
   modifiedContent.replace(/\broot\.grammar/g, 'grammar');
+  console.log('Test3');
   fs.writeFileSync(file, modifiedContent);
 }
 
