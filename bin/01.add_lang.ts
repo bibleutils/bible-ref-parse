@@ -8,7 +8,7 @@ const gScriptPath = path.resolve(__dirname, '..');
 const gDir: string = `${gScriptPath}/src`;
 const gTestDir: string = `${gScriptPath}/test`;
 const gRegexpSpace = '[\\s\\x{a0}]';
-let gValidCharacters = `[\\d\\s\\xa0.:,;\\x1e\\x1f&\\(\\)\\uff08\\uff09\\[\\]/\"'\\*=~\\-\\u2013\\u2014]`;
+let gValidCharacters = "[\\d\\s\\xa0.:,;\\x1e\\x1f&\\(\\)\\uff08\\uff09\\[\\]/\"'\\*=~\\-\\u2013\\u2014]";
 const gValidOsises = makeValidOsises([
 	'Gen', 'Exod', 'Lev', 'Num', 'Deut', 'Josh', 'Judg', 'Ruth', '1Sam', '2Sam', '1Kgs', '2Kgs', '1Chr', '2Chr', 'Ezra', 'Neh', 'Esth',
 	'Job', 'Ps', 'Prov', 'Eccl', 'Song', 'Isa', 'Jer', 'Lam', 'Ezek', 'Dan', 'Hos', 'Joel', 'Amos', 'Obad', 'Jonah', 'Mic', 'Nah', 'Hab', 'Zeph',
@@ -270,15 +270,15 @@ function makeTests(): { [key: string]: string[] } {
 	// Replace placeholders in the spec template
 	let template = getFileContents(`${gDir}/template/spec.coffee`);
 	const langIsos = JSON.stringify(gVars['$LANG_ISOS']);
-	template = template.replace(/\$LANG_ISOS/, langIsos);
-	template = template.replace(/\$LANG/, lang);
+	template = template.replace(/\$LANG_ISOS/g, langIsos);
+	template = template.replace(/\$LANG/g, lang);
 	template = template.replace(/\$BOOK_TESTS/, out.join("\n"));
 	template = template.replace(/\$MISC_TESTS/, miscTests.join("\n"));
 	fs.writeFileSync(`${gDir}/${lang}/spec.coffee`, template, { encoding: 'utf-8' });
 
 	// Write HTML SpecRunner
 	let specRunner = getFileContents(`${gDir}/template/SpecRunner.html`);
-	specRunner = specRunner.replace(/\$LANG/, lang);
+	specRunner = specRunner.replace(/\$LANG/g, lang);
 	fs.writeFileSync(`${gTestDir}/${lang}.html`, specRunner, { encoding: 'utf-8' });
 
 	return allAbbrevsInMakeTests;
@@ -295,13 +295,14 @@ function makeRegexps() {
 	}
 
 	const osises = gOrder.slice();
-	for (const osis of Object.keys(gRawAbbrevs).sort()) {
-		if (!osis.includes(',')) continue;
+	const sortedRawAbbrevs = Object.keys(gRawAbbrevs).sort();
+	sortedRawAbbrevs.forEach(osis => {
+		if (!osis.includes(',')) return;
 
 		let temp = osis.replace(/,+$/, '');	// Replace last comma
 		const apocrypha = (gValidOsises[temp] && gValidOsises[temp] === 'apocrypha') ? true : false;
 		osises.push({ osis, apocrypha });
-	}
+	});
 
 	const bookRegexps = makeRegexpSet(osises);
 	out = out.replace(/\$BOOK_REGEXPS/, bookRegexps);
@@ -355,7 +356,7 @@ function makeRegexpSet(refs: any): string {
 			safes[abbrev] = safe.length;
 		}
 
-		const sortedSafes = Object.keys(safes).toSorted();
+		const sortedSafes = Object.keys(safes).sort((a,b) => b.length - a.length);
 		out.push(makeRegexp(osis, apocrypha, sortedSafes));
 	}
 
@@ -364,7 +365,7 @@ function makeRegexpSet(refs: any): string {
 
 function getFileContents(filePath: string): string {
 	try {
-		return fs.readFileSync(filePath, 'utf-8');
+		return fs.readFileSync(filePath, { encoding: 'utf-8' });
 	} catch (error: any) {
 		throw new Error(`Couldn't open ${filePath}: ${error.message}`);
 	}
@@ -376,42 +377,38 @@ function makeRegexp(osis: string, apocrypha: boolean, sortedSafes: string[]): st
 
 	for (let abbrev of sortedSafes) {
 		abbrev = abbrev.replace(/ /g, `${gRegexpSpace}*`);
-		abbrev = abbrev.replace(/[\u200B]/ug, () => {
+		abbrev = abbrev.replace(/[\\x{200b}]/g, () => {
 			let temp = gRegexpSpace;
-			temp = temp.replace(/\]$/, '\u200B]');
-			return `${temp}*`;
+			temp = temp.replace(/\]$!\\x{200b}]/, '\u200B]');
+			return `; "$temp*"`;
 		});
 		abbrev = handleAccents(abbrev);
-		abbrev = abbrev.replace(/(\$[A-Z]+)(?!\w)/g, (match) => formatVar('regexp', match) + "\\.?");
+		abbrev = abbrev.replace(/(\$[A-Z]+)(?!\w)/g, (match, g1) => `${formatVar('regexp', g1)}\\.?`);
 		abbrevList.push(abbrev);
 	}
 
 	const bookRegexp = makeBookRegexp(osis, gAllAbbrevs[osis], 1);
 	osis = osis.replace(/,+$/, '');
-	osis = osis.replace(/,/g, '", "');
-	out.push(`\t\tosis: ["${osis}"]\u000A\t\t`);
-
-	if (apocrypha) {
-		out.push("apocrypha: true\u000A\t\t");
-	}
-
+	osis = osis.replace(/,/g, `", "`);
+	out.push(`\t\tosis: ["${osis}"]\x0a\t\t`);
+	if (apocrypha) out.push("apocrypha: true\x0a\t\t");
 	let pre = '#{bcv_parser::regexps.pre_book}';
 	if (/^[0-9]/.test(osis) || /[0-9]/.test(abbrevList.join('|'))) {
 		pre = gVars['$PRE_BOOK_ALLOWED_CHARACTERS'].map((char: string) => formatValue('quote', char)).join('|');
 		if (pre === "\\\\d|\\\\b") {
 			pre = '\\b';
 		}
-		pre = pre.replace(/\\+d\|?/g, '');
+		pre = pre.replace(/\\+d\|?/, '');
 		pre = pre.replace(/^\|+/, '');
-		pre = pre.replace(/^\||\|\||\|$/g, ''); // remove leftover |
-		pre = pre.replace(/^\[\^/g, '[^0-9'); // if it's a negated class, add \d
+		pre = pre.replace(/^\||\|\||\|$/, ''); // remove leftover |
+		pre = pre.replace(/^\[\^/, '[^0-9'); // if it's a negated class, add \d
 	}
 
 	const post = gVars['$POST_BOOK_ALLOWED_CHARACTERS'].join('|');
-	out.push(`regexp: ///(^|${pre})(\u000A\t\t`);
-	out.push(bookRegexp[0]);
+	out.push(`regexp: ///(^|${pre})(\x0a\t\t`);
+	out.push(bookRegexp);
 	out[out.length - 1] = out[out.length - 1].replace(/-(?!\?)/g, '-?');
-	out.push(`\u000A\t\t\t)(?:(?=${post})|\\$)///gi`);
+	out.push(`\x0a\t\t\t)(?:(?=${post})|\$)///gi`);
 
 	return out.join("");
 }
@@ -1143,24 +1140,21 @@ function handleAccents(text: string) {
 
 	text = texts.join('');
 	// Replace single quote with a specific Unicode character
-	text = text.replace(/'/g, `[\u2019']`);
+	text = text.replace(/'/g, `[\\x{2019}']`);
 
 	// Replace \x{2c8} unless $COLLAPSE_COMBINING_CHARACTERS exists and is set to 'false'
 	if (!(gVars['$COLLAPSE_COMBINING_CHARACTERS'] && gVars['$COLLAPSE_COMBINING_CHARACTERS'][0] === 'false')) {
-		text = text.replace(/\u02C8(?!`)/g, '[\u02C8]');
+		text = text.replace(/\u{2c8}(?!`)/ug, `[\\x{2c8}']`);
 	}
 
 	// Remove the backtick following characters in the range \x80-\x{ffff}
-	text = text.replace(/([\u0080-\uFFFF])`/g, (match, g1) => `${g1}`);
+	text = text.replace(/([\x80-\u{10ffff}])`/ug, (match, g1) => `${g1}`);
 
 	// Replace specific Unicode characters with another set
-	text = text.replace(/[\u02B9\u0374]/g, '[\u2019\u0384\u0374\u02B9]');
+	text = text.replace(/[\u{2b9}\u{374}]/ug, `['\\x{2019}\\x{384}\\x{374}\\x{2b9}]`);
 
 	// Replace a specific pattern with a different pattern involving Unicode characters
-	text = text.replace(/([\u0300\u0370]-)\['\u2019\u0384\u0374\u02B9\](\u0376)/g, (match, g1, g2) => `${g1}\u0374${g2}`);
-
-	// Commented-out line in Perl; you can leave it out or add it back if needed:
-	// text = text.replace(/\.$/, '');
+	text = text.replace(/([\u{300}\u{370}]-)\['\u{2019}\u{384}\u{374}\u{2b9}\](\u{376})/ug, (match, g1, g2) => `${g1}\\x{374}${g2}`);
 
 	// Replace a period with a regex for optional period, but not followed by a backtick
 	text = text.replace(/\.(?!`)/g, '\\.?');
@@ -1169,7 +1163,7 @@ function handleAccents(text: string) {
 	text = text.replace(/\.`/g, '\\.');
 
 	// Replace backtick followed by a space with Unicode character \u2009
-	text = text.replace(/ `/g, '\u2009');
+	text = text.replace(/ `/g, '\\x{2009}');
 	return text;
 }
 
@@ -1182,15 +1176,18 @@ function handleAccent(char: string): string {
 	if (char !== alt && alt.length > 0 && /[^\s\d]/.test(alt)) {
 		return `[${char}${alt}]`;
 	}
-	char = char.replace(/[\u0660\u06f0\u07c0\u0966\u09e6\u0a66\u0ae6\u0b66\u0be6\u0c66\u0ce6\u0d66\u0e50\u0ed0\u0f20\u1040\u1090\u17e0\u1810\u1946\u19d0\u1a80\u1a90\u1b50\u1bb0\u1c40\u1c50\ua620\ua8d0\ua900\ua9d0\uaa50\uabf0\uff10]/g, `[$&0]`);
-	char = char.replace(/[\u0661\u06f1\u07c1\u0967\u09e7\u0a67\u0ae7\u0b67\u0be7\u0c67\u0ce7\u0d67\u0e51\u0ed1\u0f21\u1041\u1091\u17e1\u1811\u1947\u19d1\u1a81\u1a91\u1b51\u1bb1\u1c41\u1c51\ua621\ua8d1\ua901\ua9d1\uaa51\uabf1\uff11]/g, `[$&1]`);
-	char = char.replace(/[\u0662\u06f2\u07c2\u0968\u09e8\u0a68\u0ae8\u0b68\u0be8\u0c68\u0ce8\u0d68\u0e52\u0ed2\u0f22\u1042\u1092\u17e2\u1812\u1948\u19d2\u1a82\u1a92\u1b52\u1bb2\u1c42\u1c52\ua622\ua8d2\ua902\ua9d2\uaa52\uabf2\uff12]/g, `[$&2]`);
-	char = char.replace(/[\u0663\u06f3\u07c3\u0969\u09e9\u0a69\u0ae9\u0b69\u0be9\u0c69\u0ce9\u0d69\u0e53\u0ed3\u0f23\u1043\u1093\u17e3\u1813\u1949\u19d3\u1a83\u1a93\u1b53\u1bb3\u1c43\u1c53\ua623\ua8d3\ua903\ua9d3\uaa53\uabf3\uff13]/g, `[$&3]`);
-	char = char.replace(/[\u0664\u06f4\u07c4\u096a\u09ea\u0a6a\u0aea\u0b6a\u0bea\u0c6a\u0cea\u0d6a\u0e54\u0ed4\u0f24\u1044\u1094\u17e4\u1814\u194a\u19d4\u1a84\u1a94\u1b54\u1bb4\u1c44\u1c54\ua624\ua8d4\ua904\ua9d4\uaa54\uabf4\uff14]/g, `[$&4]`);
-	char = char.replace(/[\u0665\u06f5\u07c5\u096b\u09eb\u0a6b\u0aeb\u0b6b\u0beb\u0c6b\u0ceb\u0d6b\u0e55\u0ed5\u0f25\u1045\u1095\u17e5\u1815\u194b\u19d5\u1a85\u1a95\u1b55\u1bb5\u1c45\u1c55\ua625\ua8d5\ua905\ua9d5\uaa55\uabf5\uff15]/g, `[$&5]`);
-	char = char.replace(/[\u0665\u06f5\u07c5\u096b\u09eb\u0a6b\u0aeb\u0b6b\u0beb\u0c6b\u0ceb\u0d6b\u0e55\u0ed5\u0f25\u1045\u1095\u17e5\u1815\u194b\u19d5\u1a85\u1a95\u1b55\u1bb5\u1c45\u1c55\ua625\ua8d5\ua905\ua9d5\uaa55\uabf5\uff15]/g, `[$&5]`);
-	char = char.replace(/[\u0665\u06f5\u07c5\u096b\u09eb\u0a6b\u0aeb\u0b6b\u0beb\u0c6b\u0ceb\u0d6b\u0e55\u0ed5\u0f25\u1045\u1095\u17e5\u1815\u194b\u19d5\u1a85\u1a95\u1b55\u1bb5\u1c45\u1c55\ua625\ua8d5\ua905\ua9d5\uaa55\uabf5\uff15]/g, `[$&5]`);
-	char = char.replace(/[\u0665\u06f5\u07c5\u096b\u09eb\u0a6b\u0aeb\u0b6b\u0beb\u0c6b\u0ceb\u0d6b\u0e55\u0ed5\u0f25\u1045\u1095\u17e5\u1815\u194b\u19d5\u1a85\u1a95\u1b55\u1bb5\u1c45\u1c55\ua625\ua8d5\ua905\ua9d5\uaa55\uabf5\uff15]/g, `[$&5]`);
+
+	char = char.replace(/[\u0660\u06f0\u07c0\u0966\u09e6\u0a66\u0ae6\u0b66\u0be6\u0c66\u0ce6\u0d66\u0e50\u0ed0\u0f20\u1040\u1090\u17e0\u1810\u1946\u19d0\u1a80\u1a90\u1b50\u1bb0\u1c40\u1c50\u{00a620}\u{00a8d0}\u{00a900}\u{00a9d0}\u{00aa50}\u{00abf0}\uff10]/gu, (match, char)=> `${char}0`);
+	char = char.replace(/[\u0661\u06f1\u07c1\u0967\u09e7\u0a67\u0ae7\u0b67\u0be7\u0c67\u0ce7\u0d67\u0e51\u0ed1\u0f21\u1041\u1091\u17e1\u1811\u1947\u19d1\u1a81\u1a91\u1b51\u1bb1\u1c41\u1c51\u{00a621}\u{00a8d1}\u{00a901}\u{00a9d1}\u{00aa51}\u{00abf1}\uff11]/gu, (match, char)=> `${char}1`);
+	char = char.replace(/[\u0662\u06f2\u07c2\u0968\u09e8\u0a68\u0ae8\u0b68\u0be8\u0c68\u0ce8\u0d68\u0e52\u0ed2\u0f22\u1042\u1092\u17e2\u1812\u1948\u19d2\u1a82\u1a92\u1b52\u1bb2\u1c42\u1c52\u{00a622}\u{00a8d2}\u{00a902}\u{00a9d2}\u{00aa52}\u{00abf2}\uff12]/gu, (match, char)=> `${char}2`);
+	char = char.replace(/[\u0663\u06f3\u07c3\u0969\u09e9\u0a69\u0ae9\u0b69\u0be9\u0c69\u0ce9\u0d69\u0e53\u0ed3\u0f23\u1043\u1093\u17e3\u1813\u1949\u19d3\u1a83\u1a93\u1b53\u1bb3\u1c43\u1c53\u{00a623}\u{00a8d3}\u{00a903}\u{00a9d3}\u{00aa53}\u{00abf3}\uff13]/gu, (match, char)=> `${char}3`);
+	char = char.replace(/[\u0664\u06f4\u07c4\u096a\u09ea\u0a6a\u0aea\u0b6a\u0bea\u0c6a\u0cea\u0d6a\u0e54\u0ed4\u0f24\u1044\u1094\u17e4\u1814\u194a\u19d4\u1a84\u1a94\u1b54\u1bb4\u1c44\u1c54\u{00a624}\u{00a8d4}\u{00a904}\u{00a9d4}\u{00aa54}\u{00abf4}\uff14]/gu, (match, char)=> `${char}4`);
+	char = char.replace(/[\u0665\u06f5\u07c5\u096b\u09eb\u0a6b\u0aeb\u0b6b\u0beb\u0c6b\u0ceb\u0d6b\u0e55\u0ed5\u0f25\u1045\u1095\u17e5\u1815\u194b\u19d5\u1a85\u1a95\u1b55\u1bb5\u1c45\u1c55\u{00a625}\u{00a8d5}\u{00a905}\u{00a9d5}\u{00aa55}\u{00abf5}\uff15]/gu, (match, char)=> `${char}5`);
+	char = char.replace(/[\u0666\u06f6\u07c6\u096c\u09ec\u0a6c\u0aec\u0b6c\u0bec\u0c6c\u0cec\u0d6c\u0e56\u0ed6\u0f26\u1046\u1096\u17e6\u1816\u194c\u19d6\u1a86\u1a96\u1b56\u1bb6\u1c46\u1c56\u{00a626}\u{00a8d6}\u{00a906}\u{00a9d6}\u{00aa56}\u{00abf6}\uff16]/gu, (match, char)=> `${char}6`);
+	char = char.replace(/[\u0667\u06f7\u07c7\u096d\u09ed\u0a6d\u0aed\u0b6d\u0bed\u0c6d\u0ced\u0d6d\u0e57\u0ed7\u0f27\u1047\u1097\u17e7\u1817\u194d\u19d7\u1a87\u1a97\u1b57\u1bb7\u1c47\u1c57\u{00a627}\u{00a8d7}\u{00a907}\u{00a9d7}\u{00aa57}\u{00abf7}\uff17]/gu, (match, char)=> `${char}7`);
+	char = char.replace(/[\u0668\u06f8\u07c8\u096e\u09ee\u0a6e\u0aee\u0b6e\u0bee\u0c6e\u0cee\u0d6e\u0e58\u0ed8\u0f28\u1048\u1098\u17e8\u1818\u194e\u19d8\u1a88\u1a98\u1b58\u1bb8\u1c48\u1c58\u{00a628}\u{00a8d8}\u{00a908}\u{00a9d8}\u{00aa58}\u{00abf8}\uff18]/gu, (match, char)=> `${char}8`);
+	char = char.replace(/[\u0669\u06f9\u07c9\u096f\u09ef\u0a6f\u0aef\u0b6f\u0bef\u0c6f\u0cef\u0d6f\u0e59\u0ed9\u0f29\u1049\u1099\u17e9\u1819\u194f\u19d9\u1a89\u1a99\u1b59\u1bb9\u1c49\u1c59\u{00a629}\u{00a8d9}\u{00a909}\u{00a9d9}\u{00aa59}\u{00abf9}\uff19]/gu, (match, char)=> `${char}9`);
+	
 	return char;
 }
 
