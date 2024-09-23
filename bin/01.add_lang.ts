@@ -794,12 +794,12 @@ function formatVar(type: string, varName: string): string {
 		return values.length > 1 ? `(?:${out})` : out;
 	} else if (type === 'pegjs') {
 		values.forEach((value: string, index: number) => {
-			values[index] = values[index].replace(/\.(?!`)/, ' abbrev? ');
-			values[index] = values[index].replace(/\.`/g, ' abbrev ');
+			values[index] = values[index].replace(/\.(?!`)/, '" abbrev? "');
+			values[index] = values[index].replace(/\.`/g, '" abbrev "');
 			values[index] = values[index].replace(/([A-Z])/g, (match) => match.toLowerCase());
 			values[index] = handleAccents(values[index]);
 			values[index] = values[index].replace(/\[/g, '" [');
-			values[index] = values[index].replace(/\]/g, '] "');
+			values[index] = values[index].replace(/\]/g, '\] "');
 			values[index] = `"${values[index]}"`;
 			values[index] = values[index].replace(/\s*!\[/, '" ![');
 			values[index] = values[index].replace(/\s*!([^\[])/, (match, group1) => `" !"${group1}`);
@@ -816,13 +816,13 @@ function formatVar(type: string, varName: string): string {
 						outParts[outParts.length - 1] += 'space ';
 						part = part.replace(/^ /, '');
 					}
-					part = part.replace(/ /g, ' space ');
+					part = part.replace(/ /g, '" space "');
 					part = part.replace(/((?:^|")[^"]+?")( space )/g, (match, quote, space) => {
-						if (/[\x80-\u{10FFFF}]/u.test(quote)) quote += 'i'; // Add 'i' if Unicode
+						if (/[\x80-\uFFFF]/u.test(quote)) quote += 'i'; // Add 'i' if Unicode
 						return `${quote}${space}`;
 					});
 					outParts.push(part);
-					if (/[\x80-\u{10FFFF}]/u.test(part)) {
+					if (/[\x80-\uFFFF]/u.test(part)) {
 						parts[i + 1] = 'i' + parts[i + 1]; // Modify next part
 					}
 					isOutsideQuote = true;
@@ -833,13 +833,11 @@ function formatVar(type: string, varName: string): string {
 			});
 
 			values[index] = outParts.join('"');
-			values[index] = values[index].replace(/\[([^\]]*?[\x80-\uffff][^\]]*?)\]/ug, (match, group1) => {
-				console.log(`Group1 Match - 1: ${group1}`);
-				return `[${match}]i`
+			values[index] = values[index].replace(/\[([^\]]*?[\x80-\uffff][^\]]*?)\]/ug, (match, g1) => {
+				return `[${g1}]i`
 			});
-			values[index] = values[index].replace(/!(space ".+)/g, (match, group1) => {
-				console.log(`Group1 Match - 2: ${group1}`);
-				return `!(${group1})`
+			values[index] = values[index].replace(/!(space ".+)/g, (match, g1) => {
+				return `!(${g1})`
 			});
 			values[index] = values[index].replace(/\s+$/, '');
 
@@ -902,13 +900,13 @@ function handlePegjsPrepends(out: string, values: string[]): string {
 			return;
 		}
 
-		modifiedC = modifiedC.replace(/^""\s*/, '');
+		modifiedC = modifiedC.replace(/^"" /, '');
 		if (modifiedC.length > 0) {
 			outputArray.push(modifiedC);
 		}
 	});
 
-	if (!/i?\s*$/.test(longest)) {
+	if (!/"i?\s*$/.test(longest)) {
 		longest += '"';
 		if (/[\x80-\u{10FFFF}]/u.test(longest)) {
 			longest += 'i';
