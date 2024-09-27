@@ -7,7 +7,7 @@ import { argv } from 'process';
 const gScriptPath = path.resolve(__dirname, '..');
 const gDir: string = `${gScriptPath}/src`;
 const gTestDir: string = `${gScriptPath}/test`;
-const gRegexpSpace = '[\\s\\x{a0}]';
+const gRegexpSpace = '[\\s\u00a0}]';
 let gValidCharacters = "[\\d\\s\\xa0.:,;\\x1e\\x1f&\\(\\)\\uff08\\uff09\\[\\]/\"'\\*=~\\-\\u2013\\u2014]";
 const gValidOsises = makeValidOsises([
 	'Gen', 'Exod', 'Lev', 'Num', 'Deut', 'Josh', 'Judg', 'Ruth', '1Sam', '2Sam', '1Kgs', '2Kgs', '1Chr', '2Chr', 'Ezra', 'Neh', 'Esth',
@@ -206,6 +206,9 @@ function makeTests(): { [key: string]: string[] } {
 		out.push(...tests);
 		out.push(...addNonLatinDigitTests(osis, tests));
 
+		if(osis === '2Chr' || osis === '2Sam' || osis === '1Sam') {
+			console.log("Test-002");
+		}
 		// Add valid non-apocryphal OSIS tests
 		if (gValidOsises[first] !== 'apocrypha') {
 			out.push("\t\tp.include_apocrypha(false)");
@@ -220,23 +223,21 @@ function makeTests(): { [key: string]: string[] } {
 		out.push("\t\ttrue"); // Always return something in CoffeeScript.
 		// }
 	});
-
+	
+	// Write the book names to a file
+	const bookNamesPath = `${gDir}/${lang}/book_names.txt`;
 	let allabbrevs_sorted = Object.keys(allAbbrevsInMakeTests).toSorted();
-
-	let content = [];
+	
 	for (let osis of allabbrevs_sorted) {
 		const osisAbbrevs = sortAbbrevsByLength(Object.keys(allAbbrevsInMakeTests[osis]));
 		const useOsis = osis.replace(/,+$/, '');
 		for (const abbrev of osisAbbrevs) {
 			const use = abbrev.replace(/\u2009/ug, ' ');
-			content.push(`${useOsis}\t${use}\n`);
+			fs.writeFileSync(bookNamesPath, `${useOsis}\t${use}\n`, { encoding: 'utf-8' });
 		}
 		allAbbrevsInMakeTests[osis] = osisAbbrevs;
 	}
-
-	// Write the book names to a file
-	const bookNamesPath = `${gDir}/${lang}/book_names.txt`;
-	fs.writeFileSync(bookNamesPath, content.join('\n'), { encoding: 'utf-8' });
+	
 
 	// Create and write additional tests
 	const miscTests = [
@@ -329,14 +330,16 @@ function makeRegexpSet(refs: any): string {
 
 	for (const ref of refs) {
 		const { osis, apocrypha } = ref;
-
+		if(osis === '2Chr' || osis === '2Sam' || osis === '1Sam') {
+			console.log("Test-001");
+		}
 		if (osis === 'Ps' && !hasPsalmCb && fileExists(`${gDir}/${lang}/psalm_cb.coffee`)) {
 			out.push(getFileContents(`${gDir}/${lang}/psalm_cb.coffee`));
 			hasPsalmCb = true;
 		}
 
 		const safes: { [abbrev: string]: number } = {};
-		for (const abbrev of Object.keys(gRawAbbrevs[osis]).sort()) {
+		for (const abbrev of Object.keys(gRawAbbrevs[osis])) {
 			let safe = abbrev.replace(/[\[\]\?]/g, '');
 			safes[abbrev] = safe.length;
 		}
@@ -360,19 +363,23 @@ function makeRegexp(osis: string, apocrypha: boolean, sortedSafes: string[]): st
 	const out: string[] = [];
 	const abbrevList: string[] = [];
 
+	if(osis === 'Bel') {
+		console.log("Test-001");
+	}
 	for (let abbrev of sortedSafes) {
 		abbrev = abbrev.replace(/ /g, `${gRegexpSpace}*`);
-		abbrev = abbrev.replace(/[\\x{200b}]/g, () => {
+		abbrev = abbrev.replace(/[\u200B]/g, () => {
 			let temp = gRegexpSpace;
-			temp = temp.replace(/\]$!\\x{200b}]/, '\u200B]');
-			return `; "$temp*"`;
+			// Replace the closing bracket ']' at the end of 'temp' with \u200B followed by ']'
+			temp = temp.replace(/\]$/, '\u200B]');
+			return `${temp}*`;
 		});
 		abbrev = handleAccents(abbrev);
-		abbrev = abbrev.replace(/(\$[A-Z]+)(?!\w)/g, (match, g1) => `${formatVar('regexp', g1)}\\.?`);
+		abbrev = abbrev.replace(/\$[A-Z]+(?!\w)/g, (match) => formatVar('regexp', match) + "\\.?");
 		abbrevList.push(abbrev);
 	}
-
-	const bookRegexp = makeBookRegexp(osis, gAllAbbrevs[osis], 1);
+	
+	const bookRegexp = makeBookRegexp(osis, gAllAbbrevs[osis].slice(), 1);
 	osis = osis.replace(/,+$/, '');
 	osis = osis.replace(/,/g, `", "`);
 	out.push(`\t\tosis: ["${osis}"]\x0a\t\t`);
@@ -400,10 +407,13 @@ function makeRegexp(osis: string, apocrypha: boolean, sortedSafes: string[]): st
 
 function makeBookRegexp(osis: string, abbrevs: string[], recurseLevel: number) {
 	// Remove backslashes from each abbreviation
+	if(osis === '2Chr' || osis === '2Sam' || osis === '1Sam') {
+		console.log("Test-001");
+	}
 	abbrevs.map(abbrev => abbrev.replace(/\\/g, ''));
 
 	// Get subsets of the book abbreviations
-	const subsets = getBookSubsets(abbrevs);
+	const subsets = getBookSubsets(abbrevs.slice());
 	const out: string[] = [];
 	let i = 1;
 
@@ -431,11 +441,14 @@ function makeBookRegexp(osis: string, abbrevs: string[], recurseLevel: number) {
 			throw new Error("No regexp JSON object");
 		}
 
-		const patterns = regexp['patterns'].map((pattern: string) => formatNodeRegexpPattern(pattern));
+		let patterns: string[] = [];
+		for(let pattern of regexp['patterns']) {
+			patterns.push(formatNodeRegexpPattern(`${pattern}`));
+		}		
 		let pattern = patterns.join('|');
 		pattern = validateNodeRegexp(osis, pattern, subset, recurseLevel);
 		out.push(pattern);
-	}
+	};
 
 	validateFullNodeRegexp(osis, out.join('|'), abbrevs);
 	return out.join('|');
@@ -515,7 +528,7 @@ function makeTranslations() {
 		}
 	}
 
-	const regexp = makeBookRegexp('translations', regexps, 1);
+	const regexp = makeBookRegexp('translations', regexps.slice(), 1);
 	let alias = aliases.join('\x0a\t\t');
 
 	const translationAliasesPath = `${gDir}/${lang}/translation_aliases.coffee`;
@@ -534,7 +547,7 @@ function makeTranslations() {
 	out = out.replace(/\$TRANS_ALIAS/g, alias);
 	out = out.replace(/\s*\$TRANS_ALTERNATE/g, `\n${alternate}`);
 
-	const langIsos = JSON.parse(JSON.stringify(gVars['$LANG_ISOS']));
+	const langIsos = JSON.stringify(gVars['$LANG_ISOS']);
 	out = out.replace(/\$LANG_ISOS/g, langIsos);
 
 	fs.writeFileSync(`${gDir}/${lang}/translations.coffee`, out, { encoding: 'utf-8' });
@@ -602,6 +615,7 @@ function consolidateAbbrevs(...refs: { [key: string]: any }[]): string[][] {
 	return out;
 }
 
+// Most important function - We can easily mess up the regex matching. Be cautious while modifying it.
 function validateNodeRegexp(
 	osis: string,
 	pattern: string,
@@ -617,6 +631,9 @@ function validateNodeRegexp(
 	}
 
 	console.log(`RECURSE_LEVEL: ${recurseLevel}`);
+	if(osis === '2Sam' && recurseLevel == 2) {
+		console.log("Break");
+	}
 
 	if (recurseLevel > 10) {
 		console.log(`Splitting ${osis} by length...`);
@@ -624,11 +641,11 @@ function validateNodeRegexp(
 			throw new Error(`'Lengths' didn't work: ${osis}`);
 		}
 
-		const lengths = splitByLength(...abbrevs);
+		const lengths = splitByLength(abbrevs);
 		const patterns: string[] = [];
 
 		for (const length of Object.keys(lengths).sort((a, b) => Number(b) - Number(a))) {
-			patterns.push(makeBookRegexp(osis, lengths[length], 1));
+			patterns.push(makeBookRegexp(osis, lengths[length].slice(), 1));
 		}
 
 		return validateNodeRegexp(osis, patterns.join('|'), abbrevs, recurseLevel + 1, 'lengths');
@@ -636,20 +653,22 @@ function validateNodeRegexp(
 
 	console.log(`	 Recurse (${osis}): ${recurseLevel}`);
 
-	okPattern = makeBookRegexp(osis, oks, recurseLevel + 1);
-	notOkPattern = makeBookRegexp(osis, notOks, recurseLevel + 1);
+	okPattern = makeBookRegexp(osis, oks.slice(), recurseLevel + 1);
+	notOkPattern = makeBookRegexp(osis, notOks.slice(), recurseLevel + 1);
 
-	const shortestOk = oks.sort();
-	const shortestNotOk = notOks.sort();
+	// Find the shortest string values for current patterns
+	const shortestOk = oks.toSorted((a, b) => a.length - b.length)[0];
+	const shortestNotOk = notOks.toSorted((a, b) => a.length - b.length)[0];
 
 	let newPattern = (shortestOk.length > shortestNotOk.length && recurseLevel < 10)
 		? `${okPattern}|${notOkPattern}`
 		: `${notOkPattern}|${okPattern}`;
 
-	return validateNodeRegexp(osis, newPattern, abbrevs, recurseLevel + 1, 'final');
+	newPattern = validateNodeRegexp(osis, newPattern, abbrevs, recurseLevel + 1, 'final');
+	return newPattern;
 }
 
-function splitByLength(...abbrevs: string[]): { [key: number]: string[] } {
+function splitByLength(abbrevs: string[]): { [key: number]: string[] } {
 	const lengths: { [key: number]: string[] } = {};
 
 	for (const abbrev of abbrevs) {
@@ -672,6 +691,9 @@ function checkRegexpPattern(
 	const notOks: string[] = [];
 
 	for (const abbrev of abbrevs) {
+		if(abbrev === '2 Sm') {
+			console.log("Break-2");
+		}
 		let compare = `${abbrev} 1`;
 		compare = compare.replace(RegExp(`^(?:${pattern})`, 'i'), '');
 		if (compare !== ' 1') {
@@ -746,9 +768,9 @@ function formatNodeRegexpPattern(pattern: string): string {
 	}
 
 	// Replace spaces and special placeholders with corresponding patterns
-	pattern = pattern.replace(/ /g, '[\\s\\xa0]*');
-	pattern = pattern.replace(/::OPTIONAL_SPACE::/g, '\\s\\xa0');
-	pattern = pattern.replace(/\u2009/ug, '[\\s\\xa0]');
+	pattern = pattern.replace(/ /g, `[\\s\\xa0]*`);
+	pattern = pattern.replace(/::OPTIONAL_SPACE::/g, `\\s\\xa0`);
+	pattern = pattern.replace(/\u2009/ug, `[\\s\\xa0]`);
 
 	return pattern;
 }
@@ -1017,12 +1039,12 @@ function getAbbrevs() {
 	const fileName = `${gDir}/${lang}/data.txt`;
 	let hasCorrections = false;
 	try {
-		const correctionsFile = fs.createWriteStream('temp.corrections.txt', { encoding: 'utf-8' });
+		let correctionsFile: fs.WriteStream;
 		const fileContent = fs.readFileSync(fileName, { encoding: 'utf-8' });
 		const lines = fileContent.split('\n');
 		for (const line of lines) {
-			if(/^Hab/.test(line)) {
-				console.log("Test-004");
+			if(/^2Chr/.test(line) || /^1Sam/.test(line) || /^2Sam/.test(line)) {
+				console.log("Test-001");
 			}
 			if (/\t\s/.test(line) && /^[^\*]/.test(line)) {
 				console.log(`Tab followed by space: ${line}\n`);
@@ -1043,6 +1065,7 @@ function getAbbrevs() {
 			if (normalized !== line) {
 				console.log('Non-normalized text');
 				hasCorrections = true;
+				correctionsFile = fs.createWriteStream('temp.corrections.txt', { encoding: 'utf-8' });
 				correctionsFile.write(`${normalized}\n`);
 			}
 			const isLiteral = /^\*/.test(normalized);
@@ -1051,6 +1074,9 @@ function getAbbrevs() {
 			}
 			let [osis, ...l_abbrevs] = normalized.split('\t');
 			osis = osis.replace(/^\*/, '');
+			if(osis === '2Chr' || osis === '1Sam' || osis === '2Sam') {
+				console.log("Test-001");
+			}
 			isValidOsis(osis);
 			out[osis] = out[osis] || {};
 			out[osis][osis] = true;
@@ -1088,7 +1114,7 @@ function getAbbrevs() {
 				}
 			}
 		}
-		correctionsFile.close();
+		if(correctionsFile) correctionsFile.close();
 		if (hasCorrections) {
 			fs.unlinkSync('temp.corrections.txt');
 		}
@@ -1548,7 +1574,7 @@ function addTransTests() {
 	const out = [];
 	out.push(`\tit "should handle translations (${lang})", ->`);
 
-	for (const abbrev of gVars['$TRANS'].sort()) {
+	for (const abbrev of gVars['$TRANS'].toSorted()) {
 		for (const translation of expandAbbrev(removeExclamations(handleAccents(abbrev)))) {
 			let [trans, osis] = translation.split(',') || [translation, translation];
 			if(!osis) osis = trans;
