@@ -85,13 +85,11 @@ try {
   if(isWindows){
     cmd = `powershell -Command "npx pegjs --format globals --export-var grammar -o ${tempGrammarFile} ${grammarFile}"`
   }
-  console.log('Test1 ->', cmd);
   let output = childProcess.execSync(cmd);
   console.log(output);
   
   // Add PEG.js global variables
   addPegjsGlobal(tempGrammarFile);
-  console.log('Test4');
   
   console.log('Joining...');
   if(isWindows){
@@ -133,9 +131,7 @@ try {
 function addPegjsGlobal(file: string) {
   const content = fs.readFileSync(file, 'utf-8');
   const modifiedContent = `var grammar;\n${content}`;
-  console.log('Test2');
   modifiedContent.replace(/\broot\.grammar/g, 'grammar');
-  console.log('Test3');
   fs.writeFileSync(file, modifiedContent);
 }
 

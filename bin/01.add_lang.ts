@@ -206,9 +206,6 @@ function makeTests(): { [key: string]: string[] } {
 		out.push(...tests);
 		out.push(...addNonLatinDigitTests(osis, tests));
 
-		if(osis === '2Chr' || osis === '2Sam' || osis === '1Sam') {
-			console.log("Test-002");
-		}
 		// Add valid non-apocryphal OSIS tests
 		if (gValidOsises[first] !== 'apocrypha') {
 			out.push("\t\tp.include_apocrypha(false)");
@@ -330,9 +327,6 @@ function makeRegexpSet(refs: any): string {
 
 	for (const ref of refs) {
 		const { osis, apocrypha } = ref;
-		if(osis === '2Chr' || osis === '2Sam' || osis === '1Sam') {
-			console.log("Test-001");
-		}
 		if (osis === 'Ps' && !hasPsalmCb && fileExists(`${gDir}/${lang}/psalm_cb.coffee`)) {
 			out.push(getFileContents(`${gDir}/${lang}/psalm_cb.coffee`));
 			hasPsalmCb = true;
@@ -363,9 +357,6 @@ function makeRegexp(osis: string, apocrypha: boolean, sortedSafes: string[]): st
 	const out: string[] = [];
 	const abbrevList: string[] = [];
 
-	if(osis === 'Bel') {
-		console.log("Test-001");
-	}
 	for (let abbrev of sortedSafes) {
 		abbrev = abbrev.replace(/ /g, `${gRegexpSpace}*`);
 		abbrev = abbrev.replace(/[\u200B]/g, () => {
@@ -407,9 +398,6 @@ function makeRegexp(osis: string, apocrypha: boolean, sortedSafes: string[]): st
 
 function makeBookRegexp(osis: string, abbrevs: string[], recurseLevel: number) {
 	// Remove backslashes from each abbreviation
-	if(osis === '2Chr' || osis === '2Sam' || osis === '1Sam') {
-		console.log("Test-001");
-	}
 	abbrevs.map(abbrev => abbrev.replace(/\\/g, ''));
 
 	// Get subsets of the book abbreviations
@@ -1043,9 +1031,6 @@ function getAbbrevs() {
 		const fileContent = fs.readFileSync(fileName, { encoding: 'utf-8' });
 		const lines = fileContent.split('\n');
 		for (const line of lines) {
-			if(/^2Chr/.test(line) || /^1Sam/.test(line) || /^2Sam/.test(line)) {
-				console.log("Test-001");
-			}
 			if (/\t\s/.test(line) && /^[^\*]/.test(line)) {
 				console.log(`Tab followed by space: ${line}\n`);
 			  }
@@ -1074,9 +1059,6 @@ function getAbbrevs() {
 			}
 			let [osis, ...l_abbrevs] = normalized.split('\t');
 			osis = osis.replace(/^\*/, '');
-			if(osis === '2Chr' || osis === '1Sam' || osis === '2Sam') {
-				console.log("Test-001");
-			}
 			isValidOsis(osis);
 			out[osis] = out[osis] || {};
 			out[osis][osis] = true;
@@ -1312,22 +1294,6 @@ function expandAbbrev(abbrev: string): string[] {
 	return outs;
 }
 
-// Helper functions (add appropriate implementations)
-// function sortAbbrevsByLength(abbrevs: string[]): string[] {
-//     return abbrevs.sort((a, b) => b.length - a.length);
-// }
-
-// function sortAbbrevsByLength(strArray: string[]): string[] {
-//     // Sort abbreviations by length in descending order, and lexicographically within the same length
-//     return strArray.toSorted((a, b) => {
-//         const lengthDiff = a.length - b.length;
-//         if (lengthDiff !== 0) {
-//             return lengthDiff; // Sort by length descending
-//         }
-//         return a.localeCompare(b); // Sort lexicographically if lengths are equal
-//     });
-// }
-
 function sortAbbrevsByLength(abbrevs: string[]): string[] {
 	const lengths: { [key: number]: string[] } = {};
 	const out: string[] = [];
@@ -1364,9 +1330,6 @@ function expandAbbrevVars(abbrev: string): string[] {
 		return [abbrev];
 	}
 	const varName = varMatch[0];
-	if(/Hab/.test(varName)){
-		console.log("Test-001");
-	}
 
 	let out: string[] = [];
 	let recurse = false;
