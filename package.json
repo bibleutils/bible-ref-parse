@@ -31,7 +31,7 @@
 		"add-language": "cd bin && tsx 01.add_lang.ts",
 		"compile-language-legacy": "cd bin && perl 02.compile.pl",
 		"compile-language": "cd bin && npx tsx 02.compile.ts",
-		"build-language": "bash -c 'npm run add-language $0 && npm run compile-language $0'",
+		"build-language": "bash build-lanugage.sh",
 		"test-language": "bash -c 'npx jasmine-node test/js/$0.spec.js'",
 		"test": "(find test/js -name *.spec.ts | xargs -I % sh -c 'echo %; npx jasmine-node %';) || exit 1;"
 	},
