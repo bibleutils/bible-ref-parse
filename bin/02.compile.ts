@@ -79,7 +79,7 @@ if (isWindows) {
 // console.debug(`Spec Test JS File: ${specTestJsFile}`);
 
 
-let cmd: string = `bash -c pegjs --format globals --export-var grammar -o ${tempGrammarFile} ${grammarFile}`;
+let cmd: string = `npx pegjs --format globals --export-var grammar -o ${tempGrammarFile} ${grammarFile}`;
 try {
 	// Run PEG.js to generate grammar file
 	if (isWindows) {
@@ -96,7 +96,7 @@ try {
 		const commaSeparatedPaths = coffeeFiles.map(file => "'" + file.replace("'", "''") + "'").join(', ');
 		cmd = `powershell -Command "Get-Content -Path @(${commaSeparatedPaths}) | npx coffee --no-header --compile --stdio | Out-File -FilePath '${outputJsFile}' -Encoding UTF8"`;
 	} else {
-		cmd = `bash -c cat ${coffeeFiles.join(' ')} | coffee --no-header --compile --stdio > ${outputJsFile}`;
+		cmd = `cat ${coffeeFiles.join(' ')} | coffee --no-header --compile --stdio > ${outputJsFile}`;
 	}
 
 	// console.debug(cmd);
@@ -118,7 +118,7 @@ try {
 		// cmd = `powershell -Command "Rename-Item -Path ${specFile} -NewName ${specJsFile}"`;
 	}
 	else
-		cmd = `bash -c mv ${specJsFile} ${specTestJsFile}`;
+		cmd = `mv ${specJsFile} ${specTestJsFile}`;
 
 	childProcess.execSync(cmd, { encoding: 'utf-8' });
 	// console.log(output);

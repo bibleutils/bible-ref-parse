@@ -3,6 +3,11 @@ import * as path from 'path';
 import { execSync } from 'child_process';
 import { argv } from 'process';
 
+type Ref = {
+	osis: string;
+	apocrypha: boolean;
+}
+
 // GLOBAL VARIABLES
 const gScriptPath = path.resolve(__dirname, '..');
 const gDir: string = `${gScriptPath}/src`;
@@ -27,13 +32,13 @@ if (!lang || !/^\w+$/.test(lang)) {
 console.log(`${argv[1]} Starting...`);
 
 const gRawAbbrevs: any = {};
-console.log("Global 'gRawAbbrevs' Variable Value: ", gRawAbbrevs);
+// console.log("Global 'gRawAbbrevs' Variable Value: ", gRawAbbrevs);
 const gVars = getVars();
-console.log("Global 'gVars' Variable Value: ", gVars);
+// console.log("Global 'gVars' Variable Value: ", gVars);
 const gAbbrevs: any = getAbbrevs();
-console.log("Global 'gAbbrevs' Variable Value: ", gAbbrevs);
+// console.log("Global 'gAbbrevs' Variable Value: ", gAbbrevs);
 const gOrder = getOrder();
-console.log("Global 'gOrder' Variable Value: ", gOrder);
+// console.log("Global 'gOrder' Variable Value: ", gOrder);
 const gAllAbbrevs = makeTests();
 console.log("Make Regular Expressions...");
 // Every global variable is matching till this point
@@ -224,17 +229,18 @@ function makeTests(): { [key: string]: string[] } {
 	// Write the book names to a file
 	const bookNamesPath = `${gDir}/${lang}/book_names.txt`;
 	let allabbrevs_sorted = Object.keys(allAbbrevsInMakeTests).toSorted();
-	
+	let bookNamesFile = '';
+
 	for (let osis of allabbrevs_sorted) {
 		const osisAbbrevs = sortAbbrevsByLength(Object.keys(allAbbrevsInMakeTests[osis]));
-		const useOsis = osis.replace(/,+$/, '');
+		const useOsis = osis.replace(/,+$/, ''); // Remove trailing commas
 		for (const abbrev of osisAbbrevs) {
-			const use = abbrev.replace(/\u2009/ug, ' ');
-			fs.writeFileSync(bookNamesPath, `${useOsis}\t${use}\n`, { encoding: 'utf-8' });
+			const use = abbrev.replace(/\u2009/ug, ' '); // Replace a thin space with a regular space
+			bookNamesFile += `${useOsis}\t${use}\n`;
 		}
 		allAbbrevsInMakeTests[osis] = osisAbbrevs;
 	}
-	
+	fs.writeFileSync(bookNamesPath, bookNamesFile);
 
 	// Create and write additional tests
 	const miscTests = [
@@ -321,7 +327,7 @@ function makeRegexps() {
 	}
 }
 
-function makeRegexpSet(refs: any): string {
+function makeRegexpSet(refs: Ref[]): string {
 	const out = [];
 	let hasPsalmCb = false;
 
@@ -398,7 +404,7 @@ function makeRegexp(osis: string, apocrypha: boolean, sortedSafes: string[]): st
 
 function makeBookRegexp(osis: string, abbrevs: string[], recurseLevel: number) {
 	// Remove backslashes from each abbreviation
-	abbrevs.map(abbrev => abbrev.replace(/\\/g, ''));
+	abbrevs = abbrevs.map(abbrev => abbrev.replace(/\\/g, ''));
 
 	// Get subsets of the book abbreviations
 	const subsets = getBookSubsets(abbrevs.slice());
@@ -436,7 +442,8 @@ function makeBookRegexp(osis: string, abbrevs: string[], recurseLevel: number) {
 		let pattern = patterns.join('|');
 		pattern = validateNodeRegexp(osis, pattern, subset, recurseLevel);
 		out.push(pattern);
-	};
+
+	}
 
 	validateFullNodeRegexp(osis, out.join('|'), abbrevs);
 	return out.join('|');
