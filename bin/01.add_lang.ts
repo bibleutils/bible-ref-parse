@@ -43,7 +43,7 @@ const gAllAbbrevs = makeTests();
 console.log("Make Regular Expressions...");
 // Every global variable is matching till this point
 makeRegexps();
-console.log("Make Grammer...");
+console.log("Make Grammar...");
 makeGrammar();
 const defaultAlternatesFile = `${gDir}/en/translation_alternates.coffee`;
 console.log("Make Translations...");
@@ -75,7 +75,6 @@ function getVars() {
 		process.exit(1);
 	}
 
-	try {
 		const fileContent = fs.readFileSync(fileName, { encoding: 'utf-8', flag: 'r' });
 		const lines = fileContent.split('\n');
 		for (const line of lines) {
@@ -89,11 +88,7 @@ function getVars() {
 				out[key] = values;
 			}
 		}
-	} catch (error: any) {
-		console.log(`Current Working Dir: ${__dirname}`);
-		console.error(`Unexpected Error: ${error.message}`);
-		process.exit(3);
-	}
+
 
 	if (out['$ALLOWED_CHARACTERS']) {
 		for (const char of out['$ALLOWED_CHARACTERS']) {
@@ -287,7 +282,9 @@ function makeRegexps() {
 	const sortedRawAbbrevs = Object.keys(gRawAbbrevs).sort();
 	sortedRawAbbrevs.forEach(osis => {
 		if (!osis.includes(',')) return;
-
+		if (osis.charAt(osis.length - 1) === ',') {
+			console.error('OSIS - WITH TRAILING COMMA', osis);
+		}
 		let temp = osis.replace(/,+$/, '');	// Replace last comma
 		const apocrypha = (gValidOsises[temp] && gValidOsises[temp] === 'apocrypha') ? true : false;
 		osises.push({ osis, apocrypha });
@@ -1028,12 +1025,17 @@ function getUnicodeBlocks(unicodeBlock: string[]): [number, number][] {
 	}
 	return out;
 }
+type Abbrevs = {
+	[osis: string]: {
+		[abbrev: string]: boolean;
+	}
+};
 
 function getAbbrevs() {
-	const out: { [key: string]: { [key: string]: boolean } } = {};
+	const out: Abbrevs = {};
 	const fileName = `${gDir}/${lang}/data.txt`;
 	let hasCorrections = false;
-	try {
+		
 		let correctionsFile: fs.WriteStream;
 		const fileContent = fs.readFileSync(fileName, { encoding: 'utf-8' });
 		const lines = fileContent.split('\n');
@@ -1108,69 +1110,57 @@ function getAbbrevs() {
 			fs.unlinkSync('temp.corrections.txt');
 		}
 
-	} catch (error: any) {
-		console.log(`Current Working Dir: ${__dirname}`);
-		console.error(`Unexpected Error: ${error.message}`);
-		process.exit(4);
-	}
-
 	return out;
 }
 
-function handleAccents(text: string) {
-	const chars = text.split('');
-	const texts: string[] = [];
-	let context = '';
 
-	while (chars.length) {
-		let char = chars.shift();
-		const regex = RegExp('^[\x80-\u{10FFFF}]$', 'u');
-		if (regex.test(char)) {
-			if (chars[0] === '`') {
-				texts.push(char, chars.shift());
+function handleAccents(text: string): string {
+	let chars: string[] = [...text]; // Split the text into an array of characters
+	let texts: string[] = [];
+	let context: string = '';
+	while (chars.length > 0) {
+		let char = chars.shift()!;
+
+		if (/^[\x80-\uFFFF]$/.test(char)) {
+			if (chars.length > 0 && chars[0] === '`') {
+				texts.push(char);
+				texts.push(chars.shift()!);
 				continue;
 			}
 			char = handleAccent(char);
 			if (context === '[') {
-				char = char.replace(/^\[|\]$/, '');
+				char = char.replace(/^\[|\]$/g, ''); // Removes square brackets if in context
 			}
-		} else if (chars[0] === '`') {
-			texts.push(char, chars.shift());
+		} else if (chars.length > 0 && chars[0] === '`') {
+			texts.push(char);
+			texts.push(chars.shift()!);
 			continue;
-		} else if (char === '[' && texts.slice(-1)[0] !== '\\') {
+		} else if (char === '[' && !(texts.length > 0 && texts[texts.length - 1] === '\\')) {
 			context = '[';
-		} else if (char === ']' && texts.slice(-1)[0] !== '\\') {
+		} else if (char === ']' && !(texts.length > 0 && texts[texts.length - 1] === '\\')) {
 			context = '';
 		}
+
 		texts.push(char);
 	}
 
 	text = texts.join('');
-	// Replace single quote with a specific Unicode character
-	text = text.replace(/'/g, `[\\x{2019}']`);
 
-	// Replace \x{2c8} unless $COLLAPSE_COMBINING_CHARACTERS exists and is set to 'false'
-	if (!(gVars['$COLLAPSE_COMBINING_CHARACTERS'] && gVars['$COLLAPSE_COMBINING_CHARACTERS'][0] === 'false')) {
-		text = text.replace(/\u{2c8}(?!`)/ug, `[\\x{2c8}']`);
+	// Applying regex replacements similar to the original Perl code
+	text = text.replace(/'/g, '\u2019'); // Replace apostrophe with right single quotation mark
+	text = text.replace(/\u02C8(?!`)/g, '\u02C8\''); // Replace modifier letter vertical line
+
+	// Conditional replacement based on COLLAPSE_COMBINING_CHARACTERS
+	const COLLAPSE_COMBINING_CHARACTERS = false; // You may retrieve this from some config or input
+	if (!COLLAPSE_COMBINING_CHARACTERS) {
+		text = text.replace(/([\x80-\uFFFF])`/g, '$1');
 	}
 
-	// Remove the backtick following characters in the range \x80-\x{ffff}
-	text = text.replace(/([\x80-\u{10ffff}])`/ug, (match, g1) => `${g1}`);
-
-	// Replace specific Unicode characters with another set
-	text = text.replace(/[\u{2b9}\u{374}]/ug, `['\\x{2019}\\x{384}\\x{374}\\x{2b9}]`);
-
-	// Replace a specific pattern with a different pattern involving Unicode characters
-	text = text.replace(/([\u{300}\u{370}]-)\['\u{2019}\u{384}\u{374}\u{2b9}\](\u{376})/ug, (match, g1, g2) => `${g1}\\x{374}${g2}`);
-
-	// Replace a period with a regex for optional period, but not followed by a backtick
-	text = text.replace(/\.(?!`)/g, '\\.?');
-
-	// Replace period followed by a backtick with an escaped period
-	text = text.replace(/\.`/g, '\\.');
-
-	// Replace backtick followed by a space with Unicode character \u2009
-	text = text.replace(/ `/g, '\\x{2009}');
+	text = text.replace(/[\u02B9\u0374]/g, '\u2019\u0384\u0374\u02B9'); // Replace specified characters
+	text = text.replace(/([\u0300\u0370]-)\[\u2019\u0384\u0374\u02B9\](\u0376)/g, '$1\u0374$2'); // Replace accents
+	text = text.replace(/\.(?!`)/g, '\\.?'); // Escape period
+	text = text.replace(/\.`/g, '\\.'); // Escape period followed by `
+	text = text.replace(/ `/g, '\u2009'); // Replace space followed by ` with thin space
 	return text;
 }
 
@@ -1293,8 +1283,8 @@ function expandAbbrev(abbrev: string): string[] {
 		}
 	}
 
-	if (outs.join('').match(/[\[\]]/)) {
-		console.error("Unexpected char:", outs);
+	if (/[\[\]]/.test(outs.join(''))) {
+		console.error("Unexpected char: ", outs, 'abbrev', abbrev);
 		throw new Error("Unexpected char");
 	}
 
