@@ -35,6 +35,7 @@ console.log(`${argv[1]} Starting...`);
 const gRawAbbrevs: any = {};
 // console.log("Global 'gRawAbbrevs' Variable Value: ", gRawAbbrevs);
 const gVars = getVars();
+const COLLAPSE_COMBINING_CHARACTERS = gVars['$COLLAPSE_COMBINING_CHARACTERS'] && gVars['$COLLAPSE_COMBINING_CHARACTERS'][0] === 'false' || false;
 // console.log("Global 'gVars' Variable Value: ", gVars);
 const gAbbrevs: any = getAbbrevs();
 // console.log("Global 'gAbbrevs' Variable Value: ", gAbbrevs);
@@ -1149,14 +1150,13 @@ function handleAccents(text: string): string {
 	text = texts.join('');
 
 	// Applying regex replacements similar to the original Perl code
-	text = text.replace(/'/g, '\u2019'); // Replace apostrophe with right single quotation mark
+	text = text.replace(/'/g, '[\u2019\']'); // Replace apostrophe with right single quotation mark
 	// Conditional replacement based on COLLAPSE_COMBINING_CHARACTERS
-	const COLLAPSE_COMBINING_CHARACTERS = false; // You may retrieve this from some config or input
 	if (!COLLAPSE_COMBINING_CHARACTERS) {
-		text = text.replace(/\u02C8(?!`)/g, '\u02C8\''); // Replace modifier letter vertical line
+		text = text.replace(/\u02C8(?!`)/g, '[\u02C8\']'); // Replace modifier letter vertical line
 	}
 	text = text.replace(/([\x80-\uFFFF])`/g, '$1');
-	text = text.replace(/[\u02B9\u0374]/g, '\u2019\u0384\u0374\u02B9'); // Replace specified characters
+	text = text.replace(/[\u02B9\u0374]/g, '[\'\u2019\u0384\u0374\u02B9]'); // Replace specified characters
 	text = text.replace(/([\u0300\u0370]-)\[\u2019\u0384\u0374\u02B9\](\u0376)/g, '$1\u0374$2'); // Replace accents
 	text = text.replace(/\.(?!`)/g, '\\.?'); // Escape period
 	text = text.replace(/\.`/g, '\\.'); // Escape period followed by `
@@ -1166,7 +1166,7 @@ function handleAccents(text: string): string {
 
 function handleAccent(char: string): string {
 	let alt = char.normalize('NFD');
-	if (!gVars['$COLLAPSE_COMBINING_CHARACTERS'] || gVars['$COLLAPSE_COMBINING_CHARACTERS'][0] !== 'false') {
+	if (!COLLAPSE_COMBINING_CHARACTERS) {
 		alt = alt.replace(/\p{M}/gu, ''); // remove combining characters
 	}
 	alt = alt.normalize('NFC');
