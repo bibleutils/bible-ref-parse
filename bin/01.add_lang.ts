@@ -1157,7 +1157,7 @@ function handleAccents(text: string): string {
 	}
 	text = text.replace(/([\x80-\uFFFF])`/g, '$1');
 	text = text.replace(/[\u02B9\u0374]/g, '[\'\u2019\u0384\u0374\u02B9]'); // Replace specified characters
-	text = text.replace(/([\u0300\u0370]-)\[\u2019\u0384\u0374\u02B9\](\u0376)/g, '$1\u0374$2'); // Replace accents
+	text = text.replace(/([\u0300\u0370]-)\['\u2019\u0384\u0374\u02B9\](\u0376)/g, '$1\u0374$2'); // Replace accents
 	text = text.replace(/\.(?!`)/g, '\\.?'); // Escape period
 	text = text.replace(/\.`/g, '\\.'); // Escape period followed by `
 	text = text.replace(/ `/g, '\u2009'); // Replace space followed by ` with thin space
