@@ -1063,12 +1063,13 @@ function getAbbrevs() {
 			correctionsFile = fs.createWriteStream('temp.corrections.txt', { encoding: 'utf-8' });
 			correctionsFile.write(`${normalized}\n`);
 		}
-		const isLiteral = /^\*/.test(normalized);
+		const literalRegExp = /^\*/;
+		const isLiteral = literalRegExp.test(normalized);
 		if (isLiteral) {
-			normalized = normalized.replace(/([\x80-\uffff])/u, (match, g1) => `${g1}\``);
+			normalized = normalized.replace(/([\x80-\uffff])/gu, (match, g1) => `${g1}\``);
 		}
 		let [osis, ...l_abbrevs] = normalized.split('\t');
-		osis = osis.replace(/^\*/, '');
+		osis = osis.replace(literalRegExp, '');
 		isValidOsis(osis);
 		out[osis] = out[osis] || {};
 		out[osis][osis] = true;
