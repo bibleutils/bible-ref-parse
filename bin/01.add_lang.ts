@@ -12,7 +12,8 @@ type Ref = {
 const gScriptPath = path.resolve(__dirname, '..');
 const gDir: string = `${gScriptPath}/src`;
 const gTestDir: string = `${gScriptPath}/test`;
-const gRegexpSpace = '[\\s\u00a0}]';
+const gDataFileName = 'data.txt';
+const gRegexpSpace = '[\\s\u00a0]';
 let gValidCharacters = "[\\d\\s\\xa0.:,;\\x1e\\x1f&\\(\\)\\uff08\\uff09\\[\\]/\"'\\*=~\\-\\u2013\\u2014]";
 const gValidOsises = makeValidOsises([
 	'Gen', 'Exod', 'Lev', 'Num', 'Deut', 'Josh', 'Judg', 'Ruth', '1Sam', '2Sam', '1Kgs', '2Kgs', '1Chr', '2Chr', 'Ezra', 'Neh', 'Esth',
@@ -34,6 +35,7 @@ console.log(`${argv[1]} Starting...`);
 const gRawAbbrevs: any = {};
 // console.log("Global 'gRawAbbrevs' Variable Value: ", gRawAbbrevs);
 const gVars = getVars();
+const COLLAPSE_COMBINING_CHARACTERS = gVars['$COLLAPSE_COMBINING_CHARACTERS'] && gVars['$COLLAPSE_COMBINING_CHARACTERS'][0] === 'false' || false;
 // console.log("Global 'gVars' Variable Value: ", gVars);
 const gAbbrevs: any = getAbbrevs();
 // console.log("Global 'gAbbrevs' Variable Value: ", gAbbrevs);
@@ -68,26 +70,26 @@ function escapeRegExp(pattern: string) {
 
 function getVars() {
 	const out = {};
-	const fileName: string = path.join(gScriptPath, 'src', lang, 'data.txt');
+	const fileName: string = path.join(gScriptPath, 'src', lang, gDataFileName);
 	if (!fileExists(fileName)) {
 		console.log(`Current Working Dir: ${__dirname}`);
 		console.error(`Can't open ${fileName}. Make sure it is present.`);
 		process.exit(1);
 	}
 
-		const fileContent = fs.readFileSync(fileName, { encoding: 'utf-8', flag: 'r' });
-		const lines = fileContent.split('\n');
-		for (const line of lines) {
-			if (/^\$/.test(line)) {
-				const [key, ...values] = line.normalize('NFD').normalize('NFC').split(/\t/);
-				if (!values.length) {
-					console.log(`Current Working Dir: ${__dirname}`);
-					console.error(`No values for ${key}`);
-					process.exit(2);
-				}
-				out[key] = values;
+	const fileContent = fs.readFileSync(fileName, { encoding: 'utf-8', flag: 'r' });
+	const lines = fileContent.split('\n');
+	for (const line of lines) {
+		if (/^\$/.test(line)) {
+			const [key, ...values] = line.normalize('NFD').normalize('NFC').split(/\t/);
+			if (!values.length) {
+				console.log(`Current Working Dir: ${__dirname}`);
+				console.error(`No values for ${key}`);
+				process.exit(2);
 			}
+			out[key] = values;
 		}
+	}
 
 
 	if (out['$ALLOWED_CHARACTERS']) {
@@ -115,7 +117,7 @@ function getVars() {
 
 function getOrder() {
 	let out = [];
-	const fileName = `${gDir}/${lang}/data.txt`;
+	const fileName = `${gDir}/${lang}/${gDataFileName}`;
 	if (fileExists(fileName)) {
 		const file = fs.readFileSync(fileName, 'utf-8');
 		for (const line of file.split('\n')) {
@@ -220,7 +222,7 @@ function makeTests(): { [key: string]: string[] } {
 		out.push("\t\ttrue"); // Always return something in CoffeeScript.
 		// }
 	});
-	
+
 	// Write the book names to a file
 	const bookNamesPath = `${gDir}/${lang}/book_names.txt`;
 	let allabbrevs_sorted = Object.keys(allAbbrevsInMakeTests).toSorted();
@@ -369,10 +371,10 @@ function makeRegexp(osis: string, apocrypha: boolean, sortedSafes: string[]): st
 			return `${temp}*`;
 		});
 		abbrev = handleAccents(abbrev);
-		abbrev = abbrev.replace(/\$[A-Z]+(?!\w)/g, (match) => formatVar('regexp', match) + "\\.?");
+		abbrev = abbrev.replace(/(\$[A-Z]+)(?!\w)/g, (match) => formatVar('regexp', match) + "\\.?");
 		abbrevList.push(abbrev);
 	}
-	
+
 	const bookRegexp = makeBookRegexp(osis, gAllAbbrevs[osis].slice(), 1);
 	osis = osis.replace(/,+$/, '');
 	osis = osis.replace(/,/g, `", "`);
@@ -435,7 +437,7 @@ function makeBookRegexp(osis: string, abbrevs: string[], recurseLevel: number) {
 		let patterns: string[] = [];
 		for(let pattern of regexp['patterns']) {
 			patterns.push(formatNodeRegexpPattern(`${pattern}`));
-		}		
+		}
 		let pattern = patterns.join('|');
 		pattern = validateNodeRegexp(osis, pattern, subset, recurseLevel);
 		out.push(pattern);
@@ -481,7 +483,7 @@ function getBookSubsets(abbrevs: string[]): string[][] {
 			// Construct the regular expression pattern
 			const pat = `(?:^|[\\s${punctuationPattern}${symbolPattern}])${short}(?:[\\s${punctuationPattern}${symbolPattern}]|$)`;
 			// If you want to use this pattern in a RegExp:
-			const regex = RegExp(pat, 'u');  // 'u' flag enables Unicode matching
+			const regex = RegExp(pat, 'ui');  // 'u' flag enables Unicode matching
 			if (!regex.test(long)) continue;
 			subs[abbrevs[i]] = (subs[abbrevs[i]] || 0) + 1;
 		}
@@ -1033,82 +1035,83 @@ type Abbrevs = {
 
 function getAbbrevs() {
 	const out: Abbrevs = {};
-	const fileName = `${gDir}/${lang}/data.txt`;
+	const fileName = `${gDir}/${lang}/${gDataFileName}`;
 	let hasCorrections = false;
-		
-		let correctionsFile: fs.WriteStream;
-		const fileContent = fs.readFileSync(fileName, { encoding: 'utf-8' });
-		const lines = fileContent.split('\n');
-		for (const line of lines) {
-			if (/\t\s/.test(line) && /^[^\*]/.test(line)) {
-				console.log(`Tab followed by space: ${line}\n`);
-			  }
-			  if (/\ [\t\n]/.test(line)) {
-				console.log(`Space followed by tab/newline: ${line}\n`);
-			  }
-			  if (!/^[\w\*]/.test(line)) {
+
+	let correctionsFile: fs.WriteStream;
+	const fileContent = fs.readFileSync(fileName, { encoding: 'utf-8' });
+	const lines = fileContent.split('\n');
+	for (const line of lines) {
+		if (/\t\s/.test(line) && /^[^\*]/.test(line)) {
+			console.log(`Tab followed by space: ${line}\n`);
+		}
+		if (/\ [\t\n]/.test(line)) {
+			console.log(`Space followed by tab/newline: ${line}\n`);
+		}
+		if (!/^[\w\*]/.test(line)) {
+			continue;
+		}
+		if (/^\*/.test(line) && /[\[\?!]/.test(line)) {
+			console.log(`Regex character in preferred: ${line}\n`);
+		}
+		if (!/\t/.test(line)) {
+			continue;
+		}
+		let normalized = line.normalize('NFD').normalize('NFC');
+		if (normalized !== line) {
+			console.log('Non-normalized text');
+			hasCorrections = true;
+			correctionsFile = fs.createWriteStream('temp.corrections.txt', { encoding: 'utf-8' });
+			correctionsFile.write(`${normalized}\n`);
+		}
+		const literalRegExp = /^\*/;
+		const isLiteral = literalRegExp.test(normalized);
+		if (isLiteral) {
+			normalized = normalized.replace(/([\x80-\uffff])/gu, (match, g1) => `${g1}\``);
+		}
+		let [osis, ...l_abbrevs] = normalized.split('\t');
+		osis = osis.replace(literalRegExp, '');
+		isValidOsis(osis);
+		out[osis] = out[osis] || {};
+		out[osis][osis] = true;
+		if (/,/.test(osis) || (gVars['$FORCE_OSIS_ABBREV'] && gVars['$FORCE_OSIS_ABBREV'][0] === 'false')) {
+			delete out[osis][osis];
+		}
+		for (let abbrev of l_abbrevs) {
+			if (!abbrev.length) {
 				continue;
-			  }
-			  if (/^\*/.test(line) && /[\[\?!]/.test(line)) {
-				console.log(`Regex character in preferred: ${line}\n`);
-			  }
-			  if (!/\t/.test(line)) {
-				continue;
-			  }
-			let normalized = line.normalize('NFD').normalize('NFC');
-			if (normalized !== line) {
-				console.log('Non-normalized text');
-				hasCorrections = true;
-				correctionsFile = fs.createWriteStream('temp.corrections.txt', { encoding: 'utf-8' });
-				correctionsFile.write(`${normalized}\n`);
 			}
-			const isLiteral = /^\*/.test(normalized);
-			if (isLiteral) {
-				normalized = normalized.replace(/([\x80-\uffff])/u, (match, g1) => `${g1}\``);
+			if (!isLiteral) {
+				if (gVars['$PRE_BOOK']) {
+					abbrev = `${gVars['$PRE_BOOK'][0]}${abbrev}`;
+				}
+				if (gVars['$POST_BOOK']) {
+					abbrev += gVars['$POST_BOOK'][0];
+				}
+				gRawAbbrevs[osis] = gRawAbbrevs[osis] || {};
+				gRawAbbrevs[osis][abbrev] = true;
 			}
-			let [osis, ...l_abbrevs] = normalized.split('\t');
-			osis = osis.replace(/^\*/, '');
-			isValidOsis(osis);
-			out[osis] = out[osis] || {};
-			out[osis][osis] = true;
-			if (/,/.test(osis) || (gVars['$FORCE_OSIS_ABBREV'] && gVars['$FORCE_OSIS_ABBREV'][0] === 'false')) {
-				delete out[osis][osis];
+			abbrev = handleAccents(abbrev);
+			const alts = expandAbbrevVars(abbrev);
+			if (/.\$/.test(JSON.stringify(alts))) {
+				throw new Error(`Alts: ${JSON.stringify(alts)}`);
 			}
-			for (let abbrev of l_abbrevs) {
-				if (!abbrev.length) {
-					continue;
-				}
-				if (!isLiteral) {
-					if (gVars['$PRE_BOOK']) {
-						abbrev = `${gVars['$PRE_BOOK'][0]}${abbrev}`;
+			for (const alt of alts) {
+				if (/[\[\?]/.test(alt)) {
+					const expandedAbbrev = expandAbbrev(alt);
+					for (const expanded of expandedAbbrev) {
+						out[osis][expanded] = true;
 					}
-					if (gVars['$POST_BOOK']) {
-						abbrev += gVars['$POST_BOOK'][0];
-					}
-					gRawAbbrevs[osis] = gRawAbbrevs[osis] || {};
-					gRawAbbrevs[osis][abbrev] = true;
-				}
-				abbrev = handleAccents(abbrev);
-				const alts = expandAbbrevVars(abbrev);
-				if (/.\$/.test(JSON.stringify(alts))) {
-					throw new Error(`Alts: ${JSON.stringify(alts)}`);
-				}
-				for (const alt of alts) {
-					if (/[\[\?]/.test(alt)) {
-						const expandedAbbrev = expandAbbrev(alt);
-						for (const expanded of expandedAbbrev) {
-							out[osis][expanded] = true;
-						}
-					} else {
-						out[osis][alt] = true;
-					}
+				} else {
+					out[osis][alt] = true;
 				}
 			}
 		}
-		if(correctionsFile) correctionsFile.close();
-		if (hasCorrections) {
-			fs.unlinkSync('temp.corrections.txt');
-		}
+	}
+	if(correctionsFile) correctionsFile.close();
+	if (hasCorrections) {
+		fs.unlinkSync('temp.corrections.txt');
+	}
 
 	return out;
 }
@@ -1147,17 +1150,14 @@ function handleAccents(text: string): string {
 	text = texts.join('');
 
 	// Applying regex replacements similar to the original Perl code
-	text = text.replace(/'/g, '\u2019'); // Replace apostrophe with right single quotation mark
-	text = text.replace(/\u02C8(?!`)/g, '\u02C8\''); // Replace modifier letter vertical line
-
+	text = text.replace(/'/g, '[\u2019\']'); // Replace apostrophe with right single quotation mark
 	// Conditional replacement based on COLLAPSE_COMBINING_CHARACTERS
-	const COLLAPSE_COMBINING_CHARACTERS = false; // You may retrieve this from some config or input
 	if (!COLLAPSE_COMBINING_CHARACTERS) {
-		text = text.replace(/([\x80-\uFFFF])`/g, '$1');
+		text = text.replace(/\u02C8(?!`)/g, '[\u02C8\']'); // Replace modifier letter vertical line
 	}
-
-	text = text.replace(/[\u02B9\u0374]/g, '\u2019\u0384\u0374\u02B9'); // Replace specified characters
-	text = text.replace(/([\u0300\u0370]-)\[\u2019\u0384\u0374\u02B9\](\u0376)/g, '$1\u0374$2'); // Replace accents
+	text = text.replace(/([\x80-\uFFFF])`/g, '$1');
+	text = text.replace(/[\u02B9\u0374]/g, '[\'\u2019\u0384\u0374\u02B9]'); // Replace specified characters
+	text = text.replace(/([\u0300\u0370]-)\['\u2019\u0384\u0374\u02B9\](\u0376)/g, '$1\u0374$2'); // Replace accents
 	text = text.replace(/\.(?!`)/g, '\\.?'); // Escape period
 	text = text.replace(/\.`/g, '\\.'); // Escape period followed by `
 	text = text.replace(/ `/g, '\u2009'); // Replace space followed by ` with thin space
@@ -1166,7 +1166,7 @@ function handleAccents(text: string): string {
 
 function handleAccent(char: string): string {
 	let alt = char.normalize('NFD');
-	if (!gVars['$COLLAPSE_COMBINING_CHARACTERS'] || gVars['$COLLAPSE_COMBINING_CHARACTERS'][0] !== 'false') {
+	if (!COLLAPSE_COMBINING_CHARACTERS) {
 		alt = alt.replace(/\p{M}/gu, ''); // remove combining characters
 	}
 	alt = alt.normalize('NFC');
@@ -1369,7 +1369,7 @@ function escapeRegex(string: string): string {
 
 function addAbbrevToAllAbbrevs(osis: string, abbrev: string, allAbbrevs: any): { [key: string]: string[] } {
 	if (!allAbbrevs.hasOwnProperty(osis)) allAbbrevs[osis] = {};
-	if (abbrev.includes('.') && abbrev !== "\\x{418}.\\x{41d}") {
+	if (abbrev.includes('.') && abbrev !== "\u0418.\u041d") {
 		const news = abbrev.split('.');
 		let olds = [news.shift() as string];
 
