@@ -13,7 +13,7 @@ const gScriptPath = path.resolve(__dirname, '..');
 const gDir: string = `${gScriptPath}/src`;
 const gTestDir: string = `${gScriptPath}/test`;
 const gDataFileName = 'data.txt';
-const gRegexpSpace = '[\\s\u00a0}]';
+const gRegexpSpace = '[\\s\u00a0]';
 let gValidCharacters = "[\\d\\s\\xa0.:,;\\x1e\\x1f&\\(\\)\\uff08\\uff09\\[\\]/\"'\\*=~\\-\\u2013\\u2014]";
 const gValidOsises = makeValidOsises([
 	'Gen', 'Exod', 'Lev', 'Num', 'Deut', 'Josh', 'Judg', 'Ruth', '1Sam', '2Sam', '1Kgs', '2Kgs', '1Chr', '2Chr', 'Ezra', 'Neh', 'Esth',
@@ -483,7 +483,7 @@ function getBookSubsets(abbrevs: string[]): string[][] {
 			// Construct the regular expression pattern
 			const pat = `(?:^|[\\s${punctuationPattern}${symbolPattern}])${short}(?:[\\s${punctuationPattern}${symbolPattern}]|$)`;
 			// If you want to use this pattern in a RegExp:
-			const regex = RegExp(pat, 'u');  // 'u' flag enables Unicode matching
+			const regex = RegExp(pat, 'ui');  // 'u' flag enables Unicode matching
 			if (!regex.test(long)) continue;
 			subs[abbrevs[i]] = (subs[abbrevs[i]] || 0) + 1;
 		}
@@ -1369,7 +1369,7 @@ function escapeRegex(string: string): string {
 
 function addAbbrevToAllAbbrevs(osis: string, abbrev: string, allAbbrevs: any): { [key: string]: string[] } {
 	if (!allAbbrevs.hasOwnProperty(osis)) allAbbrevs[osis] = {};
-	if (abbrev.includes('.') && abbrev !== "\\x{418}.\\x{41d}") {
+	if (abbrev.includes('.') && abbrev !== "\u0418.\u041d") {
 		const news = abbrev.split('.');
 		let olds = [news.shift() as string];
 
