@@ -117,6 +117,8 @@ PrMan	PrMan
 =EpJer
 =Rev
 =PrMan
+=2Thess
+=1Thess
 =Deut
 =Josh
 =Judg
@@ -155,6 +157,7 @@ PrMan	PrMan
 =Zeph
 =Hag
 =Zech
+=Acts
 =Mal
 =Matt
 =Mark
@@ -163,7 +166,6 @@ PrMan	PrMan
 =2John
 =3John
 =John
-=Acts
 =Rom
 =2Cor
 =1Cor
@@ -171,8 +173,6 @@ PrMan	PrMan
 =Eph
 =Phil
 =Col
-=2Thess
-=1Thess
 =2Tim
 =1Tim
 =Titus
@@ -231,12 +231,12 @@ PrMan	PrMan
 *Zeph	صَفَنیا
 *Hag	حَجَّی
 *Zech	زکریا
+*Acts	اعمال
 *Mal	مَلاکی
 *Matt	مَتّی
 *Mark	مَرقُس
 *Luke	لوقا
 *John	یوحنا
-*Acts	اعمال
 *Rom	رومیان
 *1Cor	۱ قرنتیان
 *2Cor	۲ قرنتیان
