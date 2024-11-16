@@ -1037,9 +1037,9 @@ type Abbrevs = {
 function getAbbrevs() {
 	const out: Abbrevs = {};
 	const fileName = `${gDir}/${lang}/${gDataFileName}`;
-	let hasCorrections = false;
+	// let hasCorrections = false;
 
-	let correctionsFile: fs.WriteStream;
+	// let correctionsFile: fs.WriteStream;
 	const fileContent = fs.readFileSync(fileName, { encoding: 'utf-8' });
 	const lines = fileContent.split('\n');
 	for (const line of lines) {
@@ -1059,12 +1059,14 @@ function getAbbrevs() {
 			continue;
 		}
 		let normalized = line.normalize('NFD').normalize('NFC');
-		if (normalized !== line) {
-			console.log('Non-normalized text');
-			hasCorrections = true;
-			correctionsFile = fs.createWriteStream('temp.corrections.txt', { encoding: 'utf-8' });
-			correctionsFile.write(`${normalized}\n`);
-		}
+		// TODO: Check if this is necessary. This file is never used in the code later.
+		// Commenting out doesn't seem to affect the output.
+		// if (normalized !== line) {
+		// 	console.log('Non-normalized text');
+		// 	hasCorrections = true;
+		// 	correctionsFile = fs.createWriteStream('temp.corrections.txt', { encoding: 'utf-8' });
+		// 	correctionsFile.write(`${normalized}\n`);
+		// }
 		const literalRegExp = /^\*/;
 		const isLiteral = literalRegExp.test(normalized);
 		if (isLiteral) {
@@ -1109,10 +1111,10 @@ function getAbbrevs() {
 			}
 		}
 	}
-	if(correctionsFile) correctionsFile.close();
-	if (hasCorrections) {
-		fs.unlinkSync('temp.corrections.txt');
-	}
+	// if(correctionsFile) correctionsFile.close();
+	// if (hasCorrections) {
+	// 	fs.unlinkSync('temp.corrections.txt');
+	// }
 
 	return out;
 }
@@ -1125,7 +1127,7 @@ function handleAccents(text: string): string {
 	while (chars.length > 0) {
 		let char = chars.shift()!;
 
-		if (/^[\x80-\uFFFF]$/.test(char)) {
+		if (/^[\x80-\uFFFF]$/u.test(char)) {
 			if (chars.length > 0 && chars[0] === '`') {
 				texts.push(char);
 				texts.push(chars.shift()!);
