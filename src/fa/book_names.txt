@@ -1458,6 +1458,7 @@
 1Tim	اولتیموتیئوس
 1Tim	یکتیموتائوسه
 1Tim	یکتیموتائوسی
+1Tim	1 تیموتائوس
 1Tim	1Timothaeus
 1Tim	1Timothaios
 1Tim	1تیموتائوسه
@@ -2977,6 +2978,7 @@
 2Tim	دومتیموتاؤسی
 2Tim	دومتیموتائوس
 2Tim	دومتیموتیئوس
+2Tim	2 تیموتائوس
 2Tim	2Timothaeus
 2Tim	2Timothaios
 2Tim	2تیموتائوسه
