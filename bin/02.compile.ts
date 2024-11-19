@@ -1,19 +1,10 @@
 import * as fs from 'fs';
 import * as childProcess from 'child_process';
-import * as path from 'path';
 import { CONFIG } from './config';
-
-
-let scriptPath: string;
-const lang = CONFIG.language;
-
-
-let coffeeFiles: string[];
-
-scriptPath = path.posix.resolve(__dirname, '..');
+import { COMMANDS } from './commands';
 
 // CoffeeScript files
-coffeeFiles = [
+const coffeeFiles = [
 	CONFIG.paths.core.parser,
 	CONFIG.paths.core.passage,
 	CONFIG.paths.core.utils,
@@ -21,30 +12,17 @@ coffeeFiles = [
 	CONFIG.paths.build.regexps,
 ];
 
-// spec files
-
-let cmd: string = `npx pegjs --format globals --export-var grammar -o ${CONFIG.paths.temp.grammar} ${CONFIG.paths.build.grammar}`;
 try {
 	// Run PEG.js to generate grammar file
-	if (CONFIG.isWindows) {
-		cmd = `powershell -Command "npx pegjs --format globals --export-var grammar -o ${CONFIG.paths.temp.grammar} ${CONFIG.paths.build.grammar}"`
-	}
 	// console.debug(cmd);
-	childProcess.execSync(cmd);
+	childProcess.execSync(COMMANDS.compileGrammar());
 
 	// Add PEG.js global variables
 	addPegjsGlobal(CONFIG.paths.temp.grammar);
 
 	console.log('Joining...');
-	if (CONFIG.isWindows) {
-		const commaSeparatedPaths = coffeeFiles.map(file => "'" + file.replace("'", "''") + "'").join(', ');
-		cmd = `powershell -Command "Get-Content -Path @(${commaSeparatedPaths}) | npx coffee --no-header --compile --stdio | Out-File -FilePath '${CONFIG.paths.dist.js}' -Encoding UTF8"`;
-	} else {
-		cmd = `cat ${coffeeFiles.join(' ')} | coffee --no-header --compile --stdio > ${CONFIG.paths.dist.js}`;
-	}
-
 	// console.debug(cmd);
-	childProcess.execSync(cmd, { encoding: 'utf-8' });
+	childProcess.execSync(COMMANDS.compileParser(coffeeFiles), { encoding: 'utf-8' });
 	// console.log(output);
 
 	// Add PEG.js code to output JS file
@@ -52,20 +30,11 @@ try {
 	console.log('Compiling spec...');
 
 	// Compile spec CoffeeScript file
-	cmd = `npx coffee --no-header -c ${CONFIG.paths.build.spec}`;
 	// console.debug(cmd);
-	childProcess.execSync(cmd, { encoding: 'utf-8' });
+	childProcess.execSync(COMMANDS.compileSpec(), { encoding: 'utf-8' });
 	// console.log(output);
-
-	if (CONFIG.isWindows) {
-		cmd = `powershell -Command "Move-Item -Path ${CONFIG.paths.dist.specJs} -Destination ${CONFIG.paths.dist.specTestJs}"`;
-	}
-	else
-		cmd = `mv ${CONFIG.paths.dist.specJs} ${CONFIG.paths.dist.specTestJs}`;
-
-	childProcess.execSync(cmd, { encoding: 'utf-8' });
+	childProcess.execSync(COMMANDS.moveSpecJs(), { encoding: 'utf-8' });
 	// console.log(output);
-
 	// Remove temporary grammar file
 	fs.unlinkSync(CONFIG.paths.temp.grammar);
 } catch (error: any) {
@@ -137,7 +106,7 @@ function peg$parseany_integer() {
 	}
 
 	// Merge the modified PEG content into the destination file
-	mergeFile(`${scriptPath}/js/#PREFIX${lang}_bcv_parser.js`, peg);
+	mergeFile(CONFIG.paths.dist.js, peg);
 }
 
 function extractSequenceRegexVar(peg: string): string {
@@ -170,11 +139,8 @@ function getNewOptionsCheck(peg: string): string {
 }
 
 function mergeFile(file: string, peg: string): void {
-	// Remove "#PREFIX" from the file name
-	let srcFile = file.replace('#PREFIX', '');
-
 	// Read the content of the source file
-	let joined = fs.readFileSync(srcFile, {encoding: 'utf-8'});
+	let joined = fs.readFileSync(file, {encoding: 'utf-8'});
 	const prev = joined;
 
 	// Replace the pattern with the peg content
@@ -187,5 +153,5 @@ function mergeFile(file: string, peg: string): void {
 	}
 
 	// Write the updated content to the destination file
-	fs.writeFileSync(srcFile, joined, {encoding: 'utf-8'});
+	fs.writeFileSync(file, joined, {encoding: 'utf-8'});
 }

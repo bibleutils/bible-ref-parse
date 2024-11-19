@@ -9,6 +9,7 @@ if (!language) {
 
 const rootPath = path.resolve(__dirname, '../');
 const srcPath = path.join(rootPath, 'src');
+const buildPath = path.join(rootPath, 'build');
 const testPath = path.join(rootPath, 'test');
 
 const CONFIG = {
@@ -37,22 +38,23 @@ const CONFIG = {
 			regexps: path.join(srcPath, 'template/regexps.coffee'),
 			spec: path.join(srcPath, 'template/spec.coffee'),
 			specRunner: path.join(srcPath, 'template/SpecRunner.html'),
-			translationAlternates: path.join(srcPath, 'lang', 'en', 'translation_alternates.coffee'),
+			translationAlternates: path.join(srcPath, 'template/translation_alternates.coffee'),
 			translations: path.join(srcPath, 'template/translations.coffee'),
 		},
 		build: {
-			bookNames: path.join(srcPath, 'lang', language, 'book-names.txt'),
-			grammar: path.join(srcPath, 'lang', language, 'grammar.pegjs'),
-			psalms: path.join(srcPath, 'lang', language, 'psalm_cb.coffee'),
-			regexps: path.join(srcPath, 'lang', language, 'regexps.coffee'),
-			spec: path.join(srcPath, 'lang', language, 'spec.coffee'),
-			translationAliases: path.join(srcPath, 'lang', language, 'translation_aliases.coffee'),
-			translationAlternates: path.join(srcPath, 'lang', language, 'translation_alternates.coffee'),
-			translations: path.join(srcPath, 'lang', language, 'translations.coffee'),
+			language: path.join(buildPath, language),
+			bookNames: path.join(buildPath, language, 'book-names.txt'),
+			grammar: path.join(buildPath, language, 'grammar.pegjs'),
+			psalms: path.join(buildPath, language, 'psalm_cb.coffee'),
+			regexps: path.join(buildPath, language, 'regexps.coffee'),
+			spec: path.join(buildPath, language, 'spec.coffee'),
+			translationAliases: path.join(buildPath, language, 'translation_aliases.coffee'),
+			translationAlternates: path.join(buildPath, language, 'translation_alternates.coffee'),
+			translations: path.join(buildPath, language, 'translations.coffee'),
 		},
 		dist: {
 			js: path.join(rootPath, 'js', `${language}_bcv_parser.js`),
-			specJs: path.join(srcPath, 'lang', language, 'spec.js'),
+			specJs: path.join(buildPath, language, 'spec.js'),
 			specTestJs: path.join(testPath, 'js', `${language}.spec.js`),
 		},
 		tests: {
@@ -61,11 +63,6 @@ const CONFIG = {
 	}
 }
 
-const COMMANDS = {
-	makeRegexps: `node ${CONFIG.paths.scripts.makeRegexps}`,
-}
-
 export {
 	CONFIG,
-	COMMANDS,
 }

@@ -2,7 +2,8 @@ import * as fs from 'fs';
 import { execSync } from 'child_process';
 import { argv } from 'process';
 import { NON_LATIN_DIGITS_REGEXPS } from './regexps';
-import { COMMANDS, CONFIG } from './config';
+import { CONFIG } from './config';
+import { COMMANDS } from './commands';
 
 type Ref = {
 	osis: string;
@@ -36,6 +37,7 @@ const COLLAPSE_COMBINING_CHARACTERS = !(gVars['$COLLAPSE_COMBINING_CHARACTERS'] 
 const gAbbrevs: any = getAbbrevs();
 // console.log("Global 'gAbbrevs' Variable Value: ", gAbbrevs);
 const gOrder = getOrder();
+prepareBuildDirectory();
 // console.log("Global 'gOrder' Variable Value: ", gOrder);
 const gAllAbbrevs = makeTests();
 console.log("Make Regular Expressions...");
@@ -50,8 +52,15 @@ makeTranslations();
 // PROGRAM ENDS HERE
 
 // FUNCTION DECLARATIONS
+function prepareBuildDirectory () {
+	if (fileOrDirectoryExists(CONFIG.paths.build.language)) {
+		return;
+	}
+
+	fs.mkdirSync(CONFIG.paths.build.language, { recursive: true });
+}
 // Utility function to check if a file exists (to replicate `-f` operator in Perl)
-function fileExists(path: string): boolean {
+function fileOrDirectoryExists(path: string): boolean {
 	try {
 		// Assuming a Node.js environment where `fs` module can be used
 		return fs.existsSync(path);
@@ -67,7 +76,7 @@ function escapeRegExp(pattern: string) {
 function getVars() {
 	const out = {};
 	const fileName: string = CONFIG.paths.src.dataFile;
-	if (!fileExists(fileName)) {
+	if (!fileOrDirectoryExists(fileName)) {
 		console.log(`Current Working Dir: ${__dirname}`);
 		console.error(`Can't open ${fileName}. Make sure it is present.`);
 		process.exit(1);
@@ -114,7 +123,7 @@ function getVars() {
 function getOrder() {
 	let out = [];
 	const fileName = CONFIG.paths.src.dataFile;
-	if (fileExists(fileName)) {
+	if (fileOrDirectoryExists(fileName)) {
 		const file = fs.readFileSync(fileName, 'utf-8');
 		for (const line of file.split('\n')) {
 			if (!line.startsWith('=')) {
@@ -327,7 +336,7 @@ function makeRegexpSet(refs: Ref[]): string {
 
 	for (const ref of refs) {
 		const { osis, apocrypha } = ref;
-		if (osis === 'Ps' && !hasPsalmCb && fileExists(CONFIG.paths.build.psalms)) {
+		if (osis === 'Ps' && !hasPsalmCb && fileOrDirectoryExists(CONFIG.paths.build.psalms)) {
 			out.push(getFileContents(CONFIG.paths.build.psalms));
 			hasPsalmCb = true;
 		}
@@ -418,7 +427,7 @@ function makeBookRegexp(osis: string, abbrevs: string[], recurseLevel: number) {
 			base64 = '<';
 		}
 
-		let regexp = execSync(`${COMMANDS.makeRegexps} "${base64}"`).toString();
+		let regexp = execSync(COMMANDS.makeRegexps(base64)).toString();
 
 		if (useFile) {
 			fs.unlinkSync('./temp.txt');
