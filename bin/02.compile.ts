@@ -16,6 +16,7 @@ const coffeeFiles = [
 
 try {
 	prepareDirectory(CONFIG.paths.dist.directory);
+	prepareDirectory(CONFIG.paths.tests.directory);
 	// Run PEG.js to generate grammar file
 	childProcess.execSync(COMMANDS.compileGrammar());
 
