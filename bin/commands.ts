@@ -26,10 +26,10 @@ const COMMANDS = {
 	},
 	moveSpecJs (): string {
 		if (CONFIG.isWindows) {
-			return `powershell -Command "Move-Item -Path ${CONFIG.paths.dist.specJs} -Destination ${CONFIG.paths.dist.specTestJs}"`;
+			return `powershell -Command "Move-Item -Path ${CONFIG.paths.build.specJs} -Destination ${CONFIG.paths.dist.specTestJs}"`;
 		}
 
-		return `mv ${CONFIG.paths.dist.specJs} ${CONFIG.paths.dist.specTestJs}`;
+		return `mv ${CONFIG.paths.build.specJs} ${CONFIG.paths.dist.specTestJs}`;
 	},
 }
 

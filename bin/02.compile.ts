@@ -1,5 +1,6 @@
 import * as fs from 'fs';
 import * as childProcess from 'child_process';
+import logger from './logger';
 import { CONFIG } from './config';
 import { COMMANDS } from './commands';
 
@@ -14,27 +15,21 @@ const coffeeFiles = [
 
 try {
 	// Run PEG.js to generate grammar file
-	// console.debug(cmd);
 	childProcess.execSync(COMMANDS.compileGrammar());
 
 	// Add PEG.js global variables
 	addPegjsGlobal(CONFIG.paths.temp.grammar);
 
-	console.log('Joining...');
-	// console.debug(cmd);
+	logger.info('Joining...');
 	childProcess.execSync(COMMANDS.compileParser(coffeeFiles), { encoding: 'utf-8' });
-	// console.log(output);
 
 	// Add PEG.js code to output JS file
 	addPeg();
-	console.log('Compiling spec...');
+	logger.info('Compiling spec...');
 
 	// Compile spec CoffeeScript file
-	// console.debug(cmd);
 	childProcess.execSync(COMMANDS.compileSpec(), { encoding: 'utf-8' });
-	// console.log(output);
 	childProcess.execSync(COMMANDS.moveSpecJs(), { encoding: 'utf-8' });
-	// console.log(output);
 	// Remove temporary grammar file
 	fs.unlinkSync(CONFIG.paths.temp.grammar);
 } catch (error: any) {
@@ -144,7 +139,6 @@ function mergeFile(file: string, peg: string): void {
 	const prev = joined;
 
 	// Replace the pattern with the peg content
-	// console.log(joined.match(/(\s*\}\)\.call\(this\);\s*)$/));
 	joined = joined.replace(/(\s*\}\)\.call\(this\);\s*)$/, `\n${peg}$1`);
 
 	// If no changes were made, throw an error

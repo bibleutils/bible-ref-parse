@@ -9,11 +9,12 @@ if (!language) {
 
 const rootPath = path.resolve(__dirname, '../');
 const srcPath = path.join(rootPath, 'src');
-const buildPath = path.join(rootPath, 'build');
+const buildPath = path.join(rootPath, 'build/lang');
 const testPath = path.join(rootPath, 'test');
 
 const CONFIG = {
 	language,
+	logLevel: process.env.LOG_LEVEL || 'verbose',
 	isWindows: process.platform === 'win32',
 	paths: {
 		root: rootPath,
@@ -48,13 +49,13 @@ const CONFIG = {
 			psalms: path.join(buildPath, language, 'psalm_cb.coffee'),
 			regexps: path.join(buildPath, language, 'regexps.coffee'),
 			spec: path.join(buildPath, language, 'spec.coffee'),
+			specJs: path.join(buildPath, language, 'spec.js'),
 			translationAliases: path.join(buildPath, language, 'translation_aliases.coffee'),
 			translationAlternates: path.join(buildPath, language, 'translation_alternates.coffee'),
 			translations: path.join(buildPath, language, 'translations.coffee'),
 		},
 		dist: {
 			js: path.join(rootPath, 'js', `${language}_bcv_parser.js`),
-			specJs: path.join(buildPath, language, 'spec.js'),
 			specTestJs: path.join(testPath, 'js', `${language}.spec.js`),
 		},
 		tests: {

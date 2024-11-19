@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import { execSync } from 'child_process';
 import { argv } from 'process';
+import logger from './logger';
 import { NON_LATIN_DIGITS_REGEXPS } from './regexps';
 import { CONFIG } from './config';
 import { COMMANDS } from './commands';
@@ -24,29 +25,29 @@ const gValidOsises = makeValidOsises([
 
 // PROGRAM STARTS HERE
 if (!lang || !/^\w+$/.test(lang)) {
-	console.error('The first argument should be a language iso code (e.g., "fr")');
+	logger.error('The first argument should be a language iso code (e.g., "fr")');
 	process.exit(1);
 }
-console.log(`${argv[1]} Starting...`);
+logger.info(`${argv[1]} Starting...`);
 
 const gRawAbbrevs: any = {};
-// console.log("Global 'gRawAbbrevs' Variable Value: ", gRawAbbrevs);
+// logger.info("Global 'gRawAbbrevs' Variable Value: ", gRawAbbrevs);
 const gVars = getVars();
 const COLLAPSE_COMBINING_CHARACTERS = !(gVars['$COLLAPSE_COMBINING_CHARACTERS'] && gVars['$COLLAPSE_COMBINING_CHARACTERS'][0] === 'false');
-// console.log("Global 'gVars' Variable Value: ", gVars);
+// logger.info("Global 'gVars' Variable Value: ", gVars);
 const gAbbrevs: any = getAbbrevs();
-// console.log("Global 'gAbbrevs' Variable Value: ", gAbbrevs);
+// logger.info("Global 'gAbbrevs' Variable Value: ", gAbbrevs);
 const gOrder = getOrder();
 prepareBuildDirectory();
-// console.log("Global 'gOrder' Variable Value: ", gOrder);
+// logger.info("Global 'gOrder' Variable Value: ", gOrder);
 const gAllAbbrevs = makeTests();
-console.log("Make Regular Expressions...");
+logger.info("Make Regular Expressions...");
 // Every global variable is matching till this point
 makeRegexps();
-console.log("Make Grammar...");
+logger.info("Make Grammar...");
 makeGrammar();
 const defaultAlternatesFile = CONFIG.paths.template.translationAlternates;
-console.log("Make Translations...");
+logger.info("Make Translations...");
 makeTranslations();
 
 // PROGRAM ENDS HERE
@@ -77,8 +78,8 @@ function getVars() {
 	const out = {};
 	const fileName: string = CONFIG.paths.src.dataFile;
 	if (!fileOrDirectoryExists(fileName)) {
-		console.log(`Current Working Dir: ${__dirname}`);
-		console.error(`Can't open ${fileName}. Make sure it is present.`);
+		logger.info(`Current Working Dir: ${__dirname}`);
+		logger.error(`Can't open ${fileName}. Make sure it is present.`);
 		process.exit(1);
 	}
 
@@ -88,8 +89,8 @@ function getVars() {
 		if (/^\$/.test(line)) {
 			const [key, ...values] = line.normalize('NFD').normalize('NFC').split(/\t/);
 			if (!values.length) {
-				console.log(`Current Working Dir: ${__dirname}`);
-				console.error(`No values for ${key}`);
+				logger.info(`Current Working Dir: ${__dirname}`);
+				logger.error(`No values for ${key}`);
 				process.exit(2);
 			}
 			out[key] = values;
@@ -193,7 +194,7 @@ function makeTests(): { [key: string]: string[] } {
 							// if (altOsis === checkRef.osis) break; // We found the correct order.
 							if (altOsis === checkRef.osis) return; // We found the correct order.
 							if (osis === checkRef.osis) {
-								console.log(`${altOsis} should be before ${osis} in parsing order\n  ${altAbbrev} matches ${abbrev}`);
+								logger.info(`${altOsis} should be before ${osis} in parsing order\n  ${altAbbrev} matches ${abbrev}`);
 							}
 						});
 					}
@@ -289,7 +290,7 @@ function makeRegexps() {
 	sortedRawAbbrevs.forEach(osis => {
 		if (!osis.includes(',')) return;
 		if (osis.charAt(osis.length - 1) === ',') {
-			console.error('OSIS - WITH TRAILING COMMA', osis);
+			logger.error('OSIS - WITH TRAILING COMMA', osis);
 		}
 		let temp = osis.replace(/,+$/, '');	// Replace last comma
 		const apocrypha = (gValidOsises[temp] && gValidOsises[temp] === 'apocrypha') ? true : false;
@@ -417,7 +418,7 @@ function makeBookRegexp(osis: string, abbrevs: string[], recurseLevel: number) {
 	for (const subset of subsets) {
 		const json = JSON.stringify(subset);
 		let base64 = Buffer.from(json).toString('base64');
-		console.log(`${osis} ${base64.length}`);
+		logger.info(`${osis} ${base64.length}`);
 
 		let useFile = false;
 
@@ -458,7 +459,7 @@ function validateFullNodeRegexp(osis: string, pattern: string, abbrevs: string[]
 		const regex = RegExp(`^(?:${pattern}) `);
 		compare = compare.replace(regex, '');
 		if (compare !== '1') {
-			console.error(`	Not parsable (${abbrev}): '${compare}'\n${pattern}`);
+			logger.error(`	Not parsable (${abbrev}): '${compare}'\n${pattern}`);
 		}
 	});
 }
@@ -628,13 +629,13 @@ function validateNodeRegexp(
 		return pattern;
 	}
 
-	console.log(`RECURSE_LEVEL: ${recurseLevel}`);
+	logger.info(`RECURSE_LEVEL: ${recurseLevel}`);
 	if(osis === '2Sam' && recurseLevel == 2) {
-		console.log("Break");
+		logger.info("Break");
 	}
 
 	if (recurseLevel > 10) {
-		console.log(`Splitting ${osis} by length...`);
+		logger.info(`Splitting ${osis} by length...`);
 		if (note === 'lengths') {
 			throw new Error(`'Lengths' didn't work: ${osis}`);
 		}
@@ -649,7 +650,7 @@ function validateNodeRegexp(
 		return validateNodeRegexp(osis, patterns.join('|'), abbrevs, recurseLevel + 1, 'lengths');
 	}
 
-	console.log(`	 Recurse (${osis}): ${recurseLevel}`);
+	logger.info(`	 Recurse (${osis}): ${recurseLevel}`);
 
 	okPattern = makeBookRegexp(osis, oks.slice(), recurseLevel + 1);
 	notOkPattern = makeBookRegexp(osis, notOks.slice(), recurseLevel + 1);
@@ -690,7 +691,7 @@ function checkRegexpPattern(
 
 	for (const abbrev of abbrevs) {
 		if(abbrev === '2 Sm') {
-			console.log("Break-2");
+			logger.info("Break-2");
 		}
 		let compare = `${abbrev} 1`;
 		compare = compare.replace(RegExp(`^(?:${pattern})`, 'i'), '');
@@ -1045,16 +1046,16 @@ function getAbbrevs() {
 	const lines = fileContent.split('\n');
 	for (const line of lines) {
 		if (/\t\s/.test(line) && /^[^\*]/.test(line)) {
-			console.log(`Tab followed by space: ${line}\n`);
+			logger.info(`Tab followed by space: ${line}\n`);
 		}
 		if (/\ [\t\n]/.test(line)) {
-			console.log(`Space followed by tab/newline: ${line}\n`);
+			logger.info(`Space followed by tab/newline: ${line}\n`);
 		}
 		if (!/^[\w\*]/.test(line)) {
 			continue;
 		}
 		if (/^\*/.test(line) && /[\[\?!]/.test(line)) {
-			console.log(`Regex character in preferred: ${line}\n`);
+			logger.info(`Regex character in preferred: ${line}\n`);
 		}
 		if (!/\t/.test(line)) {
 			continue;
@@ -1269,7 +1270,7 @@ function expandAbbrev(abbrev: string): string[] {
 	}
 
 	if (/[\[\]]/.test(outs.join(''))) {
-		console.error("Unexpected char: ", outs, 'abbrev', abbrev);
+		logger.error("Unexpected char: ", outs, 'abbrev', abbrev);
 		throw new Error("Unexpected char");
 	}
 
