@@ -5,6 +5,7 @@ import logger from './logger';
 import { NON_LATIN_DIGITS_REGEXPS } from './regexps';
 import { CONFIG } from './config';
 import { COMMANDS } from './commands';
+import { fileOrDirectoryExists, prepareDirectory } from './utils';
 
 type Ref = {
 	osis: string;
@@ -34,7 +35,7 @@ const COLLAPSE_COMBINING_CHARACTERS = !(gVars['$COLLAPSE_COMBINING_CHARACTERS'] 
 const gAbbrevs: any = getAbbrevs();
 // logger.info("Global 'gAbbrevs' Variable Value: ", gAbbrevs);
 const gOrder = getOrder();
-prepareBuildDirectory();
+prepareDirectory(CONFIG.paths.build.directory);
 // logger.info("Global 'gOrder' Variable Value: ", gOrder);
 const gAllAbbrevs = makeTests();
 logger.info("Make Regular Expressions...");
@@ -49,23 +50,6 @@ makeTranslations();
 // PROGRAM ENDS HERE
 
 // FUNCTION DECLARATIONS
-function prepareBuildDirectory () {
-	if (fileOrDirectoryExists(CONFIG.paths.build.language)) {
-		return;
-	}
-
-	fs.mkdirSync(CONFIG.paths.build.language, { recursive: true });
-}
-// Utility function to check if a file exists (to replicate `-f` operator in Perl)
-function fileOrDirectoryExists(path: string): boolean {
-	try {
-		// Assuming a Node.js environment where `fs` module can be used
-		return fs.existsSync(path);
-	} catch (err) {
-		return false;
-	}
-}
-
 function escapeRegExp(pattern: string) {
 	return pattern.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }

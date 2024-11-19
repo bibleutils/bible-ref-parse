@@ -3,6 +3,7 @@ import * as childProcess from 'child_process';
 import logger from './logger';
 import { CONFIG } from './config';
 import { COMMANDS } from './commands';
+import { prepareDirectory } from './utils';
 
 // CoffeeScript files
 const coffeeFiles = [
@@ -14,6 +15,7 @@ const coffeeFiles = [
 ];
 
 try {
+	prepareDirectory(CONFIG.paths.dist.directory);
 	// Run PEG.js to generate grammar file
 	childProcess.execSync(COMMANDS.compileGrammar());
 

@@ -11,6 +11,7 @@ if (!language || !/^\w+$/.test(language)) {
 const rootPath = path.resolve(__dirname, '../');
 const srcPath = path.join(rootPath, 'src');
 const buildPath = path.join(rootPath, 'build/lang');
+const distPath = path.join(rootPath, 'dist');
 const testPath = path.join(rootPath, 'test');
 
 const CONFIG = {
@@ -20,43 +21,43 @@ const CONFIG = {
 	paths: {
 		root: rootPath,
 		core: {
-			parser: path.join(srcPath, 'core/bcv_parser.coffee'),
-			passage: path.join(srcPath, 'core/bcv_passage.coffee'),
-			utils: path.join(srcPath, 'core/bcv_utils.coffee'),
+			parser: path.join(srcPath, 'core/bcv-parser.coffee'),
+			passage: path.join(srcPath, 'core/bcv-passage.coffee'),
+			utils: path.join(srcPath, 'core/bcv-utils.coffee'),
 		},
 		temp: {
-			grammar: path.join(rootPath, `temp_${language}_grammar.js`),
+			grammar: path.join(rootPath, `temp-${language}-grammar.js`),
 		},
 		scripts: {
-			makeRegexps: path.join(rootPath, 'bin/make_regexps.js'),
+			makeRegexps: path.join(rootPath, 'bin/make-regexps.js'),
 		},
 		src: {
 			blocks: path.join(rootPath, 'bin/letters/blocks.txt'),
 			dataFile: path.join(srcPath, 'lang', language, 'data.txt'),
 			letters: path.join(rootPath, 'bin/letters/letters.txt'),
-			psalms: path.join(srcPath, 'lang', language, 'psalms_cb.coffee'),
+			psalms: path.join(srcPath, 'lang', language, 'psalms-cb.coffee'),
 		},
 		template: {
 			grammar: path.join(srcPath, 'template/grammar.pegjs'),
 			regexps: path.join(srcPath, 'template/regexps.coffee'),
 			spec: path.join(srcPath, 'template/spec.coffee'),
-			specRunner: path.join(srcPath, 'template/SpecRunner.html'),
-			translationAlternates: path.join(srcPath, 'template/translation_alternates.coffee'),
+			translationAlternates: path.join(srcPath, 'template/translation-alternates.coffee'),
 			translations: path.join(srcPath, 'template/translations.coffee'),
 		},
 		build: {
-			language: path.join(buildPath, language),
+			directory: path.join(buildPath, language),
 			bookNames: path.join(buildPath, language, 'book-names.txt'),
 			grammar: path.join(buildPath, language, 'grammar.pegjs'),
 			regexps: path.join(buildPath, language, 'regexps.coffee'),
 			spec: path.join(buildPath, language, 'spec.coffee'),
 			specJs: path.join(buildPath, language, 'spec.js'),
-			translationAliases: path.join(buildPath, language, 'translation_aliases.coffee'),
-			translationAlternates: path.join(buildPath, language, 'translation_alternates.coffee'),
+			translationAliases: path.join(buildPath, language, 'translation-aliases.coffee'),
+			translationAlternates: path.join(buildPath, language, 'translation-alternates.coffee'),
 			translations: path.join(buildPath, language, 'translations.coffee'),
 		},
 		dist: {
-			js: path.join(rootPath, 'js', `${language}_bcv_parser.js`),
+			directory: distPath,
+			js: path.join(distPath, `${language}-bcv-parser.js`),
 		},
 		tests: {
 			specTestJs: path.join(testPath, 'js', `${language}.spec.js`),
