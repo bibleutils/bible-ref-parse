@@ -43,7 +43,7 @@ console.log("Make Regular Expressions...");
 makeRegexps();
 console.log("Make Grammar...");
 makeGrammar();
-const defaultAlternatesFile = CONFIG.paths.src.defaultTranslationAlternates;
+const defaultAlternatesFile = CONFIG.paths.template.translationAlternates;
 console.log("Make Translations...");
 makeTranslations();
 
