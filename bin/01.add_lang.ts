@@ -267,11 +267,6 @@ function makeTests(): { [key: string]: string[] } {
 	template = template.replace(/\$MISC_TESTS/, miscTests.join("\n"));
 	fs.writeFileSync(CONFIG.paths.build.spec, template, { encoding: 'utf-8' });
 
-	// Write HTML SpecRunner
-	let specRunner = getFileContents(CONFIG.paths.template.specRunner);
-	specRunner = specRunner.replace(/\$LANG/g, lang);
-	fs.writeFileSync(CONFIG.paths.tests.specRunner, specRunner, { encoding: 'utf-8' });
-
 	return allAbbrevsInMakeTests;
 }
 

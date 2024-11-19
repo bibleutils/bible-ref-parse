@@ -56,10 +56,9 @@ const CONFIG = {
 		},
 		dist: {
 			js: path.join(rootPath, 'js', `${language}_bcv_parser.js`),
-			specTestJs: path.join(testPath, 'js', `${language}.spec.js`),
 		},
 		tests: {
-			specRunner: path.join(testPath, `${language}.html`),
+			specTestJs: path.join(testPath, 'js', `${language}.spec.js`),
 		},
 	}
 }
