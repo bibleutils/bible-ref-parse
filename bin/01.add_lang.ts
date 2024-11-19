@@ -1,8 +1,8 @@
 import * as fs from 'fs';
-import * as path from 'path';
 import { execSync } from 'child_process';
 import { argv } from 'process';
 import { NON_LATIN_DIGITS_REGEXPS } from './regexps';
+import { COMMANDS, CONFIG } from './config';
 
 type Ref = {
 	osis: string;
@@ -10,10 +10,7 @@ type Ref = {
 }
 
 // GLOBAL VARIABLES
-const gScriptPath = path.resolve(__dirname, '..');
-const gDir: string = `${gScriptPath}/src`;
-const gTestDir: string = `${gScriptPath}/test`;
-const gDataFileName = 'data.txt';
+const lang = CONFIG.language;
 const gRegexpSpace = '[\\s\u00a0]';
 let gValidCharacters = "[\\d\\s\\xa0.:,;\\x1e\\x1f&\\(\\)\\uff08\\uff09\\[\\]/\"'\\*=~\\-\\u2013\\u2014]";
 const gValidOsises = makeValidOsises([
@@ -25,8 +22,6 @@ const gValidOsises = makeValidOsises([
 ]);
 
 // PROGRAM STARTS HERE
-const lang = process.argv[2];
-
 if (!lang || !/^\w+$/.test(lang)) {
 	console.error('The first argument should be a language iso code (e.g., "fr")');
 	process.exit(1);
@@ -48,7 +43,7 @@ console.log("Make Regular Expressions...");
 makeRegexps();
 console.log("Make Grammar...");
 makeGrammar();
-const defaultAlternatesFile = `${gDir}/en/translation_alternates.coffee`;
+const defaultAlternatesFile = CONFIG.paths.src.defaultTranslationAlternates;
 console.log("Make Translations...");
 makeTranslations();
 
@@ -71,7 +66,7 @@ function escapeRegExp(pattern: string) {
 
 function getVars() {
 	const out = {};
-	const fileName: string = path.join(gScriptPath, 'src', lang, gDataFileName);
+	const fileName: string = CONFIG.paths.src.dataFile;
 	if (!fileExists(fileName)) {
 		console.log(`Current Working Dir: ${__dirname}`);
 		console.error(`Can't open ${fileName}. Make sure it is present.`);
@@ -118,7 +113,7 @@ function getVars() {
 
 function getOrder() {
 	let out = [];
-	const fileName = `${gDir}/${lang}/${gDataFileName}`;
+	const fileName = CONFIG.paths.src.dataFile;
 	if (fileExists(fileName)) {
 		const file = fs.readFileSync(fileName, 'utf-8');
 		for (const line of file.split('\n')) {
@@ -225,7 +220,6 @@ function makeTests(): { [key: string]: string[] } {
 	});
 
 	// Write the book names to a file
-	const bookNamesPath = `${gDir}/${lang}/book_names.txt`;
 	let allabbrevs_sorted = Object.keys(allAbbrevsInMakeTests).toSorted();
 	let bookNamesFile = '';
 
@@ -238,7 +232,7 @@ function makeTests(): { [key: string]: string[] } {
 		}
 		allAbbrevsInMakeTests[osis] = osisAbbrevs;
 	}
-	fs.writeFileSync(bookNamesPath, bookNamesFile);
+	fs.writeFileSync(CONFIG.paths.build.bookNames, bookNamesFile);
 
 	// Create and write additional tests
 	const miscTests = [
@@ -255,24 +249,24 @@ function makeTests(): { [key: string]: string[] } {
 	].flat();
 
 	// Replace placeholders in the spec template
-	let template = getFileContents(`${gDir}/template/spec.coffee`);
+	let template = getFileContents(CONFIG.paths.template.spec);
 	const langIsos = JSON.stringify(gVars['$LANG_ISOS']);
 	template = template.replace(/\$LANG_ISOS/g, langIsos);
 	template = template.replace(/\$LANG/g, lang);
 	template = template.replace(/\$BOOK_TESTS/, out.join("\n"));
 	template = template.replace(/\$MISC_TESTS/, miscTests.join("\n"));
-	fs.writeFileSync(`${gDir}/${lang}/spec.coffee`, template, { encoding: 'utf-8' });
+	fs.writeFileSync(CONFIG.paths.build.spec, template, { encoding: 'utf-8' });
 
 	// Write HTML SpecRunner
-	let specRunner = getFileContents(`${gDir}/template/SpecRunner.html`);
+	let specRunner = getFileContents(CONFIG.paths.template.specRunner);
 	specRunner = specRunner.replace(/\$LANG/g, lang);
-	fs.writeFileSync(`${gTestDir}/${lang}.html`, specRunner, { encoding: 'utf-8' });
+	fs.writeFileSync(CONFIG.paths.tests.specRunner, specRunner, { encoding: 'utf-8' });
 
 	return allAbbrevsInMakeTests;
 }
 
 function makeRegexps() {
-	let out = getFileContents(`${gDir}/template/regexps.coffee`);
+	let out = getFileContents(CONFIG.paths.template.regexps);
 
 	if (!gVars['$NEXT']) {
 		out = out.replace(/\n.+\$NEXT.+\n/, '\n');
@@ -319,7 +313,7 @@ function makeRegexps() {
 		out = out.replace(regex, formatVar('regexp', key));
 	});
 
-	fs.writeFileSync(`${gDir}/${lang}/regexps.coffee`, out, { encoding: 'utf-8' });
+	fs.writeFileSync(CONFIG.paths.build.regexps, out, { encoding: 'utf-8' });
 
 	const match = out.match(/\$[A-Z_]+/);
 	if (match) {
@@ -333,8 +327,8 @@ function makeRegexpSet(refs: Ref[]): string {
 
 	for (const ref of refs) {
 		const { osis, apocrypha } = ref;
-		if (osis === 'Ps' && !hasPsalmCb && fileExists(`${gDir}/${lang}/psalm_cb.coffee`)) {
-			out.push(getFileContents(`${gDir}/${lang}/psalm_cb.coffee`));
+		if (osis === 'Ps' && !hasPsalmCb && fileExists(CONFIG.paths.build.psalms)) {
+			out.push(getFileContents(CONFIG.paths.build.psalms));
 			hasPsalmCb = true;
 		}
 
@@ -424,7 +418,7 @@ function makeBookRegexp(osis: string, abbrevs: string[], recurseLevel: number) {
 			base64 = '<';
 		}
 
-		let regexp = execSync(`node ${gScriptPath}/bin/make_regexps.js "${base64}"`).toString();
+		let regexp = execSync(`${COMMANDS.makeRegexps} "${base64}"`).toString();
 
 		if (useFile) {
 			fs.unlinkSync('./temp.txt');
@@ -499,7 +493,7 @@ function getBookSubsets(abbrevs: string[]): string[][] {
 }
 
 function makeTranslations() {
-	let out = getFileContents(`${gDir}/template/translations.coffee`);
+	let out = getFileContents(CONFIG.paths.template.translations);
 	const regexps: string[] = [];
 	const aliases: string[] = [];
 
@@ -526,14 +520,14 @@ function makeTranslations() {
 	const regexp = makeBookRegexp('translations', regexps.slice(), 1);
 	let alias = aliases.join('\x0a\t\t');
 
-	const translationAliasesPath = `${gDir}/${lang}/translation_aliases.coffee`;
+	const translationAliasesPath = CONFIG.paths.build.translationAliases;
 	if (fs.existsSync(translationAliasesPath)) {
 		alias = getFileContents(translationAliasesPath);
 		out = out.replace(/\t+(\$TRANS_ALIAS)/g, (match, group1) => group1);
 	}
 
 	let alternate = getFileContents(defaultAlternatesFile);
-	const translationAlternatesPath = `${gDir}/${lang}/translation_alternates.coffee`;
+	const translationAlternatesPath = CONFIG.paths.build.translationAlternates;
 	if (fs.existsSync(translationAlternatesPath)) {
 		alternate = getFileContents(translationAlternatesPath);
 	}
@@ -545,7 +539,7 @@ function makeTranslations() {
 	const langIsos = JSON.stringify(gVars['$LANG_ISOS']);
 	out = out.replace(/\$LANG_ISOS/g, langIsos);
 
-	fs.writeFileSync(`${gDir}/${lang}/translations.coffee`, out, { encoding: 'utf-8' });
+	fs.writeFileSync(CONFIG.paths.build.translations, out, { encoding: 'utf-8' });
 
 	if (/\$[A-Z_]+/.test(out)) {
 		throw new Error('Translations: Capital variable');
@@ -553,7 +547,7 @@ function makeTranslations() {
 }
 
 function makeGrammar() {
-	let out = getFileContents(`${gDir}/template/grammar.pegjs`);
+	let out = getFileContents(CONFIG.paths.template.grammar);
 
 	if (!gVars['$NEXT']) {
 		out = out.replace(/\nnext_v\s+=.+\s+\{ return[^\}]+\}\s+\}\s+/, '\n');
@@ -576,7 +570,7 @@ function makeGrammar() {
 		out = out.replace(regex, formatVar('pegjs', key));
 	}
 
-	fs.writeFileSync(`${gDir}/${lang}/grammar.pegjs`, out, { encoding: 'utf-8' });
+	fs.writeFileSync(CONFIG.paths.build.grammar, out, { encoding: 'utf-8' });
 
 	const match = out.match(/(\$[A-Z_]+)/);
 	if (match) {
@@ -969,7 +963,7 @@ function getPreBookCharacters(unicodeBlock: string[]): string {
 
 function getLetters(blocks: [number, number][]): [string, string][] {
 	const out: { [key: number]: boolean } = {};
-	const lettersFile = fs.readFileSync('letters/letters.txt', 'utf-8');
+	const lettersFile = fs.readFileSync(CONFIG.paths.src.letters, 'utf-8');
 	const lines = lettersFile.split('\n');
 	for (const line of lines) {
 		if (line.startsWith('\\u')) {
@@ -1015,7 +1009,7 @@ function getUnicodeBlocks(unicodeBlock: string[]): [number, number][] {
 		unicode += '|Basic_Latin';
 	}
 	const out: [number, number][] = [];
-	const blocksFile = fs.readFileSync('letters/blocks.txt', 'utf-8');
+	const blocksFile = fs.readFileSync(CONFIG.paths.src.blocks, 'utf-8');
 	const lines = blocksFile.split('\n');
 	for (const line of lines) {
 		if (line.match(/^\w/)) {
@@ -1036,7 +1030,7 @@ type Abbrevs = {
 
 function getAbbrevs() {
 	const out: Abbrevs = {};
-	const fileName = `${gDir}/${lang}/${gDataFileName}`;
+	const fileName = CONFIG.paths.src.dataFile;
 
 	const fileContent = fs.readFileSync(fileName, { encoding: 'utf-8' });
 	const lines = fileContent.split('\n');
