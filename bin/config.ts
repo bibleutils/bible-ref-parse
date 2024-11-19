@@ -12,7 +12,7 @@ const rootPath = path.resolve(__dirname, '../');
 const srcPath = path.join(rootPath, 'src');
 const buildPath = path.join(rootPath, 'build/lang');
 const distPath = path.join(rootPath, 'dist');
-const testPath = path.join(rootPath, 'build/test');
+const testPath = path.join(distPath, 'test');
 
 const CONFIG = {
 	language,
