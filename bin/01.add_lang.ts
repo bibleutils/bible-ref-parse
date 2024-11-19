@@ -24,10 +24,6 @@ const gValidOsises = makeValidOsises([
 ]);
 
 // PROGRAM STARTS HERE
-if (!lang || !/^\w+$/.test(lang)) {
-	logger.error('The first argument should be a language iso code (e.g., "fr")');
-	process.exit(1);
-}
 logger.info(`${argv[1]} Starting...`);
 
 const gRawAbbrevs: any = {};

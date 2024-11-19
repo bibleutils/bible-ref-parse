@@ -1,9 +1,10 @@
 import * as path from 'path';
+import logger from './logger';
 
 const language = process.argv[2] || null;
 
-if (!language) {
-	console.error('Please specify a language identifier as the first argument');
+if (!language || !/^\w+$/.test(language)) {
+	logger.error('The first argument should be a language iso code (e.g., "fr")');
 	process.exit(1);
 }
 
