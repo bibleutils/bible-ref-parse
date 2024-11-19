@@ -1,130 +1,40 @@
 import * as fs from 'fs';
 import * as childProcess from 'child_process';
-import * as path from 'path';
-import { platform } from 'process';
+import logger from './utils/logger';
+import { CONFIG } from './config';
+import { COMMANDS } from './commands';
+import { prepareDirectory } from './utils/utils';
 
+// CoffeeScript files
+const coffeeFiles = [
+	CONFIG.paths.core.parser,
+	CONFIG.paths.core.passage,
+	CONFIG.paths.core.utils,
+	CONFIG.paths.build.translations,
+	CONFIG.paths.build.regexps,
+];
 
-let scriptPath: string;
-const lang = process.argv[2];
-
-
-if (!lang) {
-	console.error('Please specify a language identifier as the first argument');
-	process.exit(1);
-}
-
-const isWindows = platform === 'win32';
-const isMac = platform === 'darwin';
-const isLinux = platform === 'linux';
-
-let tempGrammarFile: string;
-let grammarFile: string;
-let coffeeFiles: string[];
-let outputJsFile: string;
-let specFile: string;
-let specJsFile: string;
-let specTestJsFile: string;
-
-if (isWindows) {
-	scriptPath = path.win32.resolve(__dirname, '..');
-	
-	// Grammer files
-	tempGrammarFile = path.win32.join(scriptPath, `temp_${lang}_grammar.js`);
-	grammarFile = path.win32.join(scriptPath, 'src', lang, 'grammar.pegjs');
-	
-	// CoffeeScript files
-	coffeeFiles = [
-		path.win32.join(`${scriptPath}/src/core/bcv_parser.coffee`),
-		path.win32.join(`${scriptPath}/src/core/bcv_passage.coffee`),
-		path.win32.join(`${scriptPath}/src/core/bcv_utils.coffee`),
-		path.win32.join(`${scriptPath}/src/${lang}/translations.coffee`),
-		path.win32.join(`${scriptPath}/src/${lang}/regexps.coffee`),
-	];
-	outputJsFile = path.win32.join(`${scriptPath}/js/${lang}_bcv_parser.js`);
-	
-	// spec files
-	specFile = path.win32.join(`${scriptPath}/src/${lang}/spec.coffee`);
-	specJsFile = path.win32.join(`${scriptPath}/src/${lang}/spec.js`);
-	specTestJsFile = path.win32.join(`${scriptPath}/test/js/${lang}.spec.js`);
-} else if (isMac || isLinux) {
-	scriptPath = path.posix.resolve(__dirname, '..');
-	
-	// Grammer files
-	tempGrammarFile = path.posix.resolve(scriptPath, `temp_${lang}_grammar.js`);
-	grammarFile = path.posix.resolve(scriptPath, 'src', lang, 'grammar.pegjs');
-
-	// CoffeeScript files
-	coffeeFiles = [
-		`${scriptPath}/src/core/bcv_parser.coffee`,
-		`${scriptPath}/src/core/bcv_passage.coffee`,
-		`${scriptPath}/src/core/bcv_utils.coffee`,
-		`${scriptPath}/src/${lang}/translations.coffee`,
-		`${scriptPath}/src/${lang}/regexps.coffee`,
-	];
-	outputJsFile = `${scriptPath}/js/${lang}_bcv_parser.js`;
-
-	// spec files
-	specFile = `${scriptPath}/src/${lang}/spec.coffee`;
-	specJsFile = `${scriptPath}/src/${lang}/spec.js`;
-	specTestJsFile = `${scriptPath}/test/js/${lang}.spec.js`;
-} else {
-	console.error('Unknown OS');
-	process.exit(1);
-}
-
-// console.debug(`Temp Grammer File: ${tempGrammarFile}`);
-// console.debug(`Grammer File: ${grammarFile}`);
-// console.debug(`Spec File: ${specFile}`);
-// console.debug(`Spec JS File: ${specJsFile}`);
-// console.debug(`Spec Test JS File: ${specTestJsFile}`);
-
-
-let cmd: string = `npx pegjs --format globals --export-var grammar -o ${tempGrammarFile} ${grammarFile}`;
 try {
+	prepareDirectory(CONFIG.paths.dist.directory);
+	prepareDirectory(CONFIG.paths.tests.directory);
 	// Run PEG.js to generate grammar file
-	if (isWindows) {
-		cmd = `powershell -Command "npx pegjs --format globals --export-var grammar -o ${tempGrammarFile} ${grammarFile}"`
-	}
-	// console.debug(cmd);
-	childProcess.execSync(cmd);
+	childProcess.execSync(COMMANDS.compileGrammar());
 
 	// Add PEG.js global variables
-	addPegjsGlobal(tempGrammarFile);
+	addPegjsGlobal(CONFIG.paths.temp.grammar);
 
-	console.log('Joining...');
-	if (isWindows) {
-		const commaSeparatedPaths = coffeeFiles.map(file => "'" + file.replace("'", "''") + "'").join(', ');
-		cmd = `powershell -Command "Get-Content -Path @(${commaSeparatedPaths}) | npx coffee --no-header --compile --stdio | Out-File -FilePath '${outputJsFile}' -Encoding UTF8"`;
-	} else {
-		cmd = `cat ${coffeeFiles.join(' ')} | coffee --no-header --compile --stdio > ${outputJsFile}`;
-	}
-
-	// console.debug(cmd);
-	childProcess.execSync(cmd, { encoding: 'utf-8' });
-	// console.log(output);
+	logger.info('Joining...');
+	childProcess.execSync(COMMANDS.compileParser(coffeeFiles), { encoding: 'utf-8' });
 
 	// Add PEG.js code to output JS file
-	addPeg('');
-	console.log('Compiling spec...');
+	addPeg();
+	logger.info('Compiling spec...');
 
 	// Compile spec CoffeeScript file
-	cmd = `npx coffee --no-header -c ${specFile}`;
-	// console.debug(cmd);
-	childProcess.execSync(cmd, { encoding: 'utf-8' });
-	// console.log(output);
-
-	if (isWindows) {
-		cmd = `powershell -Command "Move-Item -Path ${specJsFile} -Destination ${specTestJsFile}"`;
-		// cmd = `powershell -Command "Rename-Item -Path ${specFile} -NewName ${specJsFile}"`;
-	}
-	else
-		cmd = `mv ${specJsFile} ${specTestJsFile}`;
-
-	childProcess.execSync(cmd, { encoding: 'utf-8' });
-	// console.log(output);
-
+	childProcess.execSync(COMMANDS.compileSpec(), { encoding: 'utf-8' });
+	childProcess.execSync(COMMANDS.moveSpecJs(), { encoding: 'utf-8' });
 	// Remove temporary grammar file
-	fs.unlinkSync(tempGrammarFile);
+	fs.unlinkSync(CONFIG.paths.temp.grammar);
 } catch (error: any) {
 	console.error(`Unexpected Error While Executing: ${error?.message}`);
 	process.exit(error?.status);
@@ -137,14 +47,13 @@ function addPegjsGlobal(file: string) {
 	fs.writeFileSync(file, modifiedContent, { encoding: 'utf-8'});
 }
 
-function addPeg(prefix: string): void {
+function addPeg(): void {
 	// Read the content of the temp grammar file
-	const pegFilePath = `${scriptPath}/temp_${prefix}${lang}_grammar.js`;
 	let peg;
-	if (fs.existsSync(pegFilePath))
-		peg = fs.readFileSync(pegFilePath, {encoding: 'utf-8'});
+	if (fs.existsSync(CONFIG.paths.temp.grammar))
+		peg = fs.readFileSync(CONFIG.paths.temp.grammar, {encoding: 'utf-8'});
 	else
-		throw Error(`${pegFilePath} does not exist`);
+		throw Error(`${CONFIG.paths.temp.grammar} does not exist`);
 
 	// New parse functions
 	const newParseSpace = `
@@ -195,7 +104,7 @@ function peg$parseany_integer() {
 	}
 
 	// Merge the modified PEG content into the destination file
-	mergeFile(`${scriptPath}/js/#PREFIX${lang}_bcv_parser.js`, peg, prefix);
+	mergeFile(CONFIG.paths.dist.js, peg);
 }
 
 function extractSequenceRegexVar(peg: string): string {
@@ -227,20 +136,12 @@ function getNewOptionsCheck(peg: string): string {
 	return newOptionsCheck;
 }
 
-function mergeFile(file: string, peg: string, prefix: string): void {
-	if (prefix) {
-		prefix += "/";
-	}
-
-	// Remove "#PREFIX" from the file name
-	let srcFile = file.replace('#PREFIX', '');
-
+function mergeFile(file: string, peg: string): void {
 	// Read the content of the source file
-	let joined = fs.readFileSync(srcFile, {encoding: 'utf-8'});
+	let joined = fs.readFileSync(file, {encoding: 'utf-8'});
 	const prev = joined;
 
 	// Replace the pattern with the peg content
-	// console.log(joined.match(/(\s*\}\)\.call\(this\);\s*)$/));
 	joined = joined.replace(/(\s*\}\)\.call\(this\);\s*)$/, `\n${peg}$1`);
 
 	// If no changes were made, throw an error
@@ -248,9 +149,6 @@ function mergeFile(file: string, peg: string, prefix: string): void {
 		throw new Error("PEG not successfully added");
 	}
 
-	// Modify the destination file path by replacing "#PREFIX" with the prefix
-	let destFile = file.replace('#PREFIX', prefix);
-
 	// Write the updated content to the destination file
-	fs.writeFileSync(destFile, joined, {encoding: 'utf-8'});
+	fs.writeFileSync(file, joined, {encoding: 'utf-8'});
 }
