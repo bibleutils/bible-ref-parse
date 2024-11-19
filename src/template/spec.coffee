@@ -1,4 +1,4 @@
-bcv_parser = require("../../js/$LANG_bcv_parser.js").bcv_parser
+bcv_parser = require("../../dist/$LANG-bcv-parser.js").bcv_parser
 
 describe "Parsing", ->
 	p = {}

@@ -498,7 +498,7 @@ Most of these languages are in [Google Translate](https://translate.google.com/)
 	<tr><td>el</td><td>Greek (mostly ancient)</td></tr>
 	<tr><td>en</td><td>English</td></tr>
 	<tr><td>es</td><td>Spanish</td></tr>
-	<tr><td>fa</td><td>Farsi / Persian (but it is not part of `full` build yet)</td></tr>
+	<tr><td>fa</td><td>Farsi / Persian</td></tr>
 	<tr><td>fi</td><td>Finnish</td></tr>
 	<tr><td>fr</td><td>French</td></tr>
 	<tr><td>he</td><td>Hebrew</td></tr>
@@ -546,19 +546,6 @@ When using `<script>`s on the web, be sure to serve them with the `utf-8` charac
 ```html
 <script src="en_bcv_parser.min.js" charset="UTF-8"></script>
 ```
-
-### Cross-Language Support
-
-Two files in [`/js`](https://github.com/bibleutils/bible-ref-parse/tree/master/js) provide support for identifying translations in multiple languages at one time (e.g., "Matthew 2, Juan 1"). You can use this support if you don't know ahead of time what language someone might be using.
-
-The files are:
-
-1. `ascii_bcv_parser.js`. Only supports characters in the set `[\x00-\x7f\u2000-\u206F]` (ASCII characters and certain punctuation marks like em-dashes). It runs about 4% slower than just the `en` file, parsing around 122KB per second in the fuzz tester.
-1. `full_bcv_parser.js`. Parse book names across all languages. It runs about 6% slower than the `en` file, parsing around 120KB per second in the fuzz tester.
-
-Some features, such as psalm titles, are still English-only, even in these cross-language files.
-
-Executing `bin/add_cross_lang.pl full` or `bin/add_cross_lang.pl ascii` will recompile the needed source files. You can then compile the files as usual using the [build instructions](#building).
 
 ## Compatibility
 
