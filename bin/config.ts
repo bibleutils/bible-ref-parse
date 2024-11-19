@@ -33,6 +33,7 @@ const CONFIG = {
 			blocks: path.join(rootPath, 'bin/letters/blocks.txt'),
 			dataFile: path.join(srcPath, 'lang', language, 'data.txt'),
 			letters: path.join(rootPath, 'bin/letters/letters.txt'),
+			psalms: path.join(srcPath, 'lang', language, 'psalms_cb.coffee'),
 		},
 		template: {
 			grammar: path.join(srcPath, 'template/grammar.pegjs'),
@@ -46,7 +47,6 @@ const CONFIG = {
 			language: path.join(buildPath, language),
 			bookNames: path.join(buildPath, language, 'book-names.txt'),
 			grammar: path.join(buildPath, language, 'grammar.pegjs'),
-			psalms: path.join(buildPath, language, 'psalm_cb.coffee'),
 			regexps: path.join(buildPath, language, 'regexps.coffee'),
 			spec: path.join(buildPath, language, 'spec.coffee'),
 			specJs: path.join(buildPath, language, 'spec.js'),

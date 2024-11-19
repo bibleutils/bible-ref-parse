@@ -337,8 +337,8 @@ function makeRegexpSet(refs: Ref[]): string {
 
 	for (const ref of refs) {
 		const { osis, apocrypha } = ref;
-		if (osis === 'Ps' && !hasPsalmCb && fileOrDirectoryExists(CONFIG.paths.build.psalms)) {
-			out.push(getFileContents(CONFIG.paths.build.psalms));
+		if (osis === 'Ps' && !hasPsalmCb && fileOrDirectoryExists(CONFIG.paths.src.psalms)) {
+			out.push(getFileContents(CONFIG.paths.src.psalms));
 			hasPsalmCb = true;
 		}
 
