@@ -1,4 +1,4 @@
-import { CONFIG } from './config';
+import { CONFIG } from '../config';
 
 function info (...data: any): void {
 	if (CONFIG.logLevel !== 'silent') console.log(...data);

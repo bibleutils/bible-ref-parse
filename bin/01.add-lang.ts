@@ -1,11 +1,11 @@
 import * as fs from 'fs';
 import { execSync } from 'child_process';
 import { argv } from 'process';
-import logger from './logger';
+import logger from './utils/logger';
 import { NON_LATIN_DIGITS_REGEXPS } from './regexps';
 import { CONFIG } from './config';
 import { COMMANDS } from './commands';
-import { fileOrDirectoryExists, prepareDirectory } from './utils';
+import { fileOrDirectoryExists, prepareDirectory } from './utils/utils';
 
 type Ref = {
 	osis: string;

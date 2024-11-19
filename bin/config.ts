@@ -1,5 +1,5 @@
 import * as path from 'path';
-import logger from './logger';
+import logger from './utils/logger';
 
 const language = process.argv[2] || null;
 
@@ -32,9 +32,9 @@ const CONFIG = {
 			makeRegexps: path.join(rootPath, 'bin/make-regexps.js'),
 		},
 		src: {
-			blocks: path.join(rootPath, 'bin/letters/blocks.txt'),
+			blocks: path.join(srcPath, 'letters/blocks.txt'),
 			dataFile: path.join(srcPath, 'lang', language, 'data.txt'),
-			letters: path.join(rootPath, 'bin/letters/letters.txt'),
+			letters: path.join(srcPath, 'letters/letters.txt'),
 			psalms: path.join(srcPath, 'lang', language, 'psalms-cb.coffee'),
 		},
 		template: {

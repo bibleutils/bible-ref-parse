@@ -1,9 +1,9 @@
 import * as fs from 'fs';
 import * as childProcess from 'child_process';
-import logger from './logger';
+import logger from './utils/logger';
 import { CONFIG } from './config';
 import { COMMANDS } from './commands';
-import { prepareDirectory } from './utils';
+import { prepareDirectory } from './utils/utils';
 
 // CoffeeScript files
 const coffeeFiles = [

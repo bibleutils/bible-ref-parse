@@ -1,5 +1,4 @@
 import fs from 'fs';
-import { CONFIG } from './config';
 
 export function prepareDirectory (directory: string): void {
 	if (fileOrDirectoryExists(directory)) {
