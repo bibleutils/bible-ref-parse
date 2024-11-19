@@ -1520,7 +1520,7 @@ function addBookRangeTests() {
 	}
 
 	if (!john) {
-		console.warn("	Warning: no available John abbreviation for testing book ranges");
+		logger.warn("	Warning: no available John abbreviation for testing book ranges");
 		return [];
 	}
 
