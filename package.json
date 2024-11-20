@@ -33,9 +33,10 @@
 		"compile-language-legacy": "cd bin && perl 02.compile.pl",
 		"comp-legacy": "npm run compile-language-legacy",
 		"compile-language": "cd bin && npx tsx 02.compile.ts",
-		"build-language": "bash build-lanugage.sh",
+		"build": "node build.js",
 		"build-legacy": "bash -c 'npm run add-language-legacy $0 && npm run compile-language-legacy $0'",
 		"test-language": "bash -c 'npx jasmine-node dist/test/$0.spec.js'",
+		"test-language:all": "jasmine-node dist/test/*.spec.js",
 		"test": "(find test/js -name *.spec.ts | xargs -I % sh -c 'echo %; npx jasmine-node %';) || exit 1;"
 	},
 	"devDependencies": {
