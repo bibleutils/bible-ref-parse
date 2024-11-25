@@ -33,6 +33,9 @@ try {
 	// Compile spec CoffeeScript file
 	childProcess.execSync(COMMANDS.compileSpec(), { encoding: 'utf-8' });
 	childProcess.execSync(COMMANDS.moveSpecJs(), { encoding: 'utf-8' });
+
+	//minify the js file
+	childProcess.execSync(COMMANDS.minifyJs(), { encoding: 'utf-8' });
 	// Remove temporary grammar file
 	fs.unlinkSync(CONFIG.paths.temp.grammar);
 } catch (error: any) {
