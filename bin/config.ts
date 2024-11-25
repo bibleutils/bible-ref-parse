@@ -58,6 +58,7 @@ const CONFIG = {
 		dist: {
 			directory: distPath,
 			js: path.join(distPath, `${language}-bcv-parser.js`),
+			jsMin: path.join(distPath, `${language}-bcv-parser.min.js`),
 		},
 		tests: {
 			directory: testPath,

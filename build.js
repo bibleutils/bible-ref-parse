@@ -37,11 +37,23 @@ function compileLanguage (lang) {
 	}
 }
 
+function minify (lang) {
+	const command = `npm run minify -- dist/${lang}-bcv-parser.js -o dist/${lang}-bcv-parser.min.js -c -m`;
+
+	try {
+		childProcess.execSync(command);
+	} catch (error) {
+		console.error(`Failed to minify language ${lang}: ${error}`);
+		process.exit(1);
+	}
+}
+
 const availableLanguages = getLanguagesList();
 
 function processLanguage (lang) {
 	addLanguage(lang);
 	compileLanguage(lang);
+	minify(lang);
 	console.log(`Processed language: ${lang}`);
 }
 

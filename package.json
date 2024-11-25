@@ -38,7 +38,8 @@
 		"build-legacy": "bash -c 'npm run add-language-legacy $0 && npm run compile-language-legacy $0'",
 		"test-language": "bash -c 'npx jasmine-node dist/test/$0.spec.js'",
 		"test-language:all": "jasmine-node dist/test/*.spec.js",
-		"test": "(find test/js -name *.spec.ts | xargs -I % sh -c 'echo %; npx jasmine-node %';) || exit 1;"
+		"test": "(find test/js -name *.spec.ts | xargs -I % sh -c 'echo %; npx jasmine-node %';) || exit 1;",
+		"minify": "terser"
 	},
 	"devDependencies": {
 		"@types/base-64": "^1.0.2",
@@ -55,6 +56,7 @@
 	"dependencies": {
 		"base-64": "^1.0.0",
 		"json5": "^2.2.3",
+		"terser": "^5.36.0",
 		"tsx": "^4.19.0",
 		"xregexp": "^5.1.1"
 	}

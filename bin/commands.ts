@@ -31,6 +31,9 @@ const COMMANDS = {
 
 		return `mv ${CONFIG.paths.build.specJs} ${CONFIG.paths.tests.specTestJs}`;
 	},
+	minifyJs (): string {
+		return `npm run minify -- ${CONFIG.paths.dist.js} --output ${CONFIG.paths.dist.jsMin} -c -m`;
+	}
 }
 
 export {
