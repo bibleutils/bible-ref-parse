@@ -1,6 +1,6 @@
 {
 	"name": "bible-ref-parse",
-	"version": "2.1.18",
+	"version": "3",
 	"description": "Identifies and parses Bible references (like John 3:16) in over 40 languages.",
 	"main": "js/",
 	"directories": {
@@ -28,13 +28,10 @@
 	"homepage": "https://github.com/bibleutils/bible-ref-parse",
 	"scripts": {
 		"add-language-legacy": "cd bin && perl 01.add_lang.pl",
-		"add-legacy": "npm run add-language-legacy",
 		"add-language": "cd bin && tsx 01.add-lang.ts",
 		"compile-language-legacy": "cd bin && perl 02.compile.pl",
-		"comp-legacy": "npm run compile-language-legacy",
 		"compile-language": "cd bin && npx tsx 02.compile.ts",
 		"build": "node build.js",
-		"build-all": "node build.js all",
 		"build-legacy": "bash -c 'npm run add-language-legacy $0 && npm run compile-language-legacy $0'",
 		"test-language": "bash -c 'npx jasmine-node dist/test/$0.spec.js'",
 		"test-language:all": "jasmine-node dist/test/*.spec.js",
