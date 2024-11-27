@@ -107,3 +107,52 @@ However, it works properly because of the behaviour described in the note above.
 ```
 $UNICODE_BLOCK	Cyrillic	Latin
 ```
+
+### Books section
+
+#### Book names
+This section contains all possible book names in language.
+Should be written in format:
+```
+OSIS	book name 1	book name 2	book name n
+```
+Book names support regexp patterns. So, names like `Amo` and `Ams` could be written as `Am[os]`.
+
+Also, it supports backtick (\`) special character following accented character to use only the accented character version.
+E.g. character `á` will be transformed to [áa] regexp pattern meaning that it will be matched as `á` or `a`.
+But character ``á` `` will be transformed to `[á]` regexp pattern meaning that it will be matched only as `á`.
+
+#### Books parsing order
+This section defines the order used to parse book names.
+
+All entries should start with `=`.
+
+Syntax:
+```
+=OSIS1
+=OSIS2
+...
+=OSISn
+```
+
+It is important to have the correct order to avoid matching book names that are part of other book names.
+
+E.g. there is a data.txt file for the `en` language where the list of books is:
+```
+1Tim	$FIRST Timothy	$FIRST Tim
+Titus	Titus	Tit	Ti
+
+=Titus
+=1Tim
+```
+
+If books are parsed in the order provided then it will end up parsing "I Timothy" as "Titus" because word "Timothy" contains "Ti" which is an alias of "Titus".
+
+However, if order is reversed books will be parsed properly since longer names are parsed first.
+
+#### Preferred book names
+This section includes preferred long and short names for each OSIS.
+
+All entries should start with `*`.
+
+This section is not used in the code.
