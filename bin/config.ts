@@ -33,7 +33,7 @@ const CONFIG = {
 		},
 		src: {
 			blocks: path.join(srcPath, 'letters/blocks.txt'),
-			dataFile: path.join(srcPath, 'lang', language, 'data.txt'),
+			dataFile: path.join(srcPath, 'lang', language, 'data.json'),
 			letters: path.join(srcPath, 'letters/letters.txt'),
 			psalms: path.join(srcPath, 'lang', language, 'psalms-cb.coffee'),
 		},
