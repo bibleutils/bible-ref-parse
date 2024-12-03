@@ -14,16 +14,16 @@ Try a [demo of the Bible passage reference parser](https://www.openbible.info/la
 
 ## Usage
 
-For English, include `js/en_bcv_parser.min.js` in your project. For other languages, include the relevant `js/*_bcv_parser.js`.
+For English, include `js/en-bcv-parser.min.js` in your project. For other languages, include the relevant `js/*_bcv_parser.js`.
 
 These usage examples are in Javascript. You can also use Coffeescript, of course.
 
 ### Setup: In a Browser
 
 ```html
-<script src="/path/js/en_bcv_parser.min.js" charset="UTF-8"></script>
+<script src="en-bcv-parser.min.js" charset="UTF-8"></script>
 <script>
-	var bcv = new bcv_parser;
+	const bcv = new bcv_parser();
 </script>
 ```
 
@@ -39,14 +39,14 @@ npm i bible-ref-parse
 
 ESM:
 ```javascript
-import * as parserModule from 'bible-ref-parse/js/en_bcv_parser';
+import * as parserModule from 'bible-ref-parse/dist/en-bcv-parser';
 const parser = new parserModule.bcv_parser();
 ```
 
 CommonsJS:
 
 ```javascript
-var bcv_parser = require("/path/js/en_bcv_parser.js").bcv_parser;
+var bcv_parser = require("bible-ref-parse/dist/en-bcv-parser.js").bcv_parser;
 var bcv = new bcv_parser();
 ```
 
@@ -544,7 +544,7 @@ When parsing a language that doesn't use Latin-based numbers (0-9), you probably
 When using `<script>`s on the web, be sure to serve them with the `utf-8` character set—many of the files contain raw UTF-8 characters. The safest way to ensure the right character set is to include the `charset` attribute on the `<script>` tag:
 
 ```html
-<script src="en_bcv_parser.min.js" charset="UTF-8"></script>
+<script src="en-bcv-parser.min.js" charset="UTF-8"></script>
 ```
 
 ## Compatibility
