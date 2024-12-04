@@ -28,7 +28,7 @@ export enum Variable {
 	FORCE_OSIS_ABBREV = '$FORCE_OSIS_ABBREV',
 }
 
-export interface IInputDataVariables {
+export type IInputDataVariables = {
 	[Variable.FIRST]: string[];
 	[Variable.SECOND]: string[];
 	[Variable.THIRD]: string[];
@@ -57,12 +57,12 @@ export interface IInputDataVariables {
 	[Variable.FORCE_OSIS_ABBREV]: string[];
 }
 
-export interface IBook {
+export type IBook = {
 	osis: string;
 	abbrevs: string[];
 }
 
-export interface IData {
+export type IData = {
 	variables: Partial<IInputDataVariables>;
 	books: IBook[];
 	order: string[];

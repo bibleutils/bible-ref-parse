@@ -134,7 +134,7 @@ function makeTests(): { [key: string]: string[] } {
 			});
 
 			// Handle alternate OSIS abbreviations
-			osises.forEach(({ osis: altOsis}) => {
+			osises.forEach(({ osis: altOsis }) => {
 				if (osis === altOsis) return;
 
 				if (!GLOBAL_ABBREVS.hasOwnProperty(altOsis)) return;
