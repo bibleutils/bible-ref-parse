@@ -111,7 +111,7 @@ function peg$parseany_integer() {
 }
 
 function extractSequenceRegexVar(peg: string): string {
-	const sequenceVarMatch = peg.match(/function peg\$parsesequence_sep\(\) \{\s+var s.+;\s+s0 =.+\s+s1 =.+\s+if \((peg\$c\d+)\.test/);
+	const sequenceVarMatch = peg.match(/function peg\$parsesequence_sep\(\) \{\s+var s.+;\s+s0 =.+\s+s1 =.+\s+s2 =.+\s+if \((peg\$r\d+)\.test/);
 	if (!sequenceVarMatch) {
 		throw new Error("No sequence var");
 	}
@@ -120,7 +120,7 @@ function extractSequenceRegexVar(peg: string): string {
 
 function getSequenceRegexValue(peg: string, sequenceRegexVar: string): string {
 	const escapedRegex = sequenceRegexVar.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'); // quotemeta equivalent
-	const regex = RegExp(`${escapedRegex} = \\/\\^\\[,([^\\]]+?\\]\\/)`);
+	const regex = RegExp(`${escapedRegex} = \\/\\^\\[[&,]([^\\]]+?\\]\\/)`);
 	const sequenceValueMatch = peg.match(regex);
 	if (!sequenceValueMatch) {
 		throw new Error("No sequence value");

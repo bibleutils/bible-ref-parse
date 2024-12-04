@@ -5,7 +5,7 @@ const COMMANDS = {
 		return `node ${CONFIG.paths.scripts.makeRegexps} "${content}"`;
 	},
 	compileGrammar (): string {
-		const defaultCommand = `npx pegjs --format globals --export-var grammar -o ${CONFIG.paths.temp.grammar} ${CONFIG.paths.build.grammar}`;
+		const defaultCommand = `npx peggy --format globals --export-var grammar -o ${CONFIG.paths.temp.grammar} ${CONFIG.paths.build.grammar}`;
 
 		if (CONFIG.isWindows) {
 			return `powershell -Command "${defaultCommand}"`;
