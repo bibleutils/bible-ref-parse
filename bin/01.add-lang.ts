@@ -2,19 +2,14 @@ import * as fs from 'fs';
 import { execSync } from 'child_process';
 import { argv } from 'process';
 import logger from './utils/logger';
-import { NON_LATIN_DIGITS_REGEXPS } from './regexps';
+import { NON_LATIN_DIGITS_REGEXPS, SPACE_REGEXP, REGEXP_CHARACTERS } from './regexps';
 import { CONFIG } from './config';
 import { COMMANDS } from './commands';
 import { fileOrDirectoryExists, prepareDirectory } from './utils/utils';
-
-type Ref = {
-	osis: string;
-	apocrypha: boolean;
-}
+import { IBook, IData, IInputDataVariables, Ref, Variable } from './types';
 
 // GLOBAL VARIABLES
 const lang = CONFIG.language;
-const gRegexpSpace = '[\\s\u00a0]';
 let gValidCharacters = "[\\d\\s\\xa0.:,;\\x1e\\x1f&\\(\\)\\uff08\\uff09\\[\\]/\"'\\*=~\\-\\u2013\\u2014]";
 const gValidOsises = makeValidOsises([
 	'Gen', 'Exod', 'Lev', 'Num', 'Deut', 'Josh', 'Judg', 'Ruth', '1Sam', '2Sam', '1Kgs', '2Kgs', '1Chr', '2Chr', 'Ezra', 'Neh', 'Esth',
@@ -27,14 +22,25 @@ const gValidOsises = makeValidOsises([
 // PROGRAM STARTS HERE
 logger.info(`${argv[1]} Starting...`);
 
-const gRawAbbrevs: any = {};
+const GLOBAL_RAW_ABBREVS: any = {};
 // logger.info("Global 'gRawAbbrevs' Variable Value: ", gRawAbbrevs);
-const gVars = getVars();
-const COLLAPSE_COMBINING_CHARACTERS = !(gVars['$COLLAPSE_COMBINING_CHARACTERS'] && gVars['$COLLAPSE_COMBINING_CHARACTERS'][0] === 'false');
+const fileName: string = CONFIG.paths.src.dataFile;
+if (!fileOrDirectoryExists(fileName)) {
+	logger.info(`Current Working Dir: ${__dirname}`);
+	logger.error(`Can't open ${fileName}. Make sure it is present.`);
+	process.exit(1);
+}
+
+const fileContent: IData = prepareData(
+	fs.readFileSync(fileName, { encoding: 'utf-8', flag: 'r' })
+);
+const GLOBAL_VARIABLES = getVars(fileContent.variables);
+const COLLAPSE_COMBINING_CHARACTERS = !(GLOBAL_VARIABLES[Variable.COLLAPSE_COMBINING_CHARACTERS] && GLOBAL_VARIABLES[Variable.COLLAPSE_COMBINING_CHARACTERS][0] === 'false');
+const FORCE_OSIS_ABBREV = !(GLOBAL_VARIABLES[Variable.FORCE_OSIS_ABBREV] && GLOBAL_VARIABLES[Variable.FORCE_OSIS_ABBREV][0] === 'false');
 // logger.info("Global 'gVars' Variable Value: ", gVars);
-const gAbbrevs: any = getAbbrevs();
+const GLOBAL_ABBREVS: any = getAbbrevs(fileContent.books, fileContent.preferredBookNames);
 // logger.info("Global 'gAbbrevs' Variable Value: ", gAbbrevs);
-const gOrder = getOrder();
+const GLOBAL_ORDER = getOrder(fileContent.order);
 prepareDirectory(CONFIG.paths.build.directory);
 // logger.info("Global 'gOrder' Variable Value: ", gOrder);
 const gAllAbbrevs = makeTests();
@@ -51,35 +57,14 @@ makeTranslations();
 
 // FUNCTION DECLARATIONS
 function escapeRegExp(pattern: string) {
-	return pattern.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+	return pattern.replace(REGEXP_CHARACTERS, '\\$&');
 }
 
-function getVars() {
-	const out = {};
-	const fileName: string = CONFIG.paths.src.dataFile;
-	if (!fileOrDirectoryExists(fileName)) {
-		logger.info(`Current Working Dir: ${__dirname}`);
-		logger.error(`Can't open ${fileName}. Make sure it is present.`);
-		process.exit(1);
-	}
+function getVars(variables: Partial<IInputDataVariables>): Partial<IInputDataVariables> {
+	const out = { ...variables};
 
-	const fileContent = fs.readFileSync(fileName, { encoding: 'utf-8', flag: 'r' });
-	const lines = fileContent.split('\n');
-	for (const line of lines) {
-		if (/^\$/.test(line)) {
-			const [key, ...values] = line.normalize('NFD').normalize('NFC').split(/\t/);
-			if (!values.length) {
-				logger.info(`Current Working Dir: ${__dirname}`);
-				logger.error(`No values for ${key}`);
-				process.exit(2);
-			}
-			out[key] = values;
-		}
-	}
-
-
-	if (out['$ALLOWED_CHARACTERS']) {
-		for (const char of out['$ALLOWED_CHARACTERS']) {
+	if (out[Variable.ALLOWED_CHARACTERS]) {
+		for (const char of out[Variable.ALLOWED_CHARACTERS]) {
 			const check = escapeRegExp(char);
 			if (!gValidCharacters.includes(check)) {
 				gValidCharacters += char;
@@ -87,38 +72,30 @@ function getVars() {
 		}
 	}
 
-	const letters = getPreBookCharacters(out['$UNICODE_BLOCK']);
-	if (!out['$PRE_BOOK_ALLOWED_CHARACTERS'])
-		out['$PRE_BOOK_ALLOWED_CHARACTERS'] = [letters];
-	if (!out['$POST_BOOK_ALLOWED_CHARACTERS'])
-		out['$POST_BOOK_ALLOWED_CHARACTERS'] = [gValidCharacters];
-	if (!out['$PRE_PASSAGE_ALLOWED_CHARACTERS'])
-		out['$PRE_PASSAGE_ALLOWED_CHARACTERS'] = [getPrePassageCharacters(out['$PRE_BOOK_ALLOWED_CHARACTERS'])];
-	out['$LANG'] = [lang];
-	if (!out['$LANG_ISOS'])
-		out['$LANG_ISOS'] = [lang];
+	const letters = getPreBookCharacters(out[Variable.UNICODE_BLOCK]);
+	if (!out[Variable.PRE_BOOK_ALLOWED_CHARACTERS])
+		out[Variable.PRE_BOOK_ALLOWED_CHARACTERS] = [letters];
+	if (!out[Variable.POST_BOOK_ALLOWED_CHARACTERS])
+		out[Variable.POST_BOOK_ALLOWED_CHARACTERS] = [gValidCharacters];
+	if (!out[Variable.PRE_PASSAGE_ALLOWED_CHARACTERS])
+		out[Variable.PRE_PASSAGE_ALLOWED_CHARACTERS] = [getPrePassageCharacters(out[Variable.PRE_BOOK_ALLOWED_CHARACTERS])];
+	out[Variable.LANG] = [lang];
+	if (!out[Variable.LANG_ISOS])
+		out[Variable.LANG_ISOS] = [lang];
 
 	return out;
 }
 
-function getOrder() {
+function getOrder(order: string[]): Ref[] {
 	let out = [];
-	const fileName = CONFIG.paths.src.dataFile;
-	if (fileOrDirectoryExists(fileName)) {
-		const file = fs.readFileSync(fileName, 'utf-8');
-		for (const line of file.split('\n')) {
-			if (!line.startsWith('=')) {
-				continue;
-			}
-			const osis = line.replace(/^=/, '').normalize('NFD').normalize('NFC');
-			isValidOsis(osis);
-			const apocrypha = gValidOsises[osis] === 'apocrypha' ? true : false;
-			out.push({ osis, apocrypha });
-			gAbbrevs[osis] = gAbbrevs[osis] || {};
-			gAbbrevs[osis][osis] = true;
-			gRawAbbrevs[osis] = gRawAbbrevs[osis] || {};
-			gRawAbbrevs[osis][osis] = true;
-		}
+	for (const osis of fileContent.order) {
+		isValidOsis(osis);
+		const apocrypha = gValidOsises[osis] === 'apocrypha';
+		out.push({ osis, apocrypha });
+		GLOBAL_ABBREVS[osis] = GLOBAL_ABBREVS[osis] || {};
+		GLOBAL_ABBREVS[osis][osis] = true;
+		GLOBAL_RAW_ABBREVS[osis] = GLOBAL_RAW_ABBREVS[osis] || {};
+		GLOBAL_RAW_ABBREVS[osis][osis] = true;
 	}
 	return out;
 }
@@ -133,13 +110,13 @@ function isValidOsis(osis: string): void {
 
 function makeTests(): { [key: string]: string[] } {
 	let out: string[] = [];
-	let osises = [...gOrder];
+	let osises = [...GLOBAL_ORDER];
 	let allAbbrevsInMakeTests = {};
 
 	// Append any OSIS with a comma
-	Object.keys(gAbbrevs).toSorted().forEach(osis => {
+	Object.keys(GLOBAL_ABBREVS).toSorted().forEach(osis => {
 		if (osis.includes(',')) {
-			osises.push({ osis, apocrypha: 0 });
+			osises.push({ osis, apocrypha: false });
 		}
 	});
 
@@ -150,19 +127,18 @@ function makeTests(): { [key: string]: string[] } {
 		const match = `${first}.1.1`;
 
 		// Process each abbreviation for the current OSIS
-		sortAbbrevsByLength(Object.keys(gAbbrevs[osis])).forEach(abbrev => {
+		sortAbbrevsByLength(Object.keys(GLOBAL_ABBREVS[osis])).forEach(abbrev => {
 			expandAbbrevVars(abbrev).toSorted().forEach(expanded => {
 				allAbbrevsInMakeTests = addAbbrevToAllAbbrevs(osis, expanded, allAbbrevsInMakeTests);
 				tests.push(`\t\texpect(p.parse("${expanded} 1:1").osis()).toEqual("${match}", "parsing: '${expanded} 1:1'")`);
 			});
 
 			// Handle alternate OSIS abbreviations
-			osises.forEach(altOsis => {
+			osises.forEach(({ osis: altOsis }) => {
 				if (osis === altOsis) return;
 
-				// if(!gAbbrevs.hasOwnProperty(altOsis)) continue;
-				if (!gAbbrevs.hasOwnProperty(altOsis)) return;
-				Object.keys(gAbbrevs[altOsis]).forEach(altAbbrev => {
+				if (!GLOBAL_ABBREVS.hasOwnProperty(altOsis)) return;
+				Object.keys(GLOBAL_ABBREVS[altOsis]).forEach(altAbbrev => {
 					// for(let altAbbrev of Object.keys(gAbbrevs[altOsis])) {
 					// if (altAbbrev.length < abbrev.length) continue;
 					if (altAbbrev.length < abbrev.length) return;
@@ -197,7 +173,7 @@ function makeTests(): { [key: string]: string[] } {
 		// Add valid non-apocryphal OSIS tests
 		if (gValidOsises[first] !== 'apocrypha') {
 			out.push("\t\tp.include_apocrypha(false)");
-			sortAbbrevsByLength(Object.keys(gAbbrevs[osis])).forEach(abbrev => {
+			sortAbbrevsByLength(Object.keys(GLOBAL_ABBREVS[osis])).forEach(abbrev => {
 				expandAbbrevVars(abbrev).forEach(expanded => {
 					const normalized = ucNormalize(expanded);
 					out.push(`\t\texpect(p.parse("${normalized} 1:1").osis()).toEqual("${match}", "parsing: '${normalized} 1:1'")`);
@@ -240,7 +216,7 @@ function makeTests(): { [key: string]: string[] } {
 
 	// Replace placeholders in the spec template
 	let template = getFileContents(CONFIG.paths.template.spec);
-	const langIsos = JSON.stringify(gVars['$LANG_ISOS']);
+	const langIsos = JSON.stringify(GLOBAL_VARIABLES[Variable.LANG_ISOS]);
 	template = template.replace(/\$LANG_ISOS/g, langIsos);
 	template = template.replace(/\$LANG/g, lang);
 	template = template.replace(/\$BOOK_TESTS/, out.join("\n"));
@@ -253,22 +229,22 @@ function makeTests(): { [key: string]: string[] } {
 function makeRegexps() {
 	let out = getFileContents(CONFIG.paths.template.regexps);
 
-	if (!gVars['$NEXT']) {
+	if (!GLOBAL_VARIABLES['$NEXT']) {
 		out = out.replace(/\n.+\$NEXT.+\n/, '\n');
 		if (/\$NEXT\b/.test(out)) {
 			throw new Error('Regexps: next');
 		}
 	}
 
-	const osises = gOrder.slice();
-	const sortedRawAbbrevs = Object.keys(gRawAbbrevs).sort();
+	const osises = GLOBAL_ORDER.slice();
+	const sortedRawAbbrevs = Object.keys(GLOBAL_RAW_ABBREVS).sort();
 	sortedRawAbbrevs.forEach(osis => {
 		if (!osis.includes(',')) return;
 		if (osis.charAt(osis.length - 1) === ',') {
 			logger.error('OSIS - WITH TRAILING COMMA', osis);
 		}
 		let temp = osis.replace(/,+$/, '');	// Replace last comma
-		const apocrypha = (gValidOsises[temp] && gValidOsises[temp] === 'apocrypha') ? true : false;
+		const apocrypha = gValidOsises[temp] && gValidOsises[temp] === 'apocrypha';
 		osises.push({ osis, apocrypha });
 	});
 
@@ -276,23 +252,23 @@ function makeRegexps() {
 	out = out.replace(/\$BOOK_REGEXPS/, bookRegexps);
 	out = out.replace(/\$VALID_CHARACTERS/, gValidCharacters);
 
-	const prePassageAllowedCharacters = gVars['$PRE_PASSAGE_ALLOWED_CHARACTERS'].join('|');
+	const prePassageAllowedCharacters = GLOBAL_VARIABLES[Variable.PRE_PASSAGE_ALLOWED_CHARACTERS].join('|');
 	out = out.replace(/\$PRE_PASSAGE_ALLOWED_CHARACTERS/g, prePassageAllowedCharacters);
 
-	const preBookAllowedCharacters = gVars['$PRE_BOOK_ALLOWED_CHARACTERS'].map((value: string) => formatValue('quote', value)).join('|');
-	out = out.replace('$PRE_BOOK_ALLOWED_CHARACTERS', preBookAllowedCharacters);
+	const preBookAllowedCharacters = GLOBAL_VARIABLES[Variable.PRE_BOOK_ALLOWED_CHARACTERS].map((value: string) => formatValue('quote', value)).join('|');
+	out = out.replace(Variable.PRE_BOOK_ALLOWED_CHARACTERS, preBookAllowedCharacters);
 
 	const passageComponents: string[] = [];
-	for (const varName of ['$CHAPTER', '$NEXT', '$FF', '$TO', '$AND', '$VERSE']) {
-		if (gVars[varName]) {
-			passageComponents.push(...gVars[varName].map((value: any) => formatValue('regexp', value)));
+	for (const varName of [Variable.CHAPTER, Variable.NEXT, Variable.FF, Variable.TO, Variable.AND, Variable.VERSE]) {
+		if (GLOBAL_VARIABLES[varName]) {
+			passageComponents.push(...GLOBAL_VARIABLES[varName].map((value: any) => formatValue('regexp', value)));
 		}
 	}
 
 	passageComponents.sort((a, b) => b.length - a.length);
 	out = out.replace(/\$PASSAGE_COMPONENTS/g, passageComponents.join(' | '));
 
-	Object.keys(gVars).sort().forEach((key) => {
+	Object.keys(GLOBAL_VARIABLES).sort().forEach((key) => {
 		const safeKey = key.replace(/^\$/, '\\$');
 		const regex = RegExp(`${safeKey}(?!\\w)`, 'g');
 		out = out.replace(regex, formatVar('regexp', key));
@@ -318,7 +294,7 @@ function makeRegexpSet(refs: Ref[]): string {
 		}
 
 		const safes: { [abbrev: string]: number } = {};
-		for (const abbrev of Object.keys(gRawAbbrevs[osis])) {
+		for (const abbrev of Object.keys(GLOBAL_RAW_ABBREVS[osis])) {
 			let safe = abbrev.replace(/[\[\]\?]/g, '');
 			safes[abbrev] = safe.length;
 		}
@@ -343,9 +319,9 @@ function makeRegexp(osis: string, apocrypha: boolean, sortedSafes: string[]): st
 	const abbrevList: string[] = [];
 
 	for (let abbrev of sortedSafes) {
-		abbrev = abbrev.replace(/ /g, `${gRegexpSpace}*`);
+		abbrev = abbrev.replace(/ /g, `${SPACE_REGEXP}*`);
 		abbrev = abbrev.replace(/[\u200B]/g, () => {
-			let temp = gRegexpSpace;
+			let temp = SPACE_REGEXP;
 			// Replace the closing bracket ']' at the end of 'temp' with \u200B followed by ']'
 			temp = temp.replace(/\]$/, '\u200B]');
 			return `${temp}*`;
@@ -362,7 +338,7 @@ function makeRegexp(osis: string, apocrypha: boolean, sortedSafes: string[]): st
 	if (apocrypha) out.push("apocrypha: true\x0a\t\t");
 	let pre = '#{bcv_parser::regexps.pre_book}';
 	if (/^[0-9]/.test(osis) || /[0-9]/.test(abbrevList.join('|'))) {
-		pre = gVars['$PRE_BOOK_ALLOWED_CHARACTERS'].map((char: string) => formatValue('quote', char)).join('|');
+		pre = GLOBAL_VARIABLES[Variable.PRE_BOOK_ALLOWED_CHARACTERS].map((char: string) => formatValue('quote', char)).join('|');
 		if (pre === "\\\\d|\\\\b") {
 			pre = '\\b';
 		}
@@ -372,7 +348,7 @@ function makeRegexp(osis: string, apocrypha: boolean, sortedSafes: string[]): st
 		pre = pre.replace(/^\[\^/, '[^0-9'); // if it's a negated class, add \d
 	}
 
-	const post = gVars['$POST_BOOK_ALLOWED_CHARACTERS'].join('|');
+	const post = GLOBAL_VARIABLES[Variable.POST_BOOK_ALLOWED_CHARACTERS].join('|');
 	out.push(`regexp: ///(^|${pre})(\x0a\t\t`);
 	out.push(bookRegexp);
 	out[out.length - 1] = out[out.length - 1].replace(/-(?!\?)/g, '-?');
@@ -482,7 +458,7 @@ function makeTranslations() {
 	const regexps: string[] = [];
 	const aliases: string[] = [];
 
-	for (const translation of gVars['$TRANS']) {
+	for (const translation of GLOBAL_VARIABLES['$TRANS']) {
 		const [trans, osis, alias] = translation.split(',');
 		regexps.push(trans);
 
@@ -521,7 +497,7 @@ function makeTranslations() {
 	out = out.replace(/\$TRANS_ALIAS/g, alias);
 	out = out.replace(/\s*\$TRANS_ALTERNATE/g, `\n${alternate}`);
 
-	const langIsos = JSON.stringify(gVars['$LANG_ISOS']);
+	const langIsos = JSON.stringify(GLOBAL_VARIABLES[Variable.LANG_ISOS]);
 	out = out.replace(/\$LANG_ISOS/g, langIsos);
 
 	fs.writeFileSync(CONFIG.paths.build.translations, out, { encoding: 'utf-8' });
@@ -534,7 +510,7 @@ function makeTranslations() {
 function makeGrammar() {
 	let out = getFileContents(CONFIG.paths.template.grammar);
 
-	if (!gVars['$NEXT']) {
+	if (!GLOBAL_VARIABLES['$NEXT']) {
 		out = out.replace(/\nnext_v\s+=.+\s+\{ return[^\}]+\}\s+\}\s+/, '\n');
 		out = out.replace(/\bnext_v \/ /g, '');
 		out = out.replace(/\$NEXT \/ /g, '');
@@ -544,7 +520,7 @@ function makeGrammar() {
 	}
 
 	// Assuming vars is an object (hash in Perl)
-	for (const key of Object.keys(gVars).sort()) {
+	for (const key of Object.keys(GLOBAL_VARIABLES).sort()) {
 		// Escape any leading '$' in the key
 		const safeKey = key.replace(/^\$/, '\\$');
 
@@ -751,12 +727,12 @@ function formatNodeRegexpPattern(pattern: string): string {
 
 
 function formatValue(type: string, value: string): string {
-	gVars['$TEMP_VALUE'] = [value];
+	GLOBAL_VARIABLES['$TEMP_VALUE'] = [value];
 	return formatVar(type, '$TEMP_VALUE');
 }
 
 function formatVar(type: string, varName: string): string {
-	let values: string[] = gVars[varName].slice(); // Assuming `gVars` is an existing object
+	let values: string[] = GLOBAL_VARIABLES[varName].slice(); // Assuming `gVars` is an existing object
 	if (type === 'regexp' || type === 'quote') {
 		values.forEach((value: string, index: number) => {
 			values[index] = values[index].replace(/\.$/, ''); // Remove trailing period
@@ -1013,55 +989,41 @@ type Abbrevs = {
 	}
 };
 
-function getAbbrevs() {
+function getAbbrevs(books: IBook[], preferredBookNames: IBook[]): Abbrevs {
 	const out: Abbrevs = {};
-	const fileName = CONFIG.paths.src.dataFile;
+	const processedBooks: Array<IBook & { isLiteral: boolean }> = [
+		...books.map((book) => ({ ...book, isLiteral: false })),
+		...preferredBookNames.map((book) => {
+			return {
+				isLiteral: true,
+				osis: book.osis,
+				abbrevs: book.abbrevs.map((abbrev) => {
+					return abbrev.replace(/([\x80-\uffff])/gu, (match, g1) => `${g1}\``);
+				})
+			};
+		}),
+	];
 
-	const fileContent = fs.readFileSync(fileName, { encoding: 'utf-8' });
-	const lines = fileContent.split('\n');
-	for (const line of lines) {
-		if (/\t\s/.test(line) && /^[^\*]/.test(line)) {
-			logger.info(`Tab followed by space: ${line}\n`);
-		}
-		if (/\ [\t\n]/.test(line)) {
-			logger.info(`Space followed by tab/newline: ${line}\n`);
-		}
-		if (!/^[\w\*]/.test(line)) {
-			continue;
-		}
-		if (/^\*/.test(line) && /[\[\?!]/.test(line)) {
-			logger.info(`Regex character in preferred: ${line}\n`);
-		}
-		if (!/\t/.test(line)) {
-			continue;
-		}
-		let normalized = line.normalize('NFD').normalize('NFC');
-		const literalRegExp = /^\*/;
-		const isLiteral = literalRegExp.test(normalized);
-		if (isLiteral) {
-			normalized = normalized.replace(/([\x80-\uffff])/gu, (match, g1) => `${g1}\``);
-		}
-		let [osis, ...l_abbrevs] = normalized.split('\t');
-		osis = osis.replace(literalRegExp, '');
+	for (const { osis, abbrevs, isLiteral } of processedBooks) {
 		isValidOsis(osis);
 		out[osis] = out[osis] || {};
 		out[osis][osis] = true;
-		if (/,/.test(osis) || (gVars['$FORCE_OSIS_ABBREV'] && gVars['$FORCE_OSIS_ABBREV'][0] === 'false')) {
+		if (/,/.test(osis) || !FORCE_OSIS_ABBREV) {
 			delete out[osis][osis];
 		}
-		for (let abbrev of l_abbrevs) {
+		for (let abbrev of abbrevs) {
 			if (!abbrev.length) {
 				continue;
 			}
 			if (!isLiteral) {
-				if (gVars['$PRE_BOOK']) {
-					abbrev = `${gVars['$PRE_BOOK'][0]}${abbrev}`;
+				if (GLOBAL_VARIABLES[Variable.PRE_BOOK]) {
+					abbrev = `${GLOBAL_VARIABLES[Variable.PRE_BOOK][0]}${abbrev}`;
 				}
-				if (gVars['$POST_BOOK']) {
-					abbrev += gVars['$POST_BOOK'][0];
+				if (GLOBAL_VARIABLES[Variable.POST_BOOK]) {
+					abbrev += GLOBAL_VARIABLES[Variable.POST_BOOK][0];
 				}
-				gRawAbbrevs[osis] = gRawAbbrevs[osis] || {};
-				gRawAbbrevs[osis][abbrev] = true;
+				GLOBAL_RAW_ABBREVS[osis] = GLOBAL_RAW_ABBREVS[osis] || {};
+				GLOBAL_RAW_ABBREVS[osis][abbrev] = true;
 			}
 			abbrev = handleAccents(abbrev);
 			const alts = expandAbbrevVars(abbrev);
@@ -1293,7 +1255,7 @@ function expandAbbrevVars(abbrev: string): string[] {
 	let recurse = false;
 
 	// Iterate through each value of the matched variable
-	for (const value of gVars[varName] || []) {
+	for (const value of GLOBAL_VARIABLES[varName] || []) {
 		for (const val of expandAbbrev(value)) {
 			const processedVal = handleAccents(val);
 			let temp = abbrev.replace(/\$[A-Z]+(?!\w)/, processedVal);
@@ -1375,7 +1337,7 @@ function addRangeTests() {
 	const out = [];
 	out.push(`\tit "should handle ranges (${lang})", ->`);
 
-	for (const abbrev of gVars["$TO"]) {
+	for (const abbrev of GLOBAL_VARIABLES["$TO"]) {
 		for (const to of expandAbbrev(removeExclamations(handleAccents(abbrev)))) {
 			out.push(`\t\texpect(p.parse("Titus 1:1 ${to} 2").osis()).toEqual("Titus.1.1-Titus.1.2", "parsing: 'Titus 1:1 ${to} 2'")`);
 			out.push(`\t\texpect(p.parse("Matt 1${to}2").osis()).toEqual("Matt.1-Matt.2", "parsing: 'Matt 1${to}2'")`);
@@ -1390,7 +1352,7 @@ function addChapterTests() {
 	const out = [];
 	out.push(`\tit "should handle chapters (${lang})", ->`);
 
-	for (const abbrev of gVars["$CHAPTER"]) {
+	for (const abbrev of GLOBAL_VARIABLES["$CHAPTER"]) {
 		for (const chapter of expandAbbrev(removeExclamations(handleAccents(abbrev)))) {
 			out.push(`\t\texpect(p.parse("Titus 1:1, ${chapter} 2").osis()).toEqual("Titus.1.1,Titus.2", "parsing: 'Titus 1:1, ${chapter} 2'")`);
 			out.push(`\t\texpect(p.parse("Matt 3:4 ${ucNormalize(chapter)} 6").osis()).toEqual("Matt.3.4,Matt.6", "parsing: 'Matt 3:4 ${ucNormalize(chapter)} 6'")`);
@@ -1404,7 +1366,7 @@ function addVerseTests() {
 	const out = [];
 	out.push(`\tit "should handle verses (${lang})", ->`);
 
-	for (const abbrev of gVars["$VERSE"]) {
+	for (const abbrev of GLOBAL_VARIABLES["$VERSE"]) {
 		for (const verse of expandAbbrev(removeExclamations(handleAccents(abbrev)))) {
 			out.push(`\t\texpect(p.parse("Exod 1:1 ${verse} 3").osis()).toEqual("Exod.1.1,Exod.1.3", "parsing: 'Exod 1:1 ${verse} 3'")`);
 			out.push(`\t\texpect(p.parse("Phlm ${ucNormalize(verse)} 6").osis()).toEqual("Phlm.1.6", "parsing: 'Phlm ${ucNormalize(verse)} 6'")`);
@@ -1418,7 +1380,7 @@ function addSequenceTests() {
 	const out = [];
 	out.push(`\tit "should handle 'and' (${lang})", ->`);
 
-	for (const abbrev of gVars["$AND"]) {
+	for (const abbrev of GLOBAL_VARIABLES[Variable.AND]) {
 		for (const and of expandAbbrev(removeExclamations(handleAccents(abbrev)))) {
 			out.push(`\t\texpect(p.parse("Exod 1:1 ${and} 3").osis()).toEqual("Exod.1.1,Exod.1.3", "parsing: 'Exod 1:1 ${and} 3'")`);
 			out.push(`\t\texpect(p.parse("Phlm 2 ${ucNormalize(and)} 6").osis()).toEqual("Phlm.1.2,Phlm.1.6", "parsing: 'Phlm 2 ${ucNormalize(and)} 6'")`);
@@ -1432,7 +1394,7 @@ function addTitleTests() {
 	const out = [];
 	out.push(`\tit "should handle titles (${lang})", ->`);
 
-	for (const abbrev of gVars["$TITLE"]) {
+	for (const abbrev of GLOBAL_VARIABLES["$TITLE"]) {
 		for (const title of expandAbbrev(removeExclamations(handleAccents(abbrev)))) {
 			out.push(`\t\texpect(p.parse("Ps 3 ${title}, 4:2, 5:${title}").osis()).toEqual("Ps.3.1,Ps.4.2,Ps.5.1", "parsing: 'Ps 3 ${title}, 4:2, 5:${title}'")`);
 			out.push(`\t\texpect(p.parse("${ucNormalize(`Ps 3 ${title}, 4:2, 5:${title}`)}").osis()).toEqual("Ps.3.1,Ps.4.2,Ps.5.1", "parsing: '${ucNormalize(`Ps 3 ${title}, 4:2, 5:${title}`)}'")`);
@@ -1447,7 +1409,7 @@ function addFfTests() {
 	out.push(`\tit "should handle 'ff' (${lang})", ->`);
 	if (lang === 'it') out.push(`\t\tp.set_options {case_sensitive: "books"}`);
 
-	for (const abbrev of gVars["$FF"]) {
+	for (const abbrev of GLOBAL_VARIABLES["$FF"]) {
 		let o_ff = handleAccents(abbrev);
 		o_ff = removeExclamations(o_ff);
 		const o_ffs = expandAbbrev(o_ff);
@@ -1464,7 +1426,7 @@ function addFfTests() {
 }
 
 function addNextTests() {
-	if (!gVars['$NEXT']) {
+	if (!GLOBAL_VARIABLES['$NEXT']) {
 		return [];
 	}
 
@@ -1472,7 +1434,7 @@ function addNextTests() {
 	out.push(`\tit "should handle 'next' (${lang})", ->`);
 	if (lang === 'it') out.push(`\t\tp.set_options {case_sensitive: "books"}`);
 
-	for (const abbrev of gVars['$NEXT']) {
+	for (const abbrev of GLOBAL_VARIABLES['$NEXT']) {
 		for (const next of expandAbbrev(removeExclamations(handleAccents(abbrev)))) {
 			out.push(`\t\texpect(p.parse("Rev 3:1${next}, 4:2${next}").osis()).toEqual("Rev.3.1-Rev.3.2,Rev.4.2-Rev.4.3", "parsing: 'Rev 3:1${next}, 4:2${next}'");`);
 			if (lang !== 'it') {
@@ -1495,7 +1457,7 @@ function addTransTests() {
 	const out = [];
 	out.push(`\tit "should handle translations (${lang})", ->`);
 
-	for (const abbrev of gVars['$TRANS'].toSorted()) {
+	for (const abbrev of GLOBAL_VARIABLES['$TRANS'].toSorted()) {
 		for (const translation of expandAbbrev(removeExclamations(handleAccents(abbrev)))) {
 			let [trans, osis] = translation.split(',') || [translation, translation];
 			if(!osis) osis = trans;
@@ -1508,11 +1470,11 @@ function addTransTests() {
 }
 
 function addBookRangeTests() {
-	const first = expandAbbrev(handleAccents(gVars['$FIRST'][0]))[0];
-	const third = expandAbbrev(handleAccents(gVars['$THIRD'][0]))[0];
+	const first = expandAbbrev(handleAccents(GLOBAL_VARIABLES[Variable.FIRST][0]))[0];
+	const third = expandAbbrev(handleAccents(GLOBAL_VARIABLES[Variable.THIRD][0]))[0];
 	let john = '';
 
-	for (const key of Object.keys(gRawAbbrevs['1John']).sort()) {
+	for (const key of Object.keys(GLOBAL_RAW_ABBREVS['1John']).sort()) {
 		if (/^\$FIRST/.test(key)) {
 			john = key.replace(/^\$FIRST(?!\w)/, '');
 			break;
@@ -1532,7 +1494,7 @@ function addBookRangeTests() {
 	const alreadys: Record<string, number> = {};
 
 	for (const abbrev of johns) {
-		for (const to_regex of gVars['$TO']) {
+		for (const to_regex of GLOBAL_VARIABLES['$TO']) {
 			for (const to of expandAbbrev(removeExclamations(handleAccents(to_regex)))) {
 				if (!alreadys[`${first} ${to} ${third} ${abbrev}`]) {
 					out.push(`\t\texpect(p.parse("${first} ${to} ${third} ${abbrev}").osis()).toEqual("1John.1-3John.1", "parsing: '${first} ${to} ${third} ${abbrev}'")`);
@@ -1559,4 +1521,47 @@ function removeExclamations(text: string): string {
 		text = text.split('!')[0];
 	}
 	return text;
+}
+
+function normalize(text: string): string {
+	return text.normalize('NFD').normalize('NFC');
+}
+
+function prepareData (dataFileContent: string): IData {
+	const data = JSON.parse(dataFileContent);
+	const out: IData = {
+		variables: prepareVariables(data.variables),
+		books: prepareBooks(data.books),
+		order: data.order.map(normalize),
+		preferredBookNames: prepareBooks(data.preferredBookNames),
+	};
+
+	return out;
+}
+
+function prepareBooks (books: object): IBook[] {
+	return Object.entries(books).map(([osis, names]) => {
+		return {
+			osis: normalize(osis),
+			abbrevs: names.map(normalize),
+		};
+	});
+}
+
+function prepareVariables (variables: { [key: string]: any }): Partial<IInputDataVariables> {
+	const out: Partial<IInputDataVariables> = {};
+
+	for (const [key, values] of Object.entries(variables)) {
+		if (typeof values === 'string') {
+			out[key] = normalize(values);
+			continue;
+		}
+		if (!Array.isArray(values)) {
+			out[key] = values;
+			continue;
+		}
+		out[key] = values.map(normalize);
+	}
+
+	return out;
 }
