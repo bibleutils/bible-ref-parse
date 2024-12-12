@@ -73,3 +73,36 @@ export type Ref = {
 	osis: string;
 	apocrypha: boolean;
 }
+
+export type IAssertionData = {
+	input: string;
+	expected: any;
+}
+
+export type IBookAssertionsData = {
+	osis: string;
+	hasNonLatinDigits: boolean;
+	assertions: IAssertionData[];
+	nonApocryphalAssertions: IAssertionData[];
+}
+
+export type ITestsData = {
+	lang: string;
+	assertions: {
+		book: IBookAssertionsData[];
+		ranges: IAssertionData[];
+		chapters: IAssertionData[];
+		verses: IAssertionData[];
+		sequence: IAssertionData[];
+		title: IAssertionData[];
+		ff: IAssertionData[];
+		next: IAssertionData[];
+		trans: IAssertionData[];
+		bookRange: IAssertionData[];
+		boundary: IAssertionData[];
+	},
+}
+
+export type ITestCaseOptions = {
+	includeApocrypha: boolean;
+}

@@ -2,11 +2,21 @@ import * as fs from 'fs';
 import { execSync } from 'child_process';
 import { argv } from 'process';
 import logger from './utils/logger';
-import { NON_LATIN_DIGITS_REGEXPS, SPACE_REGEXP, REGEXP_CHARACTERS } from './regexps';
+import { NON_LATIN_DIGITS_REGEXPS, SPACE_REGEXP, REGEXP_CHARACTERS, ALL_NON_LATIN_DIGITS_REGEXP } from './regexps';
 import { CONFIG } from './config';
 import { COMMANDS } from './commands';
 import { fileOrDirectoryExists, prepareDirectory } from './utils/utils';
-import { IBook, IData, IInputDataVariables, Ref, Variable } from './types';
+import {
+	IAssertionData,
+	IBook,
+	IBookAssertionsData,
+	IData,
+	IInputDataVariables,
+	ITestsData,
+	Ref,
+	Variable,
+} from './types';
+import { makeSpecTemplate } from './templates/spec.template';
 
 // GLOBAL VARIABLES
 const lang = CONFIG.language;
@@ -120,6 +130,23 @@ function makeTests(): { [key: string]: string[] } {
 		}
 	});
 
+	let testsData: ITestsData = {
+		lang,
+		assertions: {
+			book: [],
+			ranges: [],
+			chapters: [],
+			verses: [],
+			sequence: [],
+			title: [],
+			ff: [],
+			next: [],
+			trans: [],
+			bookRange: [],
+			boundary: [],
+		},
+	};
+
 	osises.forEach(ref => {
 		const osis = ref.osis;
 		let tests: string[] = [];
@@ -127,9 +154,16 @@ function makeTests(): { [key: string]: string[] } {
 		const match = `${first}.1.1`;
 
 		// Process each abbreviation for the current OSIS
+		const bookAssertionsData: IBookAssertionsData = {
+			osis,
+			hasNonLatinDigits: false,
+			assertions: [],
+			nonApocryphalAssertions: [],
+		}
 		sortAbbrevsByLength(Object.keys(GLOBAL_ABBREVS[osis])).forEach(abbrev => {
 			expandAbbrevVars(abbrev).toSorted().forEach(expanded => {
 				allAbbrevsInMakeTests = addAbbrevToAllAbbrevs(osis, expanded, allAbbrevsInMakeTests);
+				bookAssertionsData.assertions.push({ input: `"${expanded} 1:1"`, expected: `"${match}"` });
 				tests.push(`\t\texpect(p.parse("${expanded} 1:1").osis()).toEqual("${match}", "parsing: '${expanded} 1:1'")`);
 			});
 
@@ -158,17 +192,7 @@ function makeTests(): { [key: string]: string[] } {
 			});
 		});
 
-		// Adding test descriptions
-		out.push(`describe "Localized book ${osis} (${lang})", ->`);
-		out.push("\tp = {}");
-		out.push("\tbeforeEach ->");
-		out.push("\t\tp = new bcv_parser");
-		out.push(`\t\tp.set_options book_alone_strategy: "ignore",book_sequence_strategy: "ignore",osis_compaction_strategy: "bc",captive_end_digits_strategy: "delete"`);
-		out.push("\t\tp.include_apocrypha true");
-		out.push(`\tit "should handle book: ${osis} (${lang})", ->`);
-		out.push("\t\t`");
-		out.push(...tests);
-		out.push(...addNonLatinDigitTests(osis, tests));
+		bookAssertionsData.hasNonLatinDigits = stringHasNonLatinDigits(tests.join("\n"));
 
 		// Add valid non-apocryphal OSIS tests
 		if (gValidOsises[first] !== 'apocrypha') {
@@ -176,13 +200,12 @@ function makeTests(): { [key: string]: string[] } {
 			sortAbbrevsByLength(Object.keys(GLOBAL_ABBREVS[osis])).forEach(abbrev => {
 				expandAbbrevVars(abbrev).forEach(expanded => {
 					const normalized = ucNormalize(expanded);
-					out.push(`\t\texpect(p.parse("${normalized} 1:1").osis()).toEqual("${match}", "parsing: '${normalized} 1:1'")`);
+					bookAssertionsData.nonApocryphalAssertions.push({ input: `"${normalized} 1:1"`, expected: `"${match}"` });
 				});
 			});
 		}
-		out.push("\t\t`");
-		out.push("\t\ttrue"); // Always return something in CoffeeScript.
-		// }
+
+		testsData.assertions.book.push(bookAssertionsData);
 	});
 
 	// Write the book names to a file
@@ -200,27 +223,26 @@ function makeTests(): { [key: string]: string[] } {
 	}
 	fs.writeFileSync(CONFIG.paths.build.bookNames, bookNamesFile);
 
-	// Create and write additional tests
-	const miscTests = [
-		addRangeTests(),
-		addChapterTests(),
-		addVerseTests(),
-		addSequenceTests(),
-		addTitleTests(),
-		addFfTests(),
-		addNextTests(),
-		addTransTests(),
-		addBookRangeTests(),
-		addBoundaryTests()
-	].flat();
+	testsData.assertions.ranges.push(...addRangeTests());
+	testsData.assertions.chapters.push(...addChapterTests());
+	testsData.assertions.verses.push(...addVerseTests());
+	testsData.assertions.sequence.push(...addSequenceTests());
+	testsData.assertions.title.push(...addTitleTests());
+	testsData.assertions.ff.push(...addFfTests());
+	testsData.assertions.next.push(...addNextTests());
+	testsData.assertions.trans.push(...addTransTests());
+	testsData.assertions.bookRange.push(...addBookRangeTests());
+	testsData.assertions.boundary.push(...addBoundaryTests());
 
 	// Replace placeholders in the spec template
-	let template = getFileContents(CONFIG.paths.template.spec);
 	const langIsos = JSON.stringify(GLOBAL_VARIABLES[Variable.LANG_ISOS]);
+
+	let template = getFileContents(CONFIG.paths.template.spec);
 	template = template.replace(/\$LANG_ISOS/g, langIsos);
 	template = template.replace(/\$LANG/g, lang);
-	template = template.replace(/\$BOOK_TESTS/, out.join("\n"));
-	template = template.replace(/\$MISC_TESTS/, miscTests.join("\n"));
+	const { bookTests, miscTests } = makeSpecTemplate(testsData);
+	template = template.replace(/\$BOOK_TESTS/, bookTests);
+	template = template.replace(/\$MISC_TESTS/, miscTests);
 	fs.writeFileSync(CONFIG.paths.build.spec, template, { encoding: 'utf-8' });
 
 	return allAbbrevsInMakeTests;
@@ -1314,13 +1336,15 @@ function addAbbrevToAllAbbrevs(osis: string, abbrev: string, allAbbrevs: any): {
 	return allAbbrevs;
 }
 
+function stringHasNonLatinDigits(str: string): boolean {
+	return ALL_NON_LATIN_DIGITS_REGEXP.test(str);
+}
+
 function addNonLatinDigitTests(osis: string, args: string[]) {
 	const out: any = [];
 	const temp = args.join("\n");
 
-	const regex = /[\u0660-\u0669\u06f0-\u06f9\u07c0-\u07c9\u0966-\u096f\u09e6-\u09ef\u0a66-\u0a6f\u0ae6-\u0aef\u0b66-\u0b6f\u0be6-\u0bef\u0c66-\u0c6f\u0ce6-\u0cef\u0d66-\u0d6f\u0e50-\u0e59\u0ed0-\u0ed9\u0f20-\u0f29\u1040-\u1049\u1090-\u1099\u17e0-\u17e9\u1810-\u1819\u1946-\u194f\u19d0-\u19d9\u1a80-\u1a89\u1a90-\u1a99\u1b50-\u1b59\u1bb0-\u1bb9\u1c40-\u1c49\u1c50-\u1c59\uA620-\uA629\uA8d0-\uA8d9\uA900-\uA909\uA9d0-\uA9d9\uAA50-\uAA59\uABF0-\uABF9\uff10-\uff19]/;
-
-	if (!regex.test(temp)) {
+	if (!stringHasNonLatinDigits(temp)) {
 		return out;
 	}
 
@@ -1334,95 +1358,87 @@ function addNonLatinDigitTests(osis: string, args: string[]) {
 }
 
 function addRangeTests() {
-	const out = [];
-	out.push(`\tit "should handle ranges (${lang})", ->`);
+	const assertions: IAssertionData[] = []
 
 	for (const abbrev of GLOBAL_VARIABLES["$TO"]) {
 		for (const to of expandAbbrev(removeExclamations(handleAccents(abbrev)))) {
-			out.push(`\t\texpect(p.parse("Titus 1:1 ${to} 2").osis()).toEqual("Titus.1.1-Titus.1.2", "parsing: 'Titus 1:1 ${to} 2'")`);
-			out.push(`\t\texpect(p.parse("Matt 1${to}2").osis()).toEqual("Matt.1-Matt.2", "parsing: 'Matt 1${to}2'")`);
-			out.push(`\t\texpect(p.parse("Phlm 2 ${ucNormalize(to)} 3").osis()).toEqual("Phlm.1.2-Phlm.1.3", "parsing: 'Phlm 2 ${ucNormalize(to)} 3'")`);
+			assertions.push({ input: `"Titus 1:1 ${to} 2"`, expected: '"Titus.1.1-Titus.1.2"' });
+			assertions.push({ input: `"Matt 1${to}2"`, expected: '"Matt.1-Matt.2"' });
+			assertions.push({ input: `"Phlm 2 ${ucNormalize(to)} 3"`, expected: '"Phlm.1.2-Phlm.1.3"' });
 		}
 	}
 
-	return out;
+	return assertions;
 }
 
 function addChapterTests() {
-	const out = [];
-	out.push(`\tit "should handle chapters (${lang})", ->`);
+	const assertions: IAssertionData[] = []
 
 	for (const abbrev of GLOBAL_VARIABLES["$CHAPTER"]) {
 		for (const chapter of expandAbbrev(removeExclamations(handleAccents(abbrev)))) {
-			out.push(`\t\texpect(p.parse("Titus 1:1, ${chapter} 2").osis()).toEqual("Titus.1.1,Titus.2", "parsing: 'Titus 1:1, ${chapter} 2'")`);
-			out.push(`\t\texpect(p.parse("Matt 3:4 ${ucNormalize(chapter)} 6").osis()).toEqual("Matt.3.4,Matt.6", "parsing: 'Matt 3:4 ${ucNormalize(chapter)} 6'")`);
+			assertions.push({ input: `"Titus 1:1, ${chapter} 2"`, expected: '"Titus.1.1,Titus.2"' });
+			assertions.push({ input: `"Matt 3:4 ${ucNormalize(chapter)} 6"`, expected: '"Matt.3.4,Matt.6"' });
 		}
 	}
 
-	return out;
+	return assertions;
 }
 
 function addVerseTests() {
-	const out = [];
-	out.push(`\tit "should handle verses (${lang})", ->`);
+	const assertions: IAssertionData[] = []
 
 	for (const abbrev of GLOBAL_VARIABLES["$VERSE"]) {
 		for (const verse of expandAbbrev(removeExclamations(handleAccents(abbrev)))) {
-			out.push(`\t\texpect(p.parse("Exod 1:1 ${verse} 3").osis()).toEqual("Exod.1.1,Exod.1.3", "parsing: 'Exod 1:1 ${verse} 3'")`);
-			out.push(`\t\texpect(p.parse("Phlm ${ucNormalize(verse)} 6").osis()).toEqual("Phlm.1.6", "parsing: 'Phlm ${ucNormalize(verse)} 6'")`);
+			assertions.push({ input: `"Exod 1:1 ${verse} 3"`, expected: '"Exod.1.1,Exod.1.3"' });
+			assertions.push({ input: `"Phlm ${ucNormalize(verse)} 6"`, expected: '"Phlm.1.6"' });
 		}
 	}
 
-	return out;
+	return assertions;
 }
 
 function addSequenceTests() {
-	const out = [];
-	out.push(`\tit "should handle 'and' (${lang})", ->`);
+	const assertions: IAssertionData[] = []
 
 	for (const abbrev of GLOBAL_VARIABLES[Variable.AND]) {
 		for (const and of expandAbbrev(removeExclamations(handleAccents(abbrev)))) {
-			out.push(`\t\texpect(p.parse("Exod 1:1 ${and} 3").osis()).toEqual("Exod.1.1,Exod.1.3", "parsing: 'Exod 1:1 ${and} 3'")`);
-			out.push(`\t\texpect(p.parse("Phlm 2 ${ucNormalize(and)} 6").osis()).toEqual("Phlm.1.2,Phlm.1.6", "parsing: 'Phlm 2 ${ucNormalize(and)} 6'")`);
+			assertions.push({ input: `"Exod 1:1 ${and} 3"`, expected: '"Exod.1.1,Exod.1.3"' });
+			assertions.push({ input: `"Phlm 2 ${ucNormalize(and)} 6"`, expected: '"Phlm.1.2,Phlm.1.6"' });
 		}
 	}
 
-	return out;
+	return assertions;
 }
 
 function addTitleTests() {
-	const out = [];
-	out.push(`\tit "should handle titles (${lang})", ->`);
+	const assertions: IAssertionData[] = []
 
 	for (const abbrev of GLOBAL_VARIABLES["$TITLE"]) {
 		for (const title of expandAbbrev(removeExclamations(handleAccents(abbrev)))) {
-			out.push(`\t\texpect(p.parse("Ps 3 ${title}, 4:2, 5:${title}").osis()).toEqual("Ps.3.1,Ps.4.2,Ps.5.1", "parsing: 'Ps 3 ${title}, 4:2, 5:${title}'")`);
-			out.push(`\t\texpect(p.parse("${ucNormalize(`Ps 3 ${title}, 4:2, 5:${title}`)}").osis()).toEqual("Ps.3.1,Ps.4.2,Ps.5.1", "parsing: '${ucNormalize(`Ps 3 ${title}, 4:2, 5:${title}`)}'")`);
+			assertions.push({ input: `"Ps 3 ${title}, 4:2, 5:${title}"`, expected: '"Ps.3.1,Ps.4.2,Ps.5.1"' });
+			assertions.push({ input: `"${ucNormalize(`Ps 3 ${title}, 4:2, 5:${title}`)}"`, expected: '"Ps.3.1,Ps.4.2,Ps.5.1"' });
 		}
 	}
 
-	return out;
+	return assertions;
 }
 
 function addFfTests() {
-	const out = [];
-	out.push(`\tit "should handle 'ff' (${lang})", ->`);
-	if (lang === 'it') out.push(`\t\tp.set_options {case_sensitive: "books"}`);
+	const assertions: IAssertionData[] = []
 
 	for (const abbrev of GLOBAL_VARIABLES["$FF"]) {
 		let o_ff = handleAccents(abbrev);
 		o_ff = removeExclamations(o_ff);
 		const o_ffs = expandAbbrev(o_ff);
 		for (const ff of o_ffs) {
-			out.push(`\t\texpect(p.parse("Rev 3${ff}, 4:2${ff}").osis()).toEqual("Rev.3-Rev.22,Rev.4.2-Rev.4.11", "parsing: 'Rev 3${ff}, 4:2${ff}'")`);
+			assertions.push({ input: `"Rev 3${ff}, 4:2${ff}"`, expected: '"Rev.3-Rev.22,Rev.4.2-Rev.4.11"' });
 			if (lang !== 'it') {
-				out.push(`\t\texpect(p.parse("${ucNormalize(`Rev 3 ${ff}, 4:2 ${ff}`)}").osis()).toEqual("Rev.3-Rev.22,Rev.4.2-Rev.4.11", "parsing: '${ucNormalize(`Rev 3 ${ff}, 4:2 ${ff}`)}'")`);
+				assertions.push({ input: `"${ucNormalize(`Rev 3 ${ff}, 4:2 ${ff}`)}"`, expected: '"Rev.3-Rev.22,Rev.4.2-Rev.4.11"' });
 			}
 		}
 	}
-	if (lang === 'it') out.push(`\t\tp.set_options {case_sensitive: "none"}`);
 
-	return out;
+	return assertions;
 }
 
 function addNextTests() {
@@ -1430,43 +1446,39 @@ function addNextTests() {
 		return [];
 	}
 
-	const out = [];
-	out.push(`\tit "should handle 'next' (${lang})", ->`);
-	if (lang === 'it') out.push(`\t\tp.set_options {case_sensitive: "books"}`);
+	const assertions: IAssertionData[] = []
 
 	for (const abbrev of GLOBAL_VARIABLES['$NEXT']) {
 		for (const next of expandAbbrev(removeExclamations(handleAccents(abbrev)))) {
-			out.push(`\t\texpect(p.parse("Rev 3:1${next}, 4:2${next}").osis()).toEqual("Rev.3.1-Rev.3.2,Rev.4.2-Rev.4.3", "parsing: 'Rev 3:1${next}, 4:2${next}'");`);
+			assertions.push({ input: `"Rev 3:1${next}, 4:2${next}"`, expected: '"Rev.3.1-Rev.3.2,Rev.4.2-Rev.4.3"' });
 			if (lang !== 'it') {
-				out.push(`\t\texpect(p.parse("${ucNormalize(`Rev 3 ${next}, 4:2 ${next}`)}").osis()).toEqual("Rev.3-Rev.4,Rev.4.2-Rev.4.3", "parsing: '${ucNormalize(`Rev 3 ${next}, 4:2 ${next}`)}'");`);
+				assertions.push({ input: `"${ucNormalize(`Rev 3 ${next}, 4:2 ${next}`)}"`, expected: '"Rev.3-Rev.4,Rev.4.2-Rev.4.3"' });
 			}
-			out.push(`\t\texpect(p.parse("Jude 1${next}, 2${next}").osis()).toEqual("Jude.1.1-Jude.1.2,Jude.1.2-Jude.1.3", "parsing: 'Jude 1${next}, 2${next}'");`);
-			out.push(`\t\texpect(p.parse("Gen 1:31${next}").osis()).toEqual("Gen.1.31-Gen.2.1", "parsing: 'Gen 1:31${next}'");`);
-			out.push(`\t\texpect(p.parse("Gen 1:2-31${next}").osis()).toEqual("Gen.1.2-Gen.2.1", "parsing: 'Gen 1:2-31${next}'");`);
-			out.push(`\t\texpect(p.parse("Gen 1:2${next}-30").osis()).toEqual("Gen.1.2-Gen.1.3,Gen.1.30", "parsing: 'Gen 1:2${next}-30'");`);
-			out.push(`\t\texpect(p.parse("Gen 50${next}, Gen 50:26${next}").osis()).toEqual("Gen.50,Gen.50.26", "parsing: 'Gen 50${next}, Gen 50:26${next}'");`);
-			out.push(`\t\texpect(p.parse("Gen 1:32${next}, Gen 51${next}").osis()).toEqual("", "parsing: 'Gen 1:32${next}, Gen 51${next}'");`);
+			assertions.push({ input: `"Jude 1${next}, 2${next}"`, expected: '"Jude.1.1-Jude.1.2,Jude.1.2-Jude.1.3"' });
+			assertions.push({ input: `"Gen 1:31${next}"`, expected: '"Gen.1.31-Gen.2.1"' });
+			assertions.push({ input: `"Gen 1:2-31${next}"`, expected: '"Gen.1.2-Gen.2.1"' });
+			assertions.push({ input: `"Gen 1:2${next}-30"`, expected: '"Gen.1.2-Gen.1.3,Gen.1.30"' });
+			assertions.push({ input: `"Gen 50${next}, Gen 50:26${next}"`, expected: '"Gen.50,Gen.50.26"' });
+			assertions.push({ input: `"Gen 1:32${next}, Gen 51${next}"`, expected: '""' });
 		}
 	}
 
-	if (lang === 'it') out.push(`\t\tp.set_options {case_sensitive: "none"}`);
-	return out;
+	return assertions;
 }
 
 function addTransTests() {
-	const out = [];
-	out.push(`\tit "should handle translations (${lang})", ->`);
+	const assertions: IAssertionData[] = []
 
 	for (const abbrev of GLOBAL_VARIABLES['$TRANS'].toSorted()) {
 		for (const translation of expandAbbrev(removeExclamations(handleAccents(abbrev)))) {
 			let [trans, osis] = translation.split(',') || [translation, translation];
 			if(!osis) osis = trans;
-			out.push(`\t\texpect(p.parse("Lev 1 (${trans})").osis_and_translations()).toEqual [["Lev.1", "${osis}"]]`);
-			out.push(`\t\texpect(p.parse("${(`Lev 1 ${trans}`).toLowerCase()}").osis_and_translations()).toEqual [["Lev.1", "${osis}"]]`);
+			assertions.push({ input: `"Lev 1 (${trans})"`, expected: `[["Lev.1", "${osis}"]]` });
+			assertions.push({ input: (`"Lev 1 ${trans}"`).toLowerCase(), expected: `[["Lev.1", "${osis}"]]` });
 		}
 	}
 
-	return out;
+	return assertions;
 }
 
 function addBookRangeTests() {
@@ -1486,10 +1498,8 @@ function addBookRangeTests() {
 		return [];
 	}
 
-	const out = [];
+	const assertions: IAssertionData[] = [];
 	const johns = expandAbbrev(handleAccents(john));
-	out.push(`\tit "should handle book ranges (${lang})", ->`);
-	out.push(`\t\tp.set_options {book_alone_strategy: "full", book_range_strategy: "include"}`);
 
 	const alreadys: Record<string, number> = {};
 
@@ -1497,23 +1507,21 @@ function addBookRangeTests() {
 		for (const to_regex of GLOBAL_VARIABLES['$TO']) {
 			for (const to of expandAbbrev(removeExclamations(handleAccents(to_regex)))) {
 				if (!alreadys[`${first} ${to} ${third} ${abbrev}`]) {
-					out.push(`\t\texpect(p.parse("${first} ${to} ${third} ${abbrev}").osis()).toEqual("1John.1-3John.1", "parsing: '${first} ${to} ${third} ${abbrev}'")`);
+					assertions.push({ input: `"${first} ${to} ${third} ${abbrev}"`, expected: '"1John.1-3John.1"' });
 					alreadys[`${first} ${to} ${third} ${abbrev}`] = 1;
 				}
 			}
 		}
 	}
 
-	return out;
+	return assertions;
 }
 
 function addBoundaryTests() {
-	const out = [];
-	out.push(`\tit "should handle boundaries (${lang})", ->`);
-	out.push(`\t\tp.set_options {book_alone_strategy: "full"}`);
-	out.push(`\t\texpect(p.parse("\\u2014Matt\\u2014").osis()).toEqual("Matt.1-Matt.28", "parsing: '\\u2014Matt\\u2014'")`);
-	out.push(`\t\texpect(p.parse("\\u201cMatt 1:1\\u201d").osis()).toEqual("Matt.1.1", "parsing: '\\u201cMatt 1:1\\u201d'")`);
-	return out;
+	const assertions: IAssertionData[] = [];
+	assertions.push({ input: `"\\u2014Matt\\u2014"`, expected: '"Matt.1-Matt.28"' });
+	assertions.push({ input: `"\\u201cMatt 1:1\\u201d"`, expected: '"Matt.1.1"' });
+	return assertions;
 }
 
 function removeExclamations(text: string): string {
