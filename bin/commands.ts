@@ -22,7 +22,7 @@ const COMMANDS = {
 		return `cat ${filesList.join(' ')} | coffee --no-header --compile --stdio > ${CONFIG.paths.dist.js}`;
 	},
 	compileSpec (): string {
-		return `npx coffee --no-header -c ${CONFIG.paths.build.spec}`;
+		return `npx coffee --nodejs --stack-size=2000 --no-header -c ${CONFIG.paths.build.spec}`;
 	},
 	moveSpecJs (): string {
 		if (CONFIG.isWindows) {

@@ -50,6 +50,7 @@ const CONFIG = {
 			grammar: path.join(buildPath, language, 'grammar.pegjs'),
 			regexps: path.join(buildPath, language, 'regexps.coffee'),
 			spec: path.join(buildPath, language, 'spec.coffee'),
+			specNew: path.join(buildPath, language, 'spec.coffee'),
 			specJs: path.join(buildPath, language, 'spec.js'),
 			translationAliases: path.join(buildPath, language, 'translation-aliases.coffee'),
 			translationAlternates: path.join(buildPath, language, 'translation-alternates.coffee'),

@@ -1,11 +1,12 @@
 bcv_parser = require("../../dist/$LANG-bcv-parser.js").bcv_parser
 
-describe "Parsing", ->
+describe "Parsing ($LANG)", ->
 	p = {}
 	beforeEach ->
 		p = new bcv_parser
 		p.options.osis_compaction_strategy = "b"
 		p.options.sequence_combination_strategy = "combine"
+		return
 
 	it "should round-trip OSIS references", ->
 		p.set_options osis_compaction_strategy: "bc"
@@ -17,6 +18,7 @@ describe "Parsing", ->
 			expect(p.parse(bc).osis()).toEqual bc
 			expect(p.parse(bcv).osis()).toEqual bcv
 			expect(p.parse(bcv_range).osis()).toEqual bcv_range
+		return
 
 	it "should round-trip OSIS Apocrypha references", ->
 		p.set_options osis_compaction_strategy: "bc", ps151_strategy: "b"
@@ -37,12 +39,16 @@ describe "Parsing", ->
 		for book in books
 			bc = book + ".1"
 			expect(p.parse(bc).osis()).toEqual ""
+		return
 
 	it "should handle a preceding character", ->
 		expect(p.parse(" Gen 1").osis()).toEqual "Gen.1"
 		expect(p.parse("Matt5John3").osis()).toEqual "Matt.5,John.3"
 		expect(p.parse("1Ps 1").osis()).toEqual ""
 		expect(p.parse("11Sam 1").osis()).toEqual ""
+		return
+
+	return
 
 $BOOK_TESTS
 
@@ -52,8 +58,10 @@ describe "Miscellaneous tests", ->
 		p = new bcv_parser
 		p.set_options book_alone_strategy: "ignore", book_sequence_strategy: "ignore", osis_compaction_strategy: "bc", captive_end_digits_strategy: "delete"
 		p.include_apocrypha true
+		return
 
 	it "should return the expected language", ->
 		expect(p.languages).toEqual $LANG_ISOS
+		return
 
 $MISC_TESTS
