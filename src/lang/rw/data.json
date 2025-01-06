@@ -9,7 +9,7 @@
 		"$CHAPTER": ["umutwe", "chapter"],
 		"$FF": ["ff"],
 		"$TITLE": ["title"],
-		"$TRANS": ["ERV"],
+		"$TRANS": ["BYSB"],
 		"$TO": ["to"],
 		"$VERSE": ["umurongo", "verse"],
 		"$UNICODE_BLOCK": ["Latin"]
