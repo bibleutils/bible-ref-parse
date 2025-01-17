@@ -1,6 +1,6 @@
 {
 	"name": "bible-ref-parse",
-	"version": "3.0.6",
+	"version": "3.0.7",
 	"description": "Identifies and parses Bible references (like John 3:16) in over 40 languages.",
 	"main": "dist/",
 	"directories": {
@@ -36,6 +36,7 @@
 		"test-language": "bash -c 'npx jest dist/test/$0.spec.js'",
 		"test-language:all": "jest dist/test/*.spec.js",
 		"test": "(find test/js -name *.spec.ts | xargs -I % sh -c 'echo %; npx jest %';) || exit 1;",
+		"demo": "npx tsx bin/demo.ts",
 		"minify": "terser"
 	},
 	"devDependencies": {
