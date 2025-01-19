@@ -512,9 +512,10 @@ class bcv_parser
 						entity_id: entity_id
 						entities: [passage]
 			# Don't return an empty object.
-			continue if osises.length == 0
-			if osises.length > 1 and @options.consecutive_combination_strategy is "combine" or @options.consecutive_combination_strategy is "separate-chapters"
-				osises = @combine_consecutive_passages osises, translation_alias
+			continue if osises.length == 0 and nonCombinableOsises.length == 0
+			if @options.consecutive_combination_strategy is "combine" or @options.consecutive_combination_strategy is "separate-chapters"
+				if osises.length > 1
+					osises = @combine_consecutive_passages osises, translation_alias
 				osises = osises.concat(nonCombinableOsises).sort((osis1, osis2) => osis1.indices[0] - osis2.indices[0])
 			# Add the osises array to the existing array.
 			if @options.sequence_combination_strategy is "separate"
