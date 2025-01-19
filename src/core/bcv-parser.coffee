@@ -1,5 +1,5 @@
 # This class takes a string and identifies Bible passage references in that string. It's designed to handle how people actually type Bible passages and tries fairly hard to make sense of dubious possibilities.
-# 
+#
 # The aggressiveness is tunable, to a certain extent, using the below `options`. It's probably too aggressive for general text parsing (the "is 2" in "There is 2 much" becomes "Isa.2", for example).
 
 # Export to whatever the current context is.
@@ -345,7 +345,7 @@ class bcv_parser
 			# Either it's on its own or a translation sequence follows it, making it effectively on its own.
 			(passage.value.length == 1 or (passage.value.length > 1 and passage.value[1].type is "translation_sequence")) and
 			start_index_adjust == 0 and
-			(@passage.books[book_id].parsed.length == 1 or (@passage.books[book_id].parsed.length > 1 and 
+			(@passage.books[book_id].parsed.length == 1 or (@passage.books[book_id].parsed.length > 1 and
 			@passage.books[book_id].parsed[1].type is "translation")) and
 			/^[234]/.test @passage.books[book_id].parsed[0]
 				@create_book_range s, passage, book_id
@@ -455,6 +455,7 @@ class bcv_parser
 				translations = [""]
 				translation_alias = "default"
 			osises = []
+			nonCombinableOsises = []
 			length = entity.passages.length
 			for i in [0 ... length]
 				passage = entity.passages[i]
@@ -472,19 +473,49 @@ class bcv_parser
 				if (passage.type is "b_range_start" or passage.type is "range_end_b") and @options.book_range_strategy is "ignore"
 						@snap_range entity, i
 				passage.absolute_indices ?= entity.absolute_indices
-				osises.push
-					osis: if passage.valid.valid then @to_osis(passage.start, passage.end, translation_alias) else ""
-					type: passage.type
-					indices: passage.absolute_indices
-					translations: translations
-					start: passage.start
-					end: passage.end
-					enclosed_indices: passage.enclosed_absolute_indices
-					entity_id: entity_id
-					entities: [passage]
+
+				if this.options.consecutive_combination_strategy is 'separate-chapters' and passage.start.c isnt passage.end.c
+					for i in [passage.start.c .. passage.end.c]
+						passageStartVerse = if i is passage.start.c then passage.start.v else 1
+						passageEndVerse = if i is passage.end.c then passage.end.v else this.translations[translation_alias]['chapters'][passage.start.b][i - 1]
+						passageStart =
+							b: passage.start.b
+							c: i
+							v: if passage.start.type is 'bcv' then passageStartVerse else null
+							type: passage.start.type
+
+						passageEnd =
+							b: passage.end.b
+							c: i
+							v: if passage.start.type is 'bcv' then passageEndVerse else null
+							type: passage.start.type
+
+						nonCombinableOsises.push
+							osis: if passage.valid.valid then @to_osis(passageStart, passageEnd, translation_alias) else ""
+							type: passage.type
+							indices: passage.absolute_indices
+							translations: translations
+							start: passageStart
+							end: passageEnd
+							enclosed_indices: passage.enclosed_absolute_indices
+							entity_id: entity_id
+							entities: [passage]
+				else
+					osises.push
+						osis: if passage.valid.valid then @to_osis(passage.start, passage.end, translation_alias) else ""
+						type: passage.type
+						indices: passage.absolute_indices
+						translations: translations
+						start: passage.start
+						end: passage.end
+						enclosed_indices: passage.enclosed_absolute_indices
+						entity_id: entity_id
+						entities: [passage]
 			# Don't return an empty object.
 			continue if osises.length == 0
-			osises = @combine_consecutive_passages osises, translation_alias if osises.length > 1 and @options.consecutive_combination_strategy is "combine"
+			if osises.length > 1 and @options.consecutive_combination_strategy is "combine" or @options.consecutive_combination_strategy is "separate-chapters"
+				osises = @combine_consecutive_passages osises, translation_alias
+				osises = osises.concat(nonCombinableOsises).sort((osis1, osis2) => osis1.indices[0] - osis2.indices[0])
 			# Add the osises array to the existing array.
 			if @options.sequence_combination_strategy is "separate"
 				out = out.concat osises
