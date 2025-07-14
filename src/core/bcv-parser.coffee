@@ -255,6 +255,7 @@ class bcv_parser
 	# Replace control characters and spaces since we replace books with a specific character pattern. The string changes, but the length stays the same so that indices remain valid. If we want to use Latin numbers rather than non-Latin ones, replace them here.
 	replace_control_characters: (s) ->
 		s = s.replace @regexps.control, " "
+		s = s.replace /\uFF1A/g, ":"
 		if @options.non_latin_digits_strategy is "replace"
 			s = s.replace /[٠۰߀०০੦૦୦0౦೦൦๐໐༠၀႐០᠐᥆᧐᪀᪐᭐᮰᱀᱐꘠꣐꤀꧐꩐꯰０]/g, "0"
 			s = s.replace /[١۱߁१১੧૧୧௧౧೧൧๑໑༡၁႑១᠑᥇᧑᪁᪑᭑᮱᱁᱑꘡꣑꤁꧑꩑꯱１]/g, "1"
