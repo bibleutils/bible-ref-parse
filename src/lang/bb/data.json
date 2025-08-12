@@ -1,6 +1,6 @@
 {
 	"variables": {
-		"$FIRST": ["$SECOND"],
+		"$FIRST": ["1"],
 		"$SECOND": ["2"],
 		"$THIRD": ["3"],
 		"$FOURTH": ["4"],
@@ -9,7 +9,7 @@
 		"$CHAPTER": ["icipandwa"],
 		"$FF": ["ff"],
 		"$TITLE": ["umutwe"],
-		"$TRANS": ["ill"],
+		"$TRANS": ["ILL,,ill"],
 		"$TO": ["ku"],
 		"$VERSE": ["vesi, icikomo"],
 		"$UNICODE_BLOCK": ["Latin, Block_Elements"]
@@ -78,7 +78,7 @@
 		"2Pet": ["$SECOND Petelo", "$SECOND Pe"],
 		"1John": ["$FIRST Yoani", "$FIRST Yo"],
 		"2John": ["$SECOND Yoani", "$SECOND Yo"],
-		"3John": ["3 Yoani", "3Yo"],
+		"3John": ["$THIRD Yoani", "$THIRD Yo"],
 		"Jude": ["Yuda", "Yud"],
 		"Rev": ["Ubusokololo", "Ubu"]
 	},
