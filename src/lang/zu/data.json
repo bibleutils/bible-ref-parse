@@ -9,7 +9,7 @@
 		"$CHAPTER": ["isahluko"],
 		"$FF": ["-"],
 		"$TITLE": ["isihloko"],
-		"$TRANS": ["ie59"],
+		"$TRANS": ["IE59,,ie59"],
 		"$TO": ["ku"],
 		"$VERSE": ["Vesi"],
 		"$UNICODE_BLOCK": ["Latin"]
@@ -71,16 +71,16 @@
 		"1Tim" :["U-$FIRST Thimothewu", "$FIRST Ti"],
 		"2Tim" :["U-$SECOND Thimothewu", "$SECOND Ti"],
 		"Titus" :["UTito", "Tit"],
-		"Phlm" :["UFilemoni", "Fil"],
+		"Phlm" :["UFilemoni"],
 		"Heb" :["KumaHebheru", "Heberu", "Heb"],
 		"Jas" :["UJakobe", "Jakobe", "Jak"],
 		"1Pet" :["U-$FIRST Petru", "$FIRST Pe"],
 		"2Pet" :["U-$SECOND Petru", "$SECOND Pe"],
-		"1John" :["U-$FIRST Johane", "$FIRST Jo"],
+		"1John" :["U-$FIRST Johane", "$FIRST Joh"],
 		"2John" :["U-$SECOND Johane", "$SECOND Joh"],
 		"3John" :["U-$THIRD Johane", "$THIRD Joh"],
 		"Jude" :["UJuda", "Juda"],
-		"Rev" :["IsAmbulo", "IsA"]
+		"Rev" :["IsAmbulo", "IsAm"]
 	},
 	"order": [
 		"Gen",
@@ -225,15 +225,15 @@
 		"1Tim" :["U-$FIRST Thimothewu", "$FIRST Ti"],
 		"2Tim" :["U-$SECOND Thimothewu", "$SECOND Ti"],
 		"Titus" :["UTito", "Tit"],
-		"Phlm" :["UFilemoni", "Fil"],
+		"Phlm" :["UFilemoni"],
 		"Heb" :["KumaHebheru", "Heb"],
 		"Jas" :["UJakobe", "Jak"],
 		"1Pet" :["U-$FIRST Petru", "$FIRST Pe"],
 		"2Pet" :["U-$SECOND Petru", "$SECOND Pe"],
-		"1John" :["U-$FIRST Johane", "$FIRST Jo"],
+		"1John" :["U-$FIRST Johane", "$FIRST Joh"],
 		"2John" :["U-$SECOND Johane", "$SECOND Joh"],
 		"3John" :["U-$THIRD Johane", "$THIRD Joh"],
 		"Jude" :["UJuda", "Juda"],
-		"Rev" :["IsAmbulo", "IsA"]
+		"Rev" :["IsAmbulo", "IsAm"]
 	}
 }
