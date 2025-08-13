@@ -11,7 +11,7 @@
 		"$TITLE": ["titulo"],
 		"$TRANS": ["KJV,,kjv"],
 		"$TO": ["mag"],
-		"$VERSE": ["vers�culo", "bersikulo"],
+		"$VERSE": ["versículo", "bersikulo"],
 		"$UNICODE_BLOCK": ["Latin"]
 	},
 	"books": {
