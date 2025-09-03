@@ -255,6 +255,55 @@ class bcv_passage
 		end_c.indices[1] = passage.indices[1]
 		@range passage, accum, context
 
+	# Handle verse ranges when in chapter context (e.g., "Sacharja 3, 1-4" = verses 1-4 in chapter 3).
+	cv_range: (passage, accum, context) ->
+		passage.start_context = bcv_utils.shallow_clone context
+		# We don't need to preserve the original `type` for reparsing.
+		passage.type = "range"
+		[start_v, end_v] = passage.value
+		# Create a virtual BCV range using the current chapter context
+		# We need to use the book ID that matches the context, not the book name
+		book_id = null
+		for id, book of @books
+			if book.parsed.indexOf(context.b) >= 0
+				book_id = id
+				break
+		passage.value = [
+			{type: "bcv", value: [
+				{type: "bc", value: [
+					{type: "b", value: book_id, indices: passage.indices},
+					{type: "c", value: [{type: "integer", value: context.c, indices: passage.indices}], indices: passage.indices}
+				], indices: passage.indices},
+				start_v
+			], indices: passage.indices},
+			end_v
+		]
+		@range passage, accum, context
+
+	# Handle book-chapter followed by verse range (e.g., "Sacharja 3, 1-4" = verses 1-4 in chapter 3).
+	bc_cv_range: (passage, accum, context) ->
+		passage.start_context = bcv_utils.shallow_clone context
+		# We don't need to preserve the original `type` for reparsing.
+		passage.type = "range"
+		[bc, cv_range] = passage.value
+		# Extract the book and chapter from the bc
+		b = @pluck("b", bc.value).value
+		c = @pluck("c", bc.value).value
+		# Extract the verse range from cv_range
+		[start_v, end_v] = cv_range.value
+		# Create a virtual BCV range
+		passage.value = [
+			{type: "bcv", value: [
+				{type: "bc", value: [
+					{type: "b", value: b, indices: passage.indices},
+					{type: "c", value: [{type: "integer", value: c, indices: passage.indices}], indices: passage.indices}
+				], indices: passage.indices},
+				start_v
+			], indices: passage.indices},
+			end_v
+		]
+		@range passage, accum, context
+
 	# Use an object to establish context for later objects but don't otherwise use it.
 	context: (passage, accum, context) ->
 		passage.start_context = bcv_utils.shallow_clone context
