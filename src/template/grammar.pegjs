@@ -1,5 +1,5 @@
 start
-  = (bcv_hyphen_range / sequence / cb_range / range / next_v / ff / bcv_comma / bc_title / ps151_bcv / bcv / bcv_weak / ps151_bc / bc / cv_psalm / bv / c_psalm / b / cbv / cbv_ordinal / cb / cb_ordinal / translation_sequence_enclosed / translation_sequence / sequence_sep / c_title / integer_title / cv / cv_weak / v_letter / integer / c / v / word / word_parenthesis / context)+
+  = (bcv_hyphen_range / bc_cv_range / sequence / cb_range / range / cv_range / next_v / ff / bcv_comma / bc_title / ps151_bcv / bcv / bcv_weak / ps151_bc / bc / cv_psalm / bv / c_psalm / b / cbv / cbv_ordinal / cb / cb_ordinal / translation_sequence_enclosed / translation_sequence / sequence_sep / c_title / integer_title / cv / cv_weak / v_letter / integer / c / v / word / word_parenthesis / context)+
 
 /* Multiples */
 sequence
@@ -11,13 +11,23 @@ sequence_post_enclosed
     { if (typeof(val_2) === "undefined") val_2 = []; val_2.unshift([val_1]); return {"type": "sequence_post_enclosed", "value": val_2, "indices": [peg$savedPos, peg$currPos - 1]} }
 
 sequence_post
-  = sequence_post_enclosed / cb_range / bcv_hyphen_range / range / next_v / ff / bcv_comma / bc_title / ps151_bcv / bcv / bcv_weak / ps151_bc / bc / cv_psalm / bv / c_psalm / b / cbv / cbv_ordinal / cb / cb_ordinal / c_title / integer_title / cv / cv_weak / v_letter / integer / c / v
+  = sequence_post_enclosed / cb_range / bcv_hyphen_range / cv_range / range / next_v / ff / bcv_comma / bc_title / ps151_bcv / bcv / bcv_weak / ps151_bc / bc / cv_psalm / bv / c_psalm / b / cbv / cbv_ordinal / cb / cb_ordinal / c_title / integer_title / cv / cv_weak / v_letter / integer / c / v
 
 // `cv_weak` is after `integer` in `val_2` to avoid cases like "Mark 16:1-6 10". `b` is a special case to avoid oddities like "Ezekiel - 25:16".
 range
   = val_1:(bcv_comma / bc_title / ps151_bcv / bcv / bcv_weak / ps151_bc / bc / cv_psalm / bv / b &(range_sep (bcv_comma / bc_title / ps151_bcv / bcv / bcv_weak / ps151_bc / bc / bv / b)) / cbv / cbv_ordinal / c_psalm / cb / cb_ordinal / c_title / integer_title / cv / cv_weak / v_letter / integer / c / v) range_sep val_2:(next_v / ff / bcv_comma / bc_title / ps151_bcv / bcv / bcv_weak / ps151_bc / bc / cv_psalm / bv / b / cbv / cbv_ordinal / c_psalm / cb / cb_ordinal / c_title / integer_title / cv / v_letter / integer / cv_weak / c / v)
     { if (val_1.length && val_1.length === 2) val_1 = val_1[0]; // for `b`, which returns [object, undefined]
       return {"type": "range", "value": [val_1, val_2], "indices": [peg$savedPos, peg$currPos - 1]} }
+
+// Handle verse ranges when in chapter context (e.g., "Sacharja 3, 1-4" = verses 1-4 in chapter 3)
+cv_range
+  = val_1:(v_letter / v) range_sep val_2:(v_letter / v) !( $NEXT )
+    { return {"type": "cv_range", "value": [val_1, val_2], "indices": [peg$savedPos, peg$currPos - 1]} }
+
+// Handle book-chapter followed by verse range (e.g., "Sacharja 3, 1-4" = verses 1-4 in chapter 3)
+bc_cv_range
+  = val_1:bc sequence_sep val_2:cv_range
+    { return {"type": "bc_cv_range", "value": [val_1, val_2], "indices": [peg$savedPos, peg$currPos - 1]} }
 
 /* Singles */
 b
