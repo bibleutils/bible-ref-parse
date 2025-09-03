@@ -540,7 +540,6 @@ function makeGrammar() {
 		out = out.replace(/\bcv_range \/ /g, '');
 		out = out.replace(/\bbc_cv_range \/ /g, '');
 		out = out.replace(/\$NEXT \/ /g, '');
-		console.log(out);
 		if (/\bnext_v\b|\$NEXT/.test(out)) {
 			throw new Error('Grammar: next_v');
 		}
