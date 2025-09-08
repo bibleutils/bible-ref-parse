@@ -534,13 +534,8 @@ function makeGrammar() {
 
 	if (!GLOBAL_VARIABLES['$NEXT']) {
 		out = out.replace(/\nnext_v\s+=.+\s+\{ return[^\}]+\}\s+\}\s+/, '\n');
-		out = out.replace(/\ncv_range\s+=.+\s+\{ return[^\}]+\}\s+\}\s+/, '\n');
-		out = out.replace(/\nbc_cv_range\s+=.+\s+\{ return[^\}]+\}\s+\}\s+/, '\n');
 		out = out.replace(/\bnext_v \/ /g, '');
-		out = out.replace(/\bcv_range \/ /g, '');
-		out = out.replace(/\bbc_cv_range \/ /g, '');
 		out = out.replace(/\$NEXT \/ /g, '');
-		console.log(out);
 		if (/\bnext_v\b|\$NEXT/.test(out)) {
 			throw new Error('Grammar: next_v');
 		}
