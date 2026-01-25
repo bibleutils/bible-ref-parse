@@ -4,9 +4,10 @@ import logger from './utils/logger';
 import { CONFIG } from './config';
 import { COMMANDS } from './commands';
 import { prepareDirectory } from './utils/utils';
+import ts from 'typescript';
 
-// CoffeeScript files
-const coffeeFiles = [
+// TypeScript files
+const tsFiles = [
 	CONFIG.paths.core.parser,
 	CONFIG.paths.core.passage,
 	CONFIG.paths.core.utils,
@@ -23,16 +24,15 @@ try {
 	// Add PEG.js global variables
 	addPegjsGlobal(CONFIG.paths.temp.grammar);
 
-	logger.info('Joining...');
-	childProcess.execSync(COMMANDS.compileParser(coffeeFiles), { encoding: 'utf-8' });
+	logger.info('Transpiling...');
+	const compiledParser = tsFiles.map((file) => transpileFile(file)).join('\n');
+	fs.writeFileSync(CONFIG.paths.dist.js, compiledParser, { encoding: 'utf-8' });
 
 	// Add PEG.js code to output JS file
 	addPeg();
 	logger.info('Compiling spec...');
-
-	// Compile spec CoffeeScript file
-	childProcess.execSync(COMMANDS.compileSpec(), { encoding: 'utf-8' });
-	childProcess.execSync(COMMANDS.moveSpecJs(), { encoding: 'utf-8' });
+	const compiledSpec = transpileFile(CONFIG.paths.build.spec);
+	fs.writeFileSync(CONFIG.paths.tests.specTestJs, compiledSpec, { encoding: 'utf-8' });
 
 	//minify the js file
 	childProcess.execSync(COMMANDS.minifyJs(), { encoding: 'utf-8' });
@@ -48,6 +48,19 @@ function addPegjsGlobal(file: string) {
 	let modifiedContent = `var grammar;\n${content}`;
 	modifiedContent = modifiedContent.replace(/\broot\.grammar/g, 'grammar');
 	fs.writeFileSync(file, modifiedContent, { encoding: 'utf-8'});
+}
+
+function transpileFile(file: string): string {
+	const content = fs.readFileSync(file, { encoding: 'utf-8' });
+	const result = ts.transpileModule(content, {
+		compilerOptions: {
+			target: ts.ScriptTarget.ESNext,
+			module: ts.ModuleKind.CommonJS,
+			sourceMap: false,
+		},
+		fileName: file,
+	});
+	return result.outputText;
 }
 
 function addPeg(): void {
@@ -146,6 +159,9 @@ function mergeFile(file: string, peg: string): void {
 
 	// Replace the pattern with the peg content
 	joined = joined.replace(/(\s*\}\)\.call\(this\);\s*)$/, `\n${peg}$1`);
+	if (prev === joined) {
+		joined = `${joined}\n${peg}`;
+	}
 
 	// If no changes were made, throw an error
 	if (prev === joined) {

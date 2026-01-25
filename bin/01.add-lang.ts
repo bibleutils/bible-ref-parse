@@ -325,7 +325,7 @@ function makeRegexpSet(refs: Ref[]): string {
 		out.push(makeRegexp(osis, apocrypha, sortedSafes));
 	}
 
-	return out.join("\u000A\t,\u000A");
+	return out.join("\n");
 }
 
 function getFileContents(filePath: string): string {
@@ -353,12 +353,14 @@ function makeRegexp(osis: string, apocrypha: boolean, sortedSafes: string[]): st
 		abbrevList.push(abbrev);
 	}
 
-	const bookRegexp = makeBookRegexp(osis, gAllAbbrevs[osis].slice(), 1);
+	let bookRegexp = makeBookRegexp(osis, gAllAbbrevs[osis].slice(), 1);
 	osis = osis.replace(/,+$/, '');
 	osis = osis.replace(/,/g, `", "`);
-	out.push(`\t\tosis: ["${osis}"]\x0a\t\t`);
-	if (apocrypha) out.push("apocrypha: true\x0a\t\t");
-	let pre = '#{bcv_parser::regexps.pre_book}';
+	bookRegexp = bookRegexp.replace(/-(?!\?)/g, '-?');
+	out.push(`\t\t{`);
+	out.push(`\n\t\t\tosis: ["${osis}"],`);
+	if (apocrypha) out.push(`\n\t\t\tapocrypha: true,`);
+	let pre = '${bcv_parser.prototype.regexps.pre_book}';
 	if (/^[0-9]/.test(osis) || /[0-9]/.test(abbrevList.join('|'))) {
 		pre = GLOBAL_VARIABLES[Variable.PRE_BOOK_ALLOWED_CHARACTERS].map((char: string) => formatValue('quote', char)).join('|');
 		if (pre === "\\\\d|\\\\b") {
@@ -371,10 +373,10 @@ function makeRegexp(osis: string, apocrypha: boolean, sortedSafes: string[]): st
 	}
 
 	const post = GLOBAL_VARIABLES[Variable.POST_BOOK_ALLOWED_CHARACTERS].join('|');
-	out.push(`regexp: ///(^|${pre})(\x0a\t\t`);
+	out.push(`\n\t\t\tregexp: RegExp(heregex(String.raw\`(^|${pre})(\n\t\t`);
 	out.push(bookRegexp);
-	out[out.length - 1] = out[out.length - 1].replace(/-(?!\?)/g, '-?');
-	out.push(`\x0a\t\t\t)(?:(?=${post})|\$)///gi`);
+	out.push(`\n\t\t\t)(?:(?=${post})|$)\`), "gi")`);
+	out.push(`\n\t\t},`);
 
 	return out.join("");
 }
@@ -489,24 +491,28 @@ function makeTranslations() {
 			let lc = trans.toLowerCase();
 			lc = /[\W]/.test(lc) ? `"${lc}"` : lc;
 
-			let string = `${lc}:`;
+			const parts: string[] = [];
 			if (osis) {
-				string += `\x0a\t\t\tosis: "${osis}"`;
+				parts.push(`osis: "${osis}"`);
 			}
 			if (effectiveAlias) {
-				string += `\x0a\t\t\talias: "${effectiveAlias}"`;
+				parts.push(`alias: "${effectiveAlias}"`);
 			}
+			const string = `${lc}: { ${parts.join(', ')} }`;
 			aliases.push(string);
 		}
 	}
 
 	const regexp = makeBookRegexp('translations', regexps.slice(), 1);
-	let alias = aliases.join('\x0a\t\t');
+	let alias = aliases.join(',\x0a\t\t');
 
 	const translationAliasesPath = CONFIG.paths.build.translationAliases;
 	if (fs.existsSync(translationAliasesPath)) {
 		alias = getFileContents(translationAliasesPath);
 		out = out.replace(/\t+(\$TRANS_ALIAS)/g, (match, group1) => group1);
+	}
+	if (alias.trim().length > 0 && !alias.trimEnd().endsWith(',')) {
+		alias = `${alias},`;
 	}
 
 	let alternate = getFileContents(defaultAlternatesFile);
@@ -766,7 +772,7 @@ function formatVar(type: string, varName: string): string {
 		});
 		let out = values.join('|');
 		out = handleAccents(out);
-		out = out.replace(/ +/g, `#{bcv_parser::regexps.space}+`);
+		out = out.replace(/ +/g, '${bcv_parser.prototype.regexps.space}+');
 		return values.length > 1 ? `(?:${out})` : out;
 	} else if (type === 'pegjs') {
 		values.forEach((value: string, index: number) => {
