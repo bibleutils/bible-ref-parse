@@ -326,7 +326,7 @@ If you're calling `parsed_entities()` directly, the following keys can appear in
 #### Start Objects
 
 * `start_book_not_defined`: `true` if a `c` or similar non-book object is lacking a book context. This message only occurs when the object becomes dissociated from the related book, as in `Chapters 11-1040 of II Kings`. It's highly unusual.
-* `start_book_not_exist`: `true` if the given book doesn't exist in the translation. A book has to have an entry in the language's `regexps.coffee` file for this message to appear.
+* `start_book_not_exist`: `true` if the given book doesn't exist in the translation. A book has to have an entry in the language's `regexps.ts` file for this message to appear.
 * `start_chapter_is_zero`: `1` if the requested start chapter is 0.
 * `start_chapter_not_exist`: The value is the last valid chapter in the book.
 * `start_chapter_not_exist_in_single_chapter_book`: `1` if wanting, say, `Philemon 2`. It is reparsed as a verse (`Philemon 1:2`).
@@ -337,8 +337,8 @@ If you're calling `parsed_entities()` directly, the following keys can appear in
 
 #### End Objects
 
-* `end_book_before_start`: `true` if the end book is before the start book (the order is controlled in the language's `translations.coffee`). E.g., `Exodus-Genesis`.
-* `end_book_not_exist`: `true` if the given book doesn't exist in the translation. A book has to have an entry in the language's `regexps.coffee` for this message to appear.
+* `end_book_before_start`: `true` if the end book is before the start book (the order is controlled in the language's `translations.ts`). E.g., `Exodus-Genesis`.
+* `end_book_not_exist`: `true` if the given book doesn't exist in the translation. A book has to have an entry in the language's `regexps.ts` for this message to appear.
 * `end_chapter_before_start`: `true` if the end chapter is before the start chapter in the same book.
 * `end_chapter_is_zero`: `1` if the requested end chapter is `0`. The `1` indicates the first valid chapter.
 * `end_chapter_not_exist`: The value is the last valid chapter in the book.
@@ -360,11 +360,11 @@ The parser is quite aggressive in identifying text as Bible references; if you j
 
 The parser spends most of its time doing regular expressions and manipulating strings. If you give it a very long string full of Bible references, it could block your main event loop. Depending on your performance requirements, parsing large numbers of even short strings could saturate your CPU and lead to problems in the rest of your app.
 
-In addition, a number of the tests in the "real-world" section of [`src/core/spec.coffee`](https://github.com/bibleutils/bible-ref-parse/blob/master/src/core/spec.coffee) have comments describing limitations of the parser. Unfortunately, it's hard to solve them without incorrectly parsing other cases—one person intends `Matt 1, 3` to mean `Matt.1,Matt.3`, while another intends it to mean `Matt.1.3`.
+In addition, a number of the tests in the "real-world" section of [`src/core/spec.ts`](https://github.com/bibleutils/bible-ref-parse/blob/master/src/core/spec.ts) have comments describing limitations of the parser. Unfortunately, it's hard to solve them without incorrectly parsing other cases—one person intends `Matt 1, 3` to mean `Matt.1,Matt.3`, while another intends it to mean `Matt.1.3`.
 
 ## Tests
 
-One of the hardest parts of building a BCV parser is finding data to test it on to tease out corner cases. The file [`src/core/spec.coffee`](https://github.com/bibleutils/bible-ref-parse/blob/master/src/core/spec.coffee) has over 3,700 tests that illustrate the range of input that this parser can handle.
+One of the hardest parts of building a BCV parser is finding data to test it on to tease out corner cases. The file [`src/core/spec.ts`](https://github.com/bibleutils/bible-ref-parse/blob/master/src/core/spec.ts) has over 3,700 tests that illustrate the range of input that this parser can handle.
 
 Separate from this repository are four data files that you can use to test your own parser. Derived from Twitter and Facebook mentions of Bible references, the dataset reflects how people really type references in English. It includes 4.7 million unique strings across 180 million total mentions. (For example, the most-popular string, "Philippians 4:13", is mentioned over 1.3 million times.)
 
@@ -474,7 +474,7 @@ In the worst case, given a string consisting of almost nothing but Bible passage
 
 ## Alternate Versification Systems
 
-The BCV parser supports several versification systems (described above). The appropriate versification system kicks in if the parsed text explicitly mentions a translation with an alternate versification system, or you can use `@set_options({"versification_system":"..."})`. You can extend the relevant `translations.coffee` to add additional ones.
+The BCV parser supports several versification systems (described above). The appropriate versification system kicks in if the parsed text explicitly mentions a translation with an alternate versification system, or you can use `@set_options({"versification_system":"..."})`. You can extend the relevant `translations.ts` to add additional ones.
 
 ## Non-English Support
 
@@ -605,7 +605,7 @@ November 1, 2015 (1.0.0). Added `punctuation_strategy` option to replace the "eu
 
 May 4, 2015 (0.10.0). Hand-tuned some of the PEG.js output to improve overall performance by around 50% in most languages.
 
-March 16, 2015 (0.9.0). Added [`parse_with_context()`](#parse_with_context) to let you supply a context for a given string. Added Welsh. Fixed some Somali book names. Added missing punctuation from abbreviations in some languages. Reduced size of "eu" files by omitting needless duplicate code. Improved testing code coverage and added a [fuzz tester](https://github.com/bibleutils/bible-ref-parse/blob/master/bin/fuzz/fuzz_lang.coffee), which uncovered several crashing bugs.
+March 16, 2015 (0.9.0). Added [`parse_with_context()`](#parse_with_context) to let you supply a context for a given string. Added Welsh. Fixed some Somali book names. Added missing punctuation from abbreviations in some languages. Reduced size of "eu" files by omitting needless duplicate code. Improved testing code coverage and added a [fuzz tester](https://github.com/bibleutils/bible-ref-parse/blob/master/bin/fuzz/fuzz_lang.ts), which uncovered several crashing bugs.
 
 November 3, 2014 (0.8.0). Fixed two bugs related to range rewriting. Updated frak to the latest development version. Added quite a few more languages, bringing the total to 46.
 

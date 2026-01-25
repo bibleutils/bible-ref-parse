@@ -16,7 +16,7 @@
 		"outDir": "./dist"
 	},
 	"include": ["src/**/*", "src/**/*.json", "bin/**/*"],
-	"exclude": ["node_modules", "dist"]
+	"exclude": ["node_modules", "dist", "build", ".tmp-decaf", "src/lang/**/psalms-cb.ts", "src/lang-legacy/**/psalms-cb.ts", "src/template/translation-alternates.ts", "src/template/translations.ts"]
 }
 
 // "suppressExcessPropertyErrors": true,       // Removing due to deprecation warning. Please refer https://www.typescriptlang.org/tsconfig/#suppressExcessPropertyErrors
