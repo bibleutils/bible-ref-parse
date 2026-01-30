@@ -527,7 +527,11 @@ class bcv_parser {
 	osis_and_indices() {
 		const out = [];
 		for (var osis of Array.from(this.parsed_entities())) {
-			if (osis.osis.length > 0) { out.push({osis: osis.osis, translations: osis.translations, indices: osis.indices}); }
+			if (osis.osis.length > 0) {
+				const entry: any = {osis: osis.osis, translations: osis.translations, indices: osis.indices};
+				if (osis.osises != null) { entry.osises = osis.osises; }
+				out.push(entry);
+			}
 		}
 		return out;
 	}
@@ -583,35 +587,18 @@ class bcv_parser {
 				if (passage.absolute_indices == null) { passage.absolute_indices = entity.absolute_indices; }
 
 				if ((this.options.consecutive_combination_strategy === 'separate-chapters') && (passage.start.c !== passage.end.c)) {
-					var asc2, end2;
-					for (i = passage.start.c, end2 = passage.end.c, asc2 = passage.start.c <= end2; asc2 ? i <= end2 : i >= end2; asc2 ? i++ : i--) {
-						var passageStartVerse = i === passage.start.c ? passage.start.v : 1;
-						var passageEndVerse = i === passage.end.c ? passage.end.v : this.translations[translation_alias]['chapters'][passage.start.b][i - 1];
-						var passageStart = {
-							b: passage.start.b,
-							c: i,
-							v: passage.start.type === 'bcv' ? passageStartVerse : null,
-							type: passage.start.type
-						};
-
-						var passageEnd = {
-							b: passage.end.b,
-							c: i,
-							v: passage.start.type === 'bcv' ? passageEndVerse : null,
-							type: passage.start.type
-						};
-
-						nonCombinableOsises.push({
-							osis: passage.valid.valid ? this.to_osis(passageStart, passageEnd, translation_alias) : "",
-							type: passage.type,
-							indices: passage.absolute_indices,
-							translations,
-							start: passageStart,
-							end: passageEnd,
-							enclosed_indices: passage.enclosed_absolute_indices,
-							entity_id,
-							entities: [passage]});
-					}
+					const osises_by_chapter = this.get_osises_by_chapter({osis: "", start: passage.start, end: passage.end}, translation_alias);
+					osises.push({
+						osis: passage.valid.valid ? this.to_osis(passage.start, passage.end, translation_alias) : "",
+						osises: osises_by_chapter,
+						type: passage.type,
+						indices: passage.absolute_indices,
+						translations,
+						start: passage.start,
+						end: passage.end,
+						enclosed_indices: passage.enclosed_absolute_indices,
+						entity_id,
+						entities: [passage]});
 				} else {
 					osises.push({
 						osis: passage.valid.valid ? this.to_osis(passage.start, passage.end, translation_alias) : "",
@@ -633,6 +620,13 @@ class bcv_parser {
 				}
 				osises = osises.concat(nonCombinableOsises).sort((osis1, osis2) => osis1.indices[0] - osis2.indices[0]);
 			}
+			if (this.options.consecutive_combination_strategy === "separate-chapters") {
+				for (osis of Array.from(osises)) {
+					if (osis.osis.length === 0) { continue; }
+					const osises_by_chapter = this.get_osises_by_chapter(osis, translation_alias);
+					if (osises_by_chapter.length > 1) { osis.osises = osises_by_chapter; }
+				}
+			}
 			// Add the osises array to the existing array.
 			if (this.options.sequence_combination_strategy === "separate") {
 				out = out.concat(osises);
@@ -646,7 +640,20 @@ class bcv_parser {
 				for (osis of Array.from(osises)) {
 					if (osis.osis.length > 0) { strings.push(osis.osis); }
 				}
-				out.push({osis: strings.join(","), indices: entity.absolute_indices, translations, entity_id, entities: osises});
+				let osises_by_chapter: string[] = [];
+				if (this.options.consecutive_combination_strategy === "separate-chapters") {
+					for (osis of Array.from(osises)) {
+						if (osis.osis.length === 0) { continue; }
+						if (osis.osises != null) {
+							osises_by_chapter = osises_by_chapter.concat(osis.osises);
+						} else {
+							osises_by_chapter = osises_by_chapter.concat(this.get_osises_by_chapter(osis, translation_alias));
+						}
+					}
+				}
+				const out_entry: any = {osis: strings.join(","), indices: entity.absolute_indices, translations, entity_id, entities: osises};
+				if (osises_by_chapter.length > 0) { out_entry.osises = osises_by_chapter; }
+				out.push(out_entry);
 			}
 		}
 		return out;
@@ -712,6 +719,35 @@ class bcv_parser {
 		}
 		if (start.extra != null) { out = start.extra + "," + out; }
 		if (end.extra != null) { out += "," + end.extra; }
+		return out;
+	}
+
+	get_osises_by_chapter(passage, translation) {
+		if ((passage == null) || (passage.start == null) || (passage.end == null) || (passage.osis == null)) { return []; }
+		if ((passage.start.b == null) || (passage.end.b == null) || (passage.start.c == null) || (passage.end.c == null)) {
+			return passage.osis.length > 0 ? [passage.osis] : [];
+		}
+		if ((passage.start.b !== passage.end.b) || (passage.start.c === passage.end.c)) {
+			return passage.osis.length > 0 ? [passage.osis] : [];
+		}
+		const out = [];
+		for (let c = passage.start.c, end = passage.end.c, asc = passage.start.c <= end; asc ? c <= end : c >= end; asc ? c++ : c--) {
+			const passageStartVerse = c === passage.start.c ? passage.start.v : 1;
+			const passageEndVerse = c === passage.end.c ? passage.end.v : this.translations[translation].chapters[passage.start.b][c - 1];
+			const passageStart = {
+				b: passage.start.b,
+				c,
+				v: passage.start.type === "bcv" ? passageStartVerse : null,
+				type: passage.start.type
+			};
+			const passageEnd = {
+				b: passage.end.b,
+				c,
+				v: passage.start.type === "bcv" ? passageEndVerse : null,
+				type: passage.start.type
+			};
+			out.push(this.to_osis(passageStart, passageEnd, translation));
+		}
 		return out;
 	}
 

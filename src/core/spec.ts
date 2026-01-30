@@ -1270,6 +1270,20 @@ describe("Parsing", function() {
 		return expect(p.parse("Deut 28 - v66-67 is a real").osis()).toEqual("Deut.28.66-Deut.28.67,Isa");
 	});
 
+	it("should handle a `separate-chapters` `consecutive_combination_strategy`", function() {
+		p.set_options({consecutive_combination_strategy: "separate-chapters"});
+		expect(p.parse("1 John 1:9-10; 1 John 2:1").osis_and_indices()).toEqual([{osis: "1John.1.9-1John.2.1", osises: ["1John.1.9-1John.1.10", "1John.2.1"], translations: [""], indices: [0, 25]}]);
+		return expect(p.parse("1 John 1:9-2:1").osis_and_indices()).toEqual([{osis: "1John.1.9-1John.2.1", osises: ["1John.1.9-1John.1.10", "1John.2.1"], translations: [""], indices: [0, 14]}]);
+	});
+
+	it("should handle `separate-chapters` with a `separate` `sequence_combination_strategy`", function() {
+		p.set_options({sequence_combination_strategy: "separate", consecutive_combination_strategy: "separate-chapters"});
+		const res = p.parse("1 John 1:9-2:1; 1 John 2:3").osis_and_indices();
+		expect(res[0].osis).toEqual("1John.1.9-1John.2.1");
+		expect(res[0].osises).toEqual(["1John.1.9-1John.1.10", "1John.2.1"]);
+		return expect(res[1].osis).toEqual("1John.2.3");
+	});
+
 	it("should handle a `combine` `consecutive_combination_strategy` and a `separate` `sequence_combination_strategy`", function() {
 		p.set_options({consecutive_combination_strategy: "combine", sequence_combination_strategy: "separate"});
 		expect(p.parse("2 Chronicles 32:32,33").osis()).toEqual("2Chr.32.32-2Chr.32.33");
