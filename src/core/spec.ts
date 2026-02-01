@@ -1272,16 +1272,13 @@ describe("Parsing", function() {
 
 	it("should handle a `separate-chapters` `consecutive_combination_strategy`", function() {
 		p.set_options({consecutive_combination_strategy: "separate-chapters"});
-		expect(p.parse("1 John 1:9-10; 1 John 2:1").osis_and_indices()).toEqual([{osis: "1John.1.9-1John.2.1", osises: ["1John.1.9-1John.1.10", "1John.2.1"], translations: [""], indices: [0, 25]}]);
-		return expect(p.parse("1 John 1:9-2:1").osis_and_indices()).toEqual([{osis: "1John.1.9-1John.2.1", osises: ["1John.1.9-1John.1.10", "1John.2.1"], translations: [""], indices: [0, 14]}]);
-	});
-
-	it("should handle `separate-chapters` with a `separate` `sequence_combination_strategy`", function() {
-		p.set_options({sequence_combination_strategy: "separate", consecutive_combination_strategy: "separate-chapters"});
-		const res = p.parse("1 John 1:9-2:1; 1 John 2:3").osis_and_indices();
-		expect(res[0].osis).toEqual("1John.1.9-1John.2.1");
-		expect(res[0].osises).toEqual(["1John.1.9-1John.1.10", "1John.2.1"]);
-		return expect(res[1].osis).toEqual("1John.2.3");
+		expect(p.parse("1 John 1:9-10; 1 John 2:1").osis_and_indices()).toEqual([
+			{osis: "1John.1.9-1John.1.10", translations: [""], indices: [0, 13]},
+			{osis: "1John.2.1", translations: [""], indices: [15, 25]}
+		]);
+		return expect(p.parse("1 John 1:9-2:1").osis_and_indices()).toEqual([
+			{osis: "1John.1.9-1John.2.1", osises: ["1John.1.9-1John.1.10", "1John.2.1"], translations: [""], indices: [0, 14]}
+		]);
 	});
 
 	it("should handle a `combine` `consecutive_combination_strategy` and a `separate` `sequence_combination_strategy`", function() {

@@ -546,6 +546,24 @@ class bcv_parser {
 				out[out.length-1].indices[1] = entity.absolute_indices[1];
 			}
 			if (entity.passages == null) { continue; }
+			if (this.options.consecutive_combination_strategy === "separate-chapters") {
+				const semicolon_segments = this.split_text_by_semicolon(entity.absolute_indices);
+				if (semicolon_segments.length > 1) {
+					for (const segment of Array.from(semicolon_segments)) {
+						const sub_parser = new bcv_parser;
+						sub_parser.set_options({...this.options});
+						sub_parser.parse(segment.text);
+						for (const sub of Array.from(sub_parser.parsed_entities())) {
+							if (sub.osis.length === 0) { continue; }
+							const indices = [sub.indices[0] + segment.offset, sub.indices[1] + segment.offset];
+							const entry: any = {osis: sub.osis, translations: sub.translations, indices, entity_id};
+							if (sub.osises != null) { entry.osises = sub.osises; }
+							out.push(entry);
+						}
+					}
+					continue;
+				}
+			}
 			if (((entity.type === "b") && (this.options.book_alone_strategy === "ignore")) || ((entity.type === "b_range") && (this.options.book_range_strategy === "ignore")) || (entity.type === "context")) { continue; }
 			// A given entity, even if part of a sequence, always only has one set of translations associated with it.
 			var translations = [];
@@ -587,10 +605,9 @@ class bcv_parser {
 				if (passage.absolute_indices == null) { passage.absolute_indices = entity.absolute_indices; }
 
 				if ((this.options.consecutive_combination_strategy === 'separate-chapters') && (passage.start.c !== passage.end.c)) {
-					const osises_by_chapter = this.get_osises_by_chapter({osis: "", start: passage.start, end: passage.end}, translation_alias);
 					osises.push({
 						osis: passage.valid.valid ? this.to_osis(passage.start, passage.end, translation_alias) : "",
-						osises: osises_by_chapter,
+						osises: this.get_osises_by_chapter({osis: "", start: passage.start, end: passage.end}, translation_alias),
 						type: passage.type,
 						indices: passage.absolute_indices,
 						translations,
@@ -632,6 +649,29 @@ class bcv_parser {
 				out = out.concat(osises);
 			// Add the OSIS string and some data to the array.
 			} else {
+				if ((this.options.consecutive_combination_strategy === "separate-chapters") && (entity.type === "sequence")) {
+					const groups = this.group_osises_by_semicolon(osises);
+					if (groups.length > 1) {
+						for (const group of Array.from(groups)) {
+							if (group.length === 0) { continue; }
+							const group_last_i = group.length - 1;
+							const indices = [group[0].indices[0], group[group_last_i].indices[1]];
+							if ((group[group_last_i].enclosed_indices != null) && (group[group_last_i].enclosed_indices[1] >= 0)) {
+								indices[1] = group[group_last_i].enclosed_indices[1];
+							}
+							const strings = [];
+							let osises_by_chapter: string[] = [];
+							for (osis of Array.from(group)) {
+								if (osis.osis.length > 0) { strings.push(osis.osis); }
+								if (osis.osises != null) { osises_by_chapter = osises_by_chapter.concat(osis.osises); }
+							}
+							const out_entry: any = {osis: strings.join(","), indices, translations, entity_id, entities: group};
+							if (osises_by_chapter.length > 0) { out_entry.osises = osises_by_chapter; }
+							out.push(out_entry);
+						}
+						continue;
+					}
+				}
 				var osis;
 				var strings = [];
 				var last_i = osises.length - 1;
@@ -643,12 +683,7 @@ class bcv_parser {
 				let osises_by_chapter: string[] = [];
 				if (this.options.consecutive_combination_strategy === "separate-chapters") {
 					for (osis of Array.from(osises)) {
-						if (osis.osis.length === 0) { continue; }
-						if (osis.osises != null) {
-							osises_by_chapter = osises_by_chapter.concat(osis.osises);
-						} else {
-							osises_by_chapter = osises_by_chapter.concat(this.get_osises_by_chapter(osis, translation_alias));
-						}
+						if (osis.osises != null) { osises_by_chapter = osises_by_chapter.concat(osis.osises); }
 					}
 				}
 				const out_entry: any = {osis: strings.join(","), indices: entity.absolute_indices, translations, entity_id, entities: osises};
@@ -723,12 +758,12 @@ class bcv_parser {
 	}
 
 	get_osises_by_chapter(passage, translation) {
-		if ((passage == null) || (passage.start == null) || (passage.end == null) || (passage.osis == null)) { return []; }
+		if ((passage == null) || (passage.start == null) || (passage.end == null)) { return []; }
 		if ((passage.start.b == null) || (passage.end.b == null) || (passage.start.c == null) || (passage.end.c == null)) {
-			return passage.osis.length > 0 ? [passage.osis] : [];
+			return (passage.osis != null) && (passage.osis.length > 0) ? [passage.osis] : [];
 		}
 		if ((passage.start.b !== passage.end.b) || (passage.start.c === passage.end.c)) {
-			return passage.osis.length > 0 ? [passage.osis] : [];
+			return (passage.osis != null) && (passage.osis.length > 0) ? [passage.osis] : [];
 		}
 		const out = [];
 		for (let c = passage.start.c, end = passage.end.c, asc = passage.start.c <= end; asc ? c <= end : c >= end; asc ? c++ : c--) {
@@ -749,6 +784,59 @@ class bcv_parser {
 			out.push(this.to_osis(passageStart, passageEnd, translation));
 		}
 		return out;
+	}
+
+	get_separator_between(prev_indices, next_indices) {
+		if ((this.s == null) || (prev_indices == null) || (next_indices == null)) { return ""; }
+		const start = prev_indices[1] + 1;
+		const end = next_indices[0];
+		if (end <= start) { return ""; }
+		return this.s.slice(start, end);
+	}
+
+	has_semicolon_separator(prev_osis, next_osis) {
+		const between = this.get_separator_between(prev_osis.indices, next_osis.indices);
+		return /[;；]/.test(between);
+	}
+
+	group_osises_by_semicolon(osises) {
+		const out = [];
+		let current = [];
+		for (const osis of Array.from(osises)) {
+			if (current.length === 0) {
+				current.push(osis);
+				continue;
+			}
+			if (this.has_semicolon_separator(current[current.length - 1], osis)) {
+				out.push(current);
+				current = [osis];
+			} else {
+				current.push(osis);
+			}
+		}
+		if (current.length > 0) { out.push(current); }
+		return out;
+	}
+
+	split_text_by_semicolon(absolute_indices) {
+		if ((this.s == null) || (absolute_indices == null) || (absolute_indices[0] == null) || (absolute_indices[1] == null)) { return []; }
+		const text = this.s.slice(absolute_indices[0], absolute_indices[1]);
+		if (!/[;；]/.test(text)) { return [{text, offset: absolute_indices[0]}]; }
+		const segments = [];
+		let start = 0;
+		for (let i = 0, end = text.length; i < end; i++) {
+			const ch = text[i];
+			if ((ch === ";") || (ch === "；")) {
+				if (i > start) {
+					segments.push({text: text.slice(start, i), offset: absolute_indices[0] + start});
+				}
+				start = i + 1;
+			}
+		}
+		if (start < text.length) {
+			segments.push({text: text.slice(start), offset: absolute_indices[0] + start});
+		}
+		return segments;
 	}
 
 	// If we want to treat Ps151 as a book rather than a chapter, we have to do some gymnastics to make sure it returns properly.
@@ -794,6 +882,11 @@ class bcv_parser {
 			if (osis.osis.length > 0) {
 				var prev_i = out.length - 1;
 				var is_enclosed_last = false;
+				if ((prev_i >= 0) && this.has_semicolon_separator(out[prev_i], osis)) {
+					out.push(osis);
+					prev = {b: osis.end.b, c: osis.end.c, v: osis.end.v};
+					continue;
+				}
 				// Record the start index of the enclosed sequence for use in future iterations.
 				if (osis.enclosed_indices[0] !== enclosed_sequence_start) {
 					enclosed_sequence_start = osis.enclosed_indices[0];

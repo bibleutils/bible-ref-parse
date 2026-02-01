@@ -60,6 +60,9 @@ function makeBookTestCases (bookData: IBookAssertionsData[], lang: string): stri
 
 export function makeSpecTemplate (data: ITestsData): { bookTests: string, miscTests: string } {
 	const { lang, assertions } = data
+	const separateChaptersTest = lang === 'en'
+		? `\tit("should handle a separate-chapters semicolon break (${lang})", function() {\n\t\tp.set_options({ consecutive_combination_strategy: "separate-chapters" });\n\t\texpect(p.parse("1 John 1:9-10; 1 John 2:1").osis_and_indices()).toEqual([\n\t\t\t{osis: "1John.1.9-1John.1.10", translations: [""], indices: [0, 13]},\n\t\t\t{osis: "1John.2.1", translations: [""], indices: [15, 25]}\n\t\t]);\n\t});\n`
+		: "";
 
 	const bookTests = makeBookTestCases(assertions.book, lang);
 	const miscTests = `\t${makeDefaultTestCase(`should handle ranges (${lang})`, assertions.ranges)}
@@ -71,7 +74,8 @@ export function makeSpecTemplate (data: ITestsData): { bookTests: string, miscTe
 	${assertions.next.length > 0 ? `${makeHandleNextTestCase(`should handle 'next' (${lang})`, assertions.next, lang)}`  : ''}
 	${makeTransTestCase(`should handle translations (${lang})`, assertions.trans)}
 	${assertions.bookRange.length > 0 ? `${makeBookRangesTestCase(`should handle book ranges (${lang})`, assertions.bookRange)}` : ''}
-	${makeBoundaryTestCase(`should handle boundaries (${lang})`, assertions.boundary)}`;
+	${makeBoundaryTestCase(`should handle boundaries (${lang})`, assertions.boundary)}
+${separateChaptersTest}`;
 
 	return { bookTests, miscTests };
 }
