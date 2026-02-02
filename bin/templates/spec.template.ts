@@ -61,7 +61,7 @@ function makeBookTestCases (bookData: IBookAssertionsData[], lang: string): stri
 export function makeSpecTemplate (data: ITestsData): { bookTests: string, miscTests: string } {
 	const { lang, assertions } = data
 	const separateChaptersTest = lang === 'en'
-		? `\tit("should handle a separate-chapters semicolon break (${lang})", function() {\n\t\tp.set_options({ consecutive_combination_strategy: "separate-chapters" });\n\t\texpect(p.parse("1 John 1:9-10; 1 John 2:1").osis_and_indices()).toEqual([\n\t\t\t{osis: "1John.1.9-1John.1.10", translations: [""], indices: [0, 13]},\n\t\t\t{osis: "1John.2.1", translations: [""], indices: [15, 25]}\n\t\t]);\n\t});\n`
+		? `\tit("should handle a separate-chapters semicolon break (${lang})", function() {\n\t\tp.set_options({ consecutive_combination_strategy: "separate-chapters" });\n\t\texpect(p.parse("1 John 1:9-10; 1 John 2:1").osis_and_indices()).toEqual([\n\t\t\t{osis: "1John.1.9-1John.1.10", translations: [""], indices: [0, 13]},\n\t\t\t{osis: "1John.2.1", translations: [""], indices: [15, 25]}\n\t\t]);\n\t\texpect(p.parse("Exodus 24:12; 25:8, 9, 40.").osis_and_indices()).toEqual([\n\t\t\t{osis: "Exod.24.12", translations: [""], indices: [0, 12]},\n\t\t\t{osis: "Exod.25.8-Exod.25.9", translations: [""], indices: [14, 21]},\n\t\t\t{osis: "Exod.25.40", translations: [""], indices: [23, 25]}\n\t\t]);\n\t\texpect(p.parse("Exodus 9:1-6; 10:22, 23.").osis_and_indices()).toEqual([\n\t\t\t{osis: "Exod.9.1-Exod.9.6", translations: [""], indices: [0, 12]},\n\t\t\t{osis: "Exod.10.22-Exod.10.23", translations: [""], indices: [14, 23]}\n\t\t]);\n\t});\n`
 		: "";
 
 	const bookTests = makeBookTestCases(assertions.book, lang);
