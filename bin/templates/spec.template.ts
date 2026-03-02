@@ -58,6 +58,32 @@ function makeBookTestCases (bookData: IBookAssertionsData[], lang: string): stri
 	return bookData.map(data => makeBookTestCase(data, lang)).join('\n');
 }
 
+function makeRoundTripApocryphaTestCases (apocryphaBooks: string[]): string {
+	return `\tit("should round-trip OSIS Apocrypha references", function() {
+\t\tlet bc, book;
+\t\tp.set_options({osis_compaction_strategy: "bc", ps151_strategy: "b"});
+\t\tp.include_apocrypha(true);
+\t\tconst books = [${apocryphaBooks.map(book => `"${book}"`).join(', ')}];
+\t\tfor (book of Array.from(books)) {
+\t\t\tbc = book + ".1";
+\t\t\tvar bcv = bc + ".1";
+\t\t\tvar bcv_range = bcv + "-" + bc + ".2";
+\t\t\texpect(p.parse(bc).osis()).toEqual(bc);
+\t\t\texpect(p.parse(bcv).osis()).toEqual(bcv);
+\t\t\texpect(p.parse(bcv_range).osis()).toEqual(bcv_range);
+\t\t}
+\t\tp.set_options({ps151_strategy: "bc"});
+\t\texpect(p.parse("Ps151.1").osis()).toEqual("Ps.151");
+\t\texpect(p.parse("Ps151.1.1").osis()).toEqual("Ps.151.1");
+\t\texpect(p.parse("Ps151.1-Ps151.2").osis()).toEqual("Ps.151.1-Ps.151.2");
+\t\tp.include_apocrypha(false);
+\t\tfor (book of Array.from(books)) {
+\t\t\tbc = book + ".1";
+\t\t\texpect(p.parse(bc).osis()).toEqual("");
+\t\t}
+\t});`
+}
+
 export function makeSpecTemplate (data: ITestsData): { bookTests: string, miscTests: string } {
 	const { lang, assertions } = data
 	const separateChaptersTest = lang === 'en'
@@ -65,7 +91,8 @@ export function makeSpecTemplate (data: ITestsData): { bookTests: string, miscTe
 		: "";
 
 	const bookTests = makeBookTestCases(assertions.book, lang);
-	const miscTests = `\t${makeDefaultTestCase(`should handle ranges (${lang})`, assertions.ranges)}
+	const miscTests = `\t${makeRoundTripApocryphaTestCases(data.testTemplateData.roundTripApocrypha)}
+	${makeDefaultTestCase(`should handle ranges (${lang})`, assertions.ranges)}
 	${makeDefaultTestCase(`should handle chapters (${lang})`, assertions.chapters)}
 	${makeDefaultTestCase(`should handle verses (${lang})`, assertions.verses)}
 	${makeDefaultTestCase(`should handle 'and' (${lang})`, assertions.sequence)}
