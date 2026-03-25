@@ -30,30 +30,6 @@ describe("Parsing ($LANG)", function() {
 		}
 	});
 
-	it("should round-trip OSIS Apocrypha references", function() {
-		let bc, book;
-		p.set_options({osis_compaction_strategy: "bc", ps151_strategy: "b"});
-		p.include_apocrypha(true);
-		const books = ["Tob","Jdt","GkEsth","Wis","Sir","Bar","PrAzar","Sus","Bel","SgThree","EpJer","1Macc","2Macc","3Macc","4Macc","1Esd","2Esd","PrMan","Ps151"];
-		for (book of Array.from(books)) {
-			bc = book + ".1";
-			var bcv = bc + ".1";
-			var bcv_range = bcv + "-" + bc + ".2";
-			expect(p.parse(bc).osis()).toEqual(bc);
-			expect(p.parse(bcv).osis()).toEqual(bcv);
-			expect(p.parse(bcv_range).osis()).toEqual(bcv_range);
-		}
-		p.set_options({ps151_strategy: "bc"});
-		expect(p.parse("Ps151.1").osis()).toEqual("Ps.151");
-		expect(p.parse("Ps151.1.1").osis()).toEqual("Ps.151.1");
-		expect(p.parse("Ps151.1-Ps151.2").osis()).toEqual("Ps.151.1-Ps.151.2");
-		p.include_apocrypha(false);
-		for (book of Array.from(books)) {
-			bc = book + ".1";
-			expect(p.parse(bc).osis()).toEqual("");
-		}
-	});
-
 	it("should handle a preceding character", function() {
 		expect(p.parse(" Gen 1").osis()).toEqual("Gen.1");
 		expect(p.parse("Matt5John3").osis()).toEqual("Matt.5,John.3");

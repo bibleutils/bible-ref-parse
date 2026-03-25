@@ -65,8 +65,6 @@ export type IBook = {
 export type IData = {
 	variables: Partial<IInputDataVariables>;
 	books: IBook[];
-	order: string[];
-	preferredBookNames: IBook[];
 }
 
 export type Ref = {
@@ -88,6 +86,9 @@ export type IBookAssertionsData = {
 
 export type ITestsData = {
 	lang: string;
+	testTemplateData: {
+		roundTripApocrypha: string[];
+	},
 	assertions: {
 		book: IBookAssertionsData[];
 		ranges: IAssertionData[];

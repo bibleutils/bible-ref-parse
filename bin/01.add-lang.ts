@@ -48,9 +48,9 @@ const GLOBAL_VARIABLES = getVars(fileContent.variables);
 const COLLAPSE_COMBINING_CHARACTERS = !(GLOBAL_VARIABLES[Variable.COLLAPSE_COMBINING_CHARACTERS] && GLOBAL_VARIABLES[Variable.COLLAPSE_COMBINING_CHARACTERS][0] === 'false');
 const FORCE_OSIS_ABBREV = !(GLOBAL_VARIABLES[Variable.FORCE_OSIS_ABBREV] && GLOBAL_VARIABLES[Variable.FORCE_OSIS_ABBREV][0] === 'false');
 // logger.info("Global 'gVars' Variable Value: ", gVars);
-const GLOBAL_ABBREVS: any = getAbbrevs(fileContent.books, fileContent.preferredBookNames);
+const GLOBAL_ABBREVS: any = getAbbrevs(fileContent.books);
 // logger.info("Global 'gAbbrevs' Variable Value: ", gAbbrevs);
-const GLOBAL_ORDER = getOrder(fileContent.order);
+const GLOBAL_ORDER: Ref[] = getOrder(fileContent.books);
 prepareDirectory(CONFIG.paths.build.directory);
 // logger.info("Global 'gOrder' Variable Value: ", gOrder);
 const gAllAbbrevs = makeTests();
@@ -96,9 +96,12 @@ function getVars(variables: Partial<IInputDataVariables>): Partial<IInputDataVar
 	return out;
 }
 
-function getOrder(order: string[]): Ref[] {
+function getOrder(books: IBook[]): Ref[] {
 	let out = [];
-	for (const osis of fileContent.order) {
+	for (const { osis } of books) {
+		if (osis.includes(',')) {
+			continue;
+		}
 		isValidOsis(osis);
 		const apocrypha = gValidOsises[osis] === 'apocrypha';
 		out.push({ osis, apocrypha });
@@ -132,6 +135,9 @@ function makeTests(): { [key: string]: string[] } {
 
 	let testsData: ITestsData = {
 		lang,
+		testTemplateData: {
+			roundTripApocrypha: [],
+		},
 		assertions: {
 			book: [],
 			ranges: [],
@@ -222,7 +228,7 @@ function makeTests(): { [key: string]: string[] } {
 		allAbbrevsInMakeTests[osis] = osisAbbrevs;
 	}
 	fs.writeFileSync(CONFIG.paths.build.bookNames, bookNamesFile);
-
+	testsData.testTemplateData.roundTripApocrypha.push(...addRoundTripApocryphaTests());
 	testsData.assertions.ranges.push(...addRangeTests());
 	testsData.assertions.chapters.push(...addChapterTests());
 	testsData.assertions.verses.push(...addVerseTests());
@@ -1017,22 +1023,10 @@ type Abbrevs = {
 	}
 };
 
-function getAbbrevs(books: IBook[], preferredBookNames: IBook[]): Abbrevs {
+function getAbbrevs(books: IBook[]): Abbrevs {
 	const out: Abbrevs = {};
-	const processedBooks: Array<IBook & { isLiteral: boolean }> = [
-		...books.map((book) => ({ ...book, isLiteral: false })),
-		...preferredBookNames.map((book) => {
-			return {
-				isLiteral: true,
-				osis: book.osis,
-				abbrevs: book.abbrevs.map((abbrev) => {
-					return abbrev.replace(/([\x80-\uffff])/gu, (match, g1) => `${g1}\``);
-				})
-			};
-		}),
-	];
 
-	for (const { osis, abbrevs, isLiteral } of processedBooks) {
+	for (const { osis, abbrevs } of books) {
 		isValidOsis(osis);
 		out[osis] = out[osis] || {};
 		out[osis][osis] = true;
@@ -1043,16 +1037,14 @@ function getAbbrevs(books: IBook[], preferredBookNames: IBook[]): Abbrevs {
 			if (!abbrev.length) {
 				continue;
 			}
-			if (!isLiteral) {
-				if (GLOBAL_VARIABLES[Variable.PRE_BOOK]) {
-					abbrev = `${GLOBAL_VARIABLES[Variable.PRE_BOOK][0]}${abbrev}`;
-				}
-				if (GLOBAL_VARIABLES[Variable.POST_BOOK]) {
-					abbrev += GLOBAL_VARIABLES[Variable.POST_BOOK][0];
-				}
-				GLOBAL_RAW_ABBREVS[osis] = GLOBAL_RAW_ABBREVS[osis] || {};
-				GLOBAL_RAW_ABBREVS[osis][abbrev] = true;
+			if (GLOBAL_VARIABLES[Variable.PRE_BOOK]) {
+				abbrev = `${GLOBAL_VARIABLES[Variable.PRE_BOOK][0]}${abbrev}`;
 			}
+			if (GLOBAL_VARIABLES[Variable.POST_BOOK]) {
+				abbrev += GLOBAL_VARIABLES[Variable.POST_BOOK][0];
+			}
+			GLOBAL_RAW_ABBREVS[osis] = GLOBAL_RAW_ABBREVS[osis] || {};
+			GLOBAL_RAW_ABBREVS[osis][abbrev] = true;
 			abbrev = handleAccents(abbrev);
 			const alts = expandAbbrevVars(abbrev);
 			if (/.\$/.test(JSON.stringify(alts))) {
@@ -1530,6 +1522,12 @@ function addBoundaryTests() {
 	return assertions;
 }
 
+function addRoundTripApocryphaTests(): string[] {
+	return GLOBAL_ORDER
+		.filter(book => book.apocrypha)
+		.map(book => book.osis);
+}
+
 function removeExclamations(text: string): string {
 	if (text.includes('!')) {
 		text = text.split('!')[0];
@@ -1546,8 +1544,6 @@ function prepareData (dataFileContent: string): IData {
 	const out: IData = {
 		variables: prepareVariables(data.variables),
 		books: prepareBooks(data.books),
-		order: data.order.map(normalize),
-		preferredBookNames: prepareBooks(data.preferredBookNames),
 	};
 
 	return out;
