@@ -36,6 +36,7 @@ const CONFIG = {
 			dataFile: path.join(srcPath, 'lang', language, 'data.json'),
 			letters: path.join(srcPath, 'letters/letters.txt'),
 			psalms: path.join(srcPath, 'lang', language, 'psalms-cb.ts'),
+			versification: path.join(srcPath, 'lang', language, 'versification.json'),
 		},
 		template: {
 			grammar: path.join(srcPath, 'template/grammar.pegjs'),

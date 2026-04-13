@@ -341,6 +341,178 @@ function getFileContents(filePath: string): string {
 	}
 }
 
+type ITranslationBookData = {
+	chaptersCount: number;
+	versesCount: { [key: string]: number };
+};
+
+type IVersificationDiffBook = {
+	chaptersCount?: number;
+	versesCount?: { [key: string]: number };
+};
+
+type IVersificationDiff = {
+	[book: string]: IVersificationDiffBook;
+};
+
+function cloneTranslationBookData(book: ITranslationBookData): ITranslationBookData {
+	return {
+		chaptersCount: book.chaptersCount,
+		versesCount: { ...book.versesCount },
+	};
+}
+
+function findMatchingBrace(input: string, startIndex: number): number {
+	let depth = 0;
+
+	for (let i = startIndex; i < input.length; i++) {
+		if (input[i] === '{') {
+			depth += 1;
+		} else if (input[i] === '}') {
+			depth -= 1;
+			if (depth === 0) {
+				return i;
+			}
+		}
+	}
+
+	throw new Error('Could not find matching brace while processing translations template');
+}
+
+function getDefaultChaptersBlock(template: string): { start: number; end: number; chapters: { [book: string]: ITranslationBookData } } {
+	const defaultMarker = '\n\tdefault: {';
+	const defaultStart = template.indexOf(defaultMarker);
+	if (defaultStart === -1) {
+		throw new Error('Could not find default translation block');
+	}
+
+	const chaptersMarker = '\n\t\tchapters: ';
+	const chaptersStart = template.indexOf(chaptersMarker, defaultStart);
+	if (chaptersStart === -1) {
+		throw new Error('Could not find default chapters block');
+	}
+
+	const objectStart = template.indexOf('{', chaptersStart + chaptersMarker.length - 1);
+	const objectEnd = findMatchingBrace(template, objectStart);
+	const chaptersString = template.slice(objectStart, objectEnd + 1);
+	const chapters = Function(`"use strict"; return (${chaptersString});`)();
+
+	return {
+		start: objectStart,
+		end: objectEnd + 1,
+		chapters,
+	};
+}
+
+function serializeObjectLiteral(value: any, baseIndent: string): string {
+	return JSON.stringify(value, null, '\t')
+		.split('\n')
+		.map((line, index) => index === 0 ? line : `${baseIndent}${line}`)
+		.join('\n');
+}
+
+function loadVersificationDiff(filePath: string): IVersificationDiff | null {
+	if (!fs.existsSync(filePath)) {
+		return null;
+	}
+
+	return JSON.parse(getFileContents(filePath));
+}
+
+function mergeVersificationDiff(
+	defaultChapters: { [book: string]: ITranslationBookData },
+	diff: IVersificationDiff,
+	diffPath: string
+): { [book: string]: ITranslationBookData } {
+	const merged: { [book: string]: ITranslationBookData } = {};
+
+	for (const book of Object.keys(defaultChapters)) {
+		merged[book] = cloneTranslationBookData(defaultChapters[book]);
+	}
+
+	for (const book of Object.keys(diff)) {
+		if (merged[book] == null) {
+			throw new Error(`Versification diff ${diffPath} contains unknown book: ${book}`);
+		}
+
+		const diffBook = diff[book] || {};
+		const bookData = cloneTranslationBookData(merged[book]);
+		const defaultChaptersCount = bookData.chaptersCount;
+		const nextChaptersCount = diffBook.chaptersCount ?? defaultChaptersCount;
+
+		if (!Number.isInteger(nextChaptersCount) || nextChaptersCount < 1) {
+			throw new Error(`Versification diff ${diffPath} has invalid chaptersCount for ${book}: ${nextChaptersCount}`);
+		}
+
+		for (const chapter of Object.keys(diffBook.versesCount || {})) {
+			const chapterNumber = parseInt(chapter, 10);
+			const verseCount = diffBook.versesCount![chapter];
+
+			if (!Number.isInteger(chapterNumber) || chapterNumber < 1) {
+				throw new Error(`Versification diff ${diffPath} has invalid chapter key for ${book}: ${chapter}`);
+			}
+			if (chapterNumber > nextChaptersCount) {
+				throw new Error(`Versification diff ${diffPath} has chapter ${chapterNumber} for ${book} beyond chaptersCount ${nextChaptersCount}`);
+			}
+			if (!Number.isInteger(verseCount) || verseCount < 1) {
+				throw new Error(`Versification diff ${diffPath} has invalid verse count for ${book} ${chapter}: ${verseCount}`);
+			}
+		}
+
+		if (nextChaptersCount < defaultChaptersCount) {
+			for (const chapter of Object.keys(bookData.versesCount)) {
+				if (parseInt(chapter, 10) > nextChaptersCount) {
+					delete bookData.versesCount[chapter];
+				}
+			}
+		}
+
+		for (const chapter of Object.keys(diffBook.versesCount || {})) {
+			bookData.versesCount[String(parseInt(chapter, 10))] = diffBook.versesCount![chapter];
+		}
+
+		if (nextChaptersCount > defaultChaptersCount) {
+			for (let chapter = defaultChaptersCount + 1; chapter <= nextChaptersCount; chapter++) {
+				if (bookData.versesCount[String(chapter)] == null) {
+					throw new Error(`Versification diff ${diffPath} must provide versesCount for added chapter ${book} ${chapter}`);
+				}
+			}
+		}
+
+		const normalizedVersesCount: { [key: string]: number } = {};
+		for (let chapter = 1; chapter <= nextChaptersCount; chapter++) {
+			const verseCount = bookData.versesCount[String(chapter)];
+			if (verseCount == null) {
+				throw new Error(`Versification diff ${diffPath} leaves ${book} chapter ${chapter} without a verse count`);
+			}
+			normalizedVersesCount[String(chapter)] = verseCount;
+		}
+
+		bookData.chaptersCount = nextChaptersCount;
+		bookData.versesCount = normalizedVersesCount;
+		merged[book] = bookData;
+	}
+
+	return merged;
+}
+
+function applyVersificationDiffToTranslations(template: string): string {
+	const diffPath = CONFIG.paths.src.versification;
+	const diff = loadVersificationDiff(diffPath);
+
+	if (diff == null) {
+		return template;
+	}
+
+	const defaultChaptersBlock = getDefaultChaptersBlock(template);
+	const mergedChapters = mergeVersificationDiff(defaultChaptersBlock.chapters, diff, diffPath);
+	const serializedChapters = serializeObjectLiteral(mergedChapters, '\t\t');
+
+	logger.info(`Applying versification diff: ${diffPath}`);
+
+	return `${template.slice(0, defaultChaptersBlock.start)}${serializedChapters}${template.slice(defaultChaptersBlock.end)}`;
+}
+
 function makeRegexp(osis: string, apocrypha: boolean, sortedSafes: string[]): string {
 	const out: string[] = [];
 	const abbrevList: string[] = [];
@@ -484,6 +656,7 @@ function getBookSubsets(abbrevs: string[]): string[][] {
 
 function makeTranslations() {
 	let out = getFileContents(CONFIG.paths.template.translations);
+	out = applyVersificationDiffToTranslations(out);
 	const regexps: string[] = [];
 	const aliases: string[] = [];
 
