@@ -1,0 +1,36 @@
+{
+  "Joel": {
+    "chaptersCount": 4,
+    "versesCount": { "4": 31 }
+  },
+  "Hag": {
+    "chaptersCount": 1
+  },
+  "Mal": {
+    "chaptersCount": 3
+  },
+  "Matt": {
+    "versesCount": { "17": 20, "18": 10, "23": 13 }
+  },
+  "Mark": {
+    "versesCount": { "7": 15, "9": 43, "11": 25, "15": 27 }
+  },
+  "Luke": {
+    "versesCount": { "17": 35, "23": 16 }
+  },
+  "John": {
+    "versesCount": { "5": 3 }
+  },
+  "Acts": {
+    "versesCount": { "8": 36, "15": 33, "24": 6, "28": 28 }
+  },
+  "Rom": {
+    "versesCount": { "16": 23 }
+  },
+  "3John": {
+    "versesCount": { "1": 15 }
+  },
+  "Rev": {
+    "versesCount": { "12": 18 }
+  }
+}

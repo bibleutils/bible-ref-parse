@@ -1,0 +1,15 @@
+{
+  "Joel": {
+    "chaptersCount": 4,
+    "versesCount": { "4": 31 }
+  },
+  "Hag": {
+    "chaptersCount": 1
+  },
+  "Mal": {
+    "chaptersCount": 3
+  },
+  "Rom": {
+    "versesCount": { "16": 23 }
+  }
+}

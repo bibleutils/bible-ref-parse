@@ -454,7 +454,7 @@ function mergeVersificationDiff(
 			if (chapterNumber > nextChaptersCount) {
 				throw new Error(`Versification diff ${diffPath} has chapter ${chapterNumber} for ${book} beyond chaptersCount ${nextChaptersCount}`);
 			}
-			if (!Number.isInteger(verseCount) || verseCount < 1) {
+			if (!Number.isInteger(verseCount)) {
 				throw new Error(`Versification diff ${diffPath} has invalid verse count for ${book} ${chapter}: ${verseCount}`);
 			}
 		}

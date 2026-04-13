@@ -1,0 +1,41 @@
+{
+  "Exod": {
+    "versesCount": { "7": 24 }
+  },
+  "Num": {
+    "versesCount": { "22": 40 }
+  },
+  "Josh": {
+    "versesCount": { "18": 27 }
+  },
+  "2Sam": {
+    "versesCount": { "23": 24 }
+  },
+  "1Chr": {
+    "versesCount": { "21": 31 }
+  },
+  "Song": {
+    "versesCount": { "4": 17 }
+  },
+  "Jer": {
+    "versesCount": { "6": 29 }
+  },
+  "Hos": {
+    "versesCount": { "11": 11 }
+  },
+  "John": {
+    "versesCount": { "7": 52 }
+  },
+  "Acts": {
+    "versesCount": { "8": 39, "23": 34, "28": 30 }
+  },
+  "1Cor": {
+    "versesCount": { "10": 34 }
+  },
+  "3John": {
+    "versesCount": { "1": 15 }
+  },
+  "Rev": {
+    "versesCount": { "12": 18 }
+  }
+}
