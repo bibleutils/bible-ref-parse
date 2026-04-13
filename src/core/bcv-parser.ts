@@ -205,19 +205,19 @@ class bcv_parser {
 			if ((translation === "aliases") || (translation === "alternates")) { continue; }
 			// If the `Ps` array in the `chapters` object doesn't exist, create it so that we can add Ps 151 to the end of it.
 			if (this.translations[translation].chapters == null) { this.translations[translation].chapters = {}; }
-			if (this.translations[translation].chapters["Ps"] == null) { this.translations[translation].chapters["Ps"] = bcv_utils.shallow_clone_array(this.translations["default"].chapters["Ps"]); }
+			if (this.translations[translation].chapters["Ps"] == null) { this.translations[translation].chapters["Ps"] = bcv_utils.shallow_clone_book_data(this.translations["default"].chapters["Ps"]); }
 			// Add Ps 151 to the end of Psalms. The assumption here is that Ps151 always only is one chapter long.
 			if (arg === true) {
 				var verse_count;
 				if (this.translations[translation].chapters["Ps151"] != null) {
-					verse_count = this.translations[translation].chapters["Ps151"][0];
+					verse_count = bcv_utils.get_book_verse_count(this.translations[translation].chapters["Ps151"], 1);
 				} else {
-					verse_count = this.translations["default"].chapters["Ps151"][0];
+					verse_count = bcv_utils.get_book_verse_count(this.translations["default"].chapters["Ps151"], 1);
 				}
-				this.translations[translation].chapters["Ps"][150] = verse_count;
+				bcv_utils.set_book_verse_count(this.translations[translation].chapters["Ps"], 151, verse_count);
 			// Remove Ps 151 from the end of Psalms.
 			} else {
-				if (this.translations[translation].chapters["Ps"].length === 151) { this.translations[translation].chapters["Ps"].pop(); }
+				if (bcv_utils.get_book_chapter_count(this.translations[translation].chapters["Ps"]) === 151) { bcv_utils.delete_book_verse_count(this.translations[translation].chapters["Ps"], 151); }
 			}
 		}
 		return this;
@@ -236,7 +236,7 @@ class bcv_parser {
 				}
 				for (book of Object.keys(this.translations.alternates.default.chapters || {})) {
 					chapter_list = this.translations.alternates.default.chapters[book];
-					this.translations.default.chapters[book] = bcv_utils.shallow_clone_array(chapter_list);
+					this.translations.default.chapters[book] = bcv_utils.shallow_clone_book_data(chapter_list);
 				}
 			// Make sure the `versification_system` is reset to the default before applying any changes--alternate systems only include differences from the default.
 			} else {
@@ -257,8 +257,8 @@ class bcv_parser {
 			for (book of Object.keys(this.translations[system].chapters || {})) {
 				// Save the existing default order so we can get it back later. Only set it the first time.
 				chapter_list = this.translations[system].chapters[book];
-				if (this.translations.alternates.default.chapters[book] == null) { this.translations.alternates.default.chapters[book] = bcv_utils.shallow_clone_array(this.translations.default.chapters[book]); }
-				this.translations.default.chapters[book] = bcv_utils.shallow_clone_array(chapter_list);
+				if (this.translations.alternates.default.chapters[book] == null) { this.translations.alternates.default.chapters[book] = bcv_utils.shallow_clone_book_data(this.translations.default.chapters[book]); }
+				this.translations.default.chapters[book] = bcv_utils.shallow_clone_book_data(chapter_list);
 			}
 		}
 		// Depending on the order of operations, the cloned list could be inconsistent with the current state. For example, if we called `versification_system`, we've cached 150 Psalms. If we then call `include_apocrypha(true)`, we now have 151 Psalms. If we then call `versification_system` again, we're back, incorrectly, to 150 Psalms because that's what was cached.
@@ -296,7 +296,7 @@ class bcv_parser {
 		};
 		for (book of Object.keys(this.translations.default.chapters || {})) {
 			var chapter_list = this.translations.default.chapters[book];
-			out.chapters[book] = bcv_utils.shallow_clone_array(chapter_list);
+			out.chapters[book] = bcv_utils.shallow_clone_book_data(chapter_list);
 		}
 		for (book of Object.keys(out.order || {})) {
 			var id = out.order[book];
@@ -696,15 +696,16 @@ class bcv_parser {
 		if (start.v == null) { start.v = 1; }
 		// If no end chapter or verse, assume the last possible. If it's a single-chapter book, always use the first chapter for consistency with other `passage_existence_strategy` results (which do respect the single-chapter length).
 		if (end.c == null) {
-			if ((this.options.passage_existence_strategy.indexOf("c") >= 0) || ((this.passage.translations[translation].chapters[end.b] != null) && (this.passage.translations[translation].chapters[end.b].length === 1))) {
-				end.c = this.passage.translations[translation].chapters[end.b].length;
+			if ((this.options.passage_existence_strategy.indexOf("c") >= 0) || ((this.passage.translations[translation].chapters[end.b] != null) && (bcv_utils.get_book_chapter_count(this.passage.translations[translation].chapters[end.b]) === 1))) {
+				end.c = bcv_utils.get_book_chapter_count(this.passage.translations[translation].chapters[end.b]);
 			} else {
 				end.c = 999;
 			}
 		}
 		if (end.v == null) {
-			if ((this.passage.translations[translation].chapters[end.b][end.c - 1] != null) && (this.options.passage_existence_strategy.indexOf("v") >= 0)) {
-				end.v = this.passage.translations[translation].chapters[end.b][end.c - 1];
+			const end_verse_count = bcv_utils.get_book_verse_count(this.passage.translations[translation].chapters[end.b], end.c);
+			if ((end_verse_count != null) && (this.options.passage_existence_strategy.indexOf("v") >= 0)) {
+				end.v = end_verse_count;
 			} else {
 				end.v = 999;
 			}
@@ -717,10 +718,10 @@ class bcv_parser {
 		(start.c === 1) &&
 		(start.v === 1) &&
 		(((end.c === 999) && (end.v === 999)) ||
-		((end.c === this.passage.translations[translation].chapters[end.b].length) &&
+		((end.c === bcv_utils.get_book_chapter_count(this.passage.translations[translation].chapters[end.b])) &&
 		(this.options.passage_existence_strategy.indexOf("c") >= 0) &&
 		((end.v === 999) ||
-		((end.v === this.passage.translations[translation].chapters[end.b][end.c - 1]) && (this.options.passage_existence_strategy.indexOf("v") >= 0)))
+		((end.v === bcv_utils.get_book_verse_count(this.passage.translations[translation].chapters[end.b], end.c)) && (this.options.passage_existence_strategy.indexOf("v") >= 0)))
 		))) {
 			osis.start = start.b;
 			osis.end = end.b;
@@ -728,7 +729,7 @@ class bcv_parser {
 		} else if ((this.options.osis_compaction_strategy.length <= 2) &&
 		(start.v === 1) &&
 		((end.v === 999) ||
-		((end.v === this.passage.translations[translation].chapters[end.b][end.c - 1]) && (this.options.passage_existence_strategy.indexOf("v") >= 0))
+		((end.v === bcv_utils.get_book_verse_count(this.passage.translations[translation].chapters[end.b], end.c)) && (this.options.passage_existence_strategy.indexOf("v") >= 0))
 		)) {
 			osis.start = start.b + "." + start.c.toString();
 			osis.end = end.b + "." + end.c.toString();
@@ -760,7 +761,7 @@ class bcv_parser {
 		const out = [];
 		for (let c = passage.start.c, end = passage.end.c, asc = passage.start.c <= end; asc ? c <= end : c >= end; asc ? c++ : c--) {
 			const passageStartVerse = c === passage.start.c ? passage.start.v : 1;
-			const passageEndVerse = c === passage.end.c ? passage.end.v : this.translations[translation].chapters[passage.start.b][c - 1];
+			const passageEndVerse = c === passage.end.c ? passage.end.v : bcv_utils.get_book_verse_count(this.translations[translation].chapters[passage.start.b], c);
 			const passageStart = {
 				b: passage.start.b,
 				c,
@@ -826,7 +827,7 @@ class bcv_parser {
 			// Otherwise, we generate the OSIS for Ps151 and then set the beginning of the range to the next book. We assume that the next book is Prov, which isn't necessarily the case. I'm not aware of a canon that doesn't place Prov after Ps, however.
 			} else {
 				// This is the string we're going to prepend to our final output.
-				start.extra = this.to_osis({b: "Ps151", c: 1, v: start.v}, {b: "Ps151", c: 1, v: this.passage.translations[translation].chapters["Ps151"][0]}, translation);
+				start.extra = this.to_osis({b: "Ps151", c: 1, v: start.v}, {b: "Ps151", c: 1, v: bcv_utils.get_book_verse_count(this.passage.translations[translation].chapters["Ps151"], 1)}, translation);
 				start.b = "Prov";
 				start.c = 1;
 				return start.v = 1;
@@ -837,7 +838,7 @@ class bcv_parser {
 			end.extra = this.to_osis({b: "Ps151", c: 1, v: 1}, {b: "Ps151", c: 1, v: end.v}, translation);
 			// Set the end of the range to be the end of Ps.150, which immediately precedes Ps151.
 			end.c = 150;
-			return end.v = this.passage.translations[translation].chapters["Ps"][149];
+			return end.v = bcv_utils.get_book_verse_count(this.passage.translations[translation].chapters["Ps"], 150);
 		}
 	}
 
@@ -911,10 +912,10 @@ class bcv_parser {
 			if (prev.c === check.c) {
 				if (prev.v === (check.v - 1)) { return true; }
 			} else if ((check.v === 1) && (prev.c === (check.c - 1))) {
-				if (prev.v === this.passage.translations[translation].chapters[prev.b][prev.c - 1]) { return true; }
+				if (prev.v === bcv_utils.get_book_verse_count(this.passage.translations[translation].chapters[prev.b], prev.c)) { return true; }
 			}
 		} else if ((check.c === 1) && (check.v === 1) && (translation_order[prev.b] === (translation_order[check.b] - 1))) {
-			if ((prev.c === this.passage.translations[translation].chapters[prev.b].length) && (prev.v === this.passage.translations[translation].chapters[prev.b][prev.c - 1])) { return true; }
+			if ((prev.c === bcv_utils.get_book_chapter_count(this.passage.translations[translation].chapters[prev.b])) && (prev.v === bcv_utils.get_book_verse_count(this.passage.translations[translation].chapters[prev.b], prev.c))) { return true; }
 		}
 		return false;
 	}

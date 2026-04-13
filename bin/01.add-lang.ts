@@ -59,7 +59,6 @@ logger.info("Make Regular Expressions...");
 makeRegexps();
 logger.info("Make Grammar...");
 makeGrammar();
-const defaultAlternatesFile = CONFIG.paths.template.translationAlternates;
 logger.info("Make Translations...");
 makeTranslations();
 
@@ -521,15 +520,8 @@ function makeTranslations() {
 		alias = `${alias},`;
 	}
 
-	let alternate = getFileContents(defaultAlternatesFile);
-	const translationAlternatesPath = CONFIG.paths.build.translationAlternates;
-	if (fs.existsSync(translationAlternatesPath)) {
-		alternate = getFileContents(translationAlternatesPath);
-	}
-
 	out = out.replace(/\$TRANS_REGEXP/g, regexp);
 	out = out.replace(/\$TRANS_ALIAS/g, alias);
-	out = out.replace(/\s*\$TRANS_ALTERNATE/g, `\n${alternate}`);
 
 	const langIsos = JSON.stringify(GLOBAL_VARIABLES[Variable.LANG_ISOS]);
 	out = out.replace(/\$LANG_ISOS/g, langIsos);

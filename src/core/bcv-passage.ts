@@ -886,6 +886,7 @@ class bcv_passage {
 	// Make sure that the start ref exists in the given translation.
 	validate_start_ref(translation, start, messages) {
 		let valid = true;
+		let chapter_count, verse_count;
 		if ((translation !== "default") && ((this.translations[translation] != null ? this.translations[translation].chapters[start.b] : undefined) == null)) {
 			this.promote_book_to_translation(start.b, translation);
 		}
@@ -914,8 +915,10 @@ class bcv_passage {
 				// Can't just have `else` because `allow` is a valid `zero_verse_strategy`.
 				} else if (this.options.zero_verse_strategy === "upgrade") { start.v = 1; }
 			}
+			chapter_count = bcv_utils.get_book_chapter_count(this.translations[translation].chapters[start.b]);
+			verse_count = bcv_utils.get_book_verse_count(this.translations[translation].chapters[start.b], start.c);
 			// Matt 5
-			if ((start.c > 0) && (this.translations[translation].chapters[start.b][start.c - 1] != null)) {
+			if ((start.c > 0) && (verse_count != null)) {
 				// Matt 5:10
 				if (start.v != null) {
 					// Matt 5:ten
@@ -923,25 +926,25 @@ class bcv_passage {
 						valid = false;
 						messages.start_verse_not_numeric = true;
 					// Matt 5:100
-					} else if (start.v > this.translations[translation].chapters[start.b][start.c - 1]) {
+					} else if (start.v > verse_count) {
 						// Not part of the same `if` statement in case we ever add a new `else` condition.
 						if (this.options.passage_existence_strategy.indexOf("v") >= 0) {
 							valid = false;
-							messages.start_verse_not_exist = this.translations[translation].chapters[start.b][start.c - 1];
+							messages.start_verse_not_exist = verse_count;
 						}
 					}
 				// Jude 1 when wanting to treat the `1` as a verse rather than a chapter.
-				} else if ((start.c === 1) && (this.options.single_chapter_1_strategy === "verse") && (this.translations[translation].chapters[start.b].length === 1)) {
+				} else if ((start.c === 1) && (this.options.single_chapter_1_strategy === "verse") && (chapter_count === 1)) {
 					messages.start_chapter_1 = 1;
 				}
 			// Matt 50
 			} else {
-				if ((start.c !== 1) && (this.translations[translation].chapters[start.b].length === 1)) {
+				if ((start.c !== 1) && (chapter_count === 1)) {
 					valid = false;
 					messages.start_chapter_not_exist_in_single_chapter_book = 1;
 				} else if ((start.c > 0) && (this.options.passage_existence_strategy.indexOf("c") >= 0)) {
 					valid = false;
-					messages.start_chapter_not_exist = this.translations[translation].chapters[start.b].length;
+					messages.start_chapter_not_exist = chapter_count;
 				}
 			}
 		// An unusual situation in which there's no defined start book. This only happens when a `c` becomes dissociated from its `b`.
@@ -961,6 +964,7 @@ class bcv_passage {
 	validate_end_ref(translation, start, end, valid, messages) {
 		// It's not necessary to check for whether the book exists in a non-default translation here because we've already validated that it works as a `start_ref`, which created the book if it didn't exist. So we don't call `@promote_book_to_translation`.
 		const translation_order = ((this.translations[translation] != null ? this.translations[translation].order : undefined) != null) ? translation : "default";
+		let chapter_count, verse_count;
 		// Matt 0
 		if (end.c != null) {
 			end.c = parseInt(end.c, 10);
@@ -990,8 +994,9 @@ class bcv_passage {
 
 		// Matt-Mark
 		if (this.translations[translation_order].order[end.b] != null) {
+			chapter_count = bcv_utils.get_book_chapter_count(this.translations[translation].chapters[end.b]);
 			// Even if the `passage_existence_strategy` doesn't include `c`, make sure to treat single-chapter books as single-chapter books.
-			if ((end.c == null) && (this.translations[translation].chapters[end.b].length === 1)) { end.c = 1; }
+			if ((end.c == null) && (chapter_count === 1)) { end.c = 1; }
 			// Mark 4-Matt 5, None 4-Matt 5
 			if ((this.translations[translation_order].order[start.b] != null) && (this.translations[translation_order].order[start.b] > this.translations[translation_order].order[end.b])) {
 				if (this.options.passage_existence_strategy.indexOf("b") >= 0) { valid = false; }
@@ -1017,18 +1022,20 @@ class bcv_passage {
 				}
 			}
 			if ((end.c != null) && !isNaN(end.c)) {
-				if ((this.translations[translation].chapters[end.b][end.c - 1] == null)) {
-					if (this.translations[translation].chapters[end.b].length === 1) {
+				verse_count = bcv_utils.get_book_verse_count(this.translations[translation].chapters[end.b], end.c);
+				if (verse_count == null) {
+					if (chapter_count === 1) {
 						messages.end_chapter_not_exist_in_single_chapter_book = 1;
 					} else if ((end.c > 0) && (this.options.passage_existence_strategy.indexOf("c") >= 0)) {
-						messages.end_chapter_not_exist = this.translations[translation].chapters[end.b].length;
+						messages.end_chapter_not_exist = chapter_count;
 					}
 				}
 			}
 			if ((end.v != null) && !isNaN(end.v)) {
-				if (end.c == null) { end.c = this.translations[translation].chapters[end.b].length; }
-				if ((end.v > this.translations[translation].chapters[end.b][end.c - 1]) && (this.options.passage_existence_strategy.indexOf("v") >= 0)) {
-					messages.end_verse_not_exist = this.translations[translation].chapters[end.b][end.c - 1];
+				if (end.c == null) { end.c = chapter_count; }
+				verse_count = bcv_utils.get_book_verse_count(this.translations[translation].chapters[end.b], end.c);
+				if ((verse_count != null) && (end.v > verse_count) && (this.options.passage_existence_strategy.indexOf("v") >= 0)) {
+					messages.end_verse_not_exist = verse_count;
 				}
 			}
 			// Matt 5:1-None 6
@@ -1046,7 +1053,7 @@ class bcv_passage {
 		if (this.translations[translation].chapters == null) { this.translations[translation].chapters = {}; }
 		// If the translation specifically overrides the default, use that. Otherwise stick with the default.
 		if (this.translations[translation].chapters[book] == null) {
-			return this.translations[translation].chapters[book] = bcv_utils.shallow_clone_array(this.translations.default.chapters[book]);
+			return this.translations[translation].chapters[book] = bcv_utils.shallow_clone_book_data(this.translations.default.chapters[book]);
 		}
 	}
 }

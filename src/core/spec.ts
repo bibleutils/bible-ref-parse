@@ -86,13 +86,13 @@ describe("Pre-parsing", function() {
 	it("should allow changing to the `vulgate` versification system and back again", function() {
 		p.set_options({versification_system: "vulgate"});
 		expect(p.options.versification_system).toEqual("vulgate");
-		expect(p.translations.default.chapters.Ps[118]).toEqual(7);
+		expect(p.translations.default.chapters.Ps.versesCount["119"]).toEqual(7);
 		expect(p.parse("Ps 118:176").osis()).toEqual("Ps.118.176");
 		expect(p.parse("Ps 119:176").osis()).toEqual("");
 		expect(p.parse("Ps 151:1").osis()).toEqual("");
 		p.set_options({versification_system: "default"});
 		expect(p.options.versification_system).toEqual("default");
-		expect(p.translations.default.chapters.Ps[118]).toEqual(176);
+		expect(p.translations.default.chapters.Ps.versesCount["119"]).toEqual(176);
 		expect(p.parse("Ps 118:176").osis()).toEqual("");
 		expect(p.parse("Ps 119:176").osis()).toEqual("Ps.119.176");
 		return expect(p.parse("Ps 151:1").osis()).toEqual("");
@@ -101,13 +101,13 @@ describe("Pre-parsing", function() {
 	it("should allow the `vulgate` versification system to work with the Apocrypha", function() {
 		p.set_options({versification_system: "vulgate", include_apocrypha: true});
 		expect(p.options.versification_system).toEqual("vulgate");
-		expect(p.translations.default.chapters.Ps[118]).toEqual(7);
+		expect(p.translations.default.chapters.Ps.versesCount["119"]).toEqual(7);
 		expect(p.parse("Ps 118:176").osis()).toEqual("Ps.118.176");
 		expect(p.parse("Ps 119:176").osis()).toEqual("");
 		expect(p.parse("Ps 151:1").osis()).toEqual("Ps.151.1");
 		p.set_options({versification_system: "default"});
 		expect(p.options.versification_system).toEqual("default");
-		expect(p.translations.default.chapters.Ps[118]).toEqual(176);
+		expect(p.translations.default.chapters.Ps.versesCount["119"]).toEqual(176);
 		expect(p.parse("Ps 118:176").osis()).toEqual("");
 		expect(p.parse("Ps 119:176").osis()).toEqual("Ps.119.176");
 		return expect(p.parse("Ps 151:1").osis()).toEqual("Ps.151.1");
@@ -245,11 +245,11 @@ describe("Pre-parsing", function() {
 	it("should turn on/off the Apocrypha", function() {
 		p.reset();
 		p.include_apocrypha(true);
-		expect(p.translations.default.chapters.Ps[150]).toEqual(7);
+		expect(p.translations.default.chapters.Ps.versesCount["151"]).toEqual(7);
 		expect(p.translations.default.order.Tob).toEqual(67);
 		expect(p.options.include_apocrypha).toBeTruthy();
 		p.include_apocrypha(false);
-		expect(p.translations.default.chapters.Ps[150]).not.toBeDefined();
+		expect(p.translations.default.chapters.Ps.versesCount["151"]).not.toBeDefined();
 		return expect(p.options.include_apocrypha).toBeFalsy();
 	});
 
@@ -2691,21 +2691,21 @@ describe("Administrative behavior", function() {
 		expect(niv.order["1Esd"]).toEqual(82);
 		expect(niv.books[65]).toEqual("Rev");
 		expect(niv.books.length).toEqual(84);
-		expect(niv.chapters["3John"][0]).toEqual(14);
+		expect(niv.chapters["3John"].versesCount["1"]).toEqual(14);
 		expect(p.options.versification_system).toEqual("default");
 		expect(niv.alias).toEqual("kjv");
 		const esv = p.translation_info("esv");
 		expect(esv.order["1Esd"]).toEqual(82);
 		expect(esv.books[65]).toEqual("Rev");
 		expect(esv.books.length).toEqual(84);
-		expect(esv.chapters["3John"][0]).toEqual(15);
+		expect(esv.chapters["3John"].versesCount["1"]).toEqual(15);
 		expect(p.options.versification_system).toEqual("default");
 		expect(esv.alias).toEqual("default");
 		const nab = p.translation_info("nabre");
 		expect(nab.order["1Esd"]).toEqual(18);
 		expect(nab.books[65]).toEqual("Gal");
 		expect(nab.books.length).toEqual(84);
-		expect(nab.chapters["3John"][0]).toEqual(15);
+		expect(nab.chapters["3John"].versesCount["1"]).toEqual(15);
 		expect(p.options.versification_system).toEqual("default");
 		expect(nab.alias).toEqual("nab");
 		// Verify that we've made a copy, not a reference.
@@ -2717,8 +2717,8 @@ describe("Administrative behavior", function() {
 		p.set_options({versification_system: "nab"});
 		const array_response = p.translation_info([]);
 		const null_response = p.translation_info(null);
-		expect(array_response.chapters["3John"][0]).toEqual(15);
-		return expect(null_response.chapters["3John"][0]).toEqual(15);
+		expect(array_response.chapters["3John"].versesCount["1"]).toEqual(15);
+		return expect(null_response.chapters["3John"].versesCount["1"]).toEqual(15);
 	});
 
 	return it("should return `.languages`", () => expect(p.languages).toEqual(["en"]));
