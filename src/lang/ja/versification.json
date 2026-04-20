@@ -1,0 +1,17 @@
+{
+  "Hag": {
+    "chaptersCount": 1
+  },
+  "Mal": {
+    "chaptersCount": 3
+  },
+  "2Cor": {
+    "versesCount": { "13": 13 }
+  },
+  "3John": {
+    "versesCount": { "1": 15 }
+  },
+  "Rev": {
+    "versesCount": { "12": 18 }
+  }
+}

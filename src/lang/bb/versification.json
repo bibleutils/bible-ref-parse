@@ -1,0 +1,27 @@
+{
+  "Joel": {
+    "chaptersCount": 4,
+    "versesCount": { "4": 31 }
+  },
+  "Hag": {
+    "chaptersCount": 1
+  },
+  "Mal": {
+    "chaptersCount": 3
+  },
+  "Matt": {
+    "versesCount": { "18": 10 }
+  },
+  "Mark": {
+    "versesCount": { "7": 15, "9": 43, "11": 25 }
+  },
+  "Acts": {
+    "versesCount": { "15": 33, "28": 28 }
+  },
+  "3John": {
+    "versesCount": { "1": 15 }
+  },
+  "Rev": {
+    "versesCount": { "12": 18 }
+  }
+}

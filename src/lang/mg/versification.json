@@ -1,0 +1,118 @@
+{
+  "Gen": {
+    "versesCount": { "31": 54, "32": 33 }
+  },
+  "Exod": {
+    "versesCount": { "7": 29, "8": 28, "21": 37, "22": 30 }
+  },
+  "Lev": {
+    "versesCount": { "5": 26, "6": 23 }
+  },
+  "Num": {
+    "versesCount": { "16": 35, "17": 28, "29": 39, "30": 17 }
+  },
+  "Deut": {
+    "versesCount": { "5": 30, "12": 31, "13": 19, "22": 29, "23": 26, "28": 69, "29": 28 }
+  },
+  "Josh": {
+    "versesCount": { "17": 17 }
+  },
+  "1Sam": {
+    "versesCount": { "10": 26, "21": 16, "23": 28, "24": 23 }
+  },
+  "2Sam": {
+    "versesCount": { "18": 32, "19": 44 }
+  },
+  "1Kgs": {
+    "versesCount": { "4": 20, "5": 32, "22": 54 }
+  },
+  "2Kgs": {
+    "versesCount": { "11": 20, "12": 22 }
+  },
+  "1Chr": {
+    "versesCount": { "5": 41, "6": 66, "27": 33 }
+  },
+  "2Chr": {
+    "versesCount": { "1": 18, "2": 17, "13": 23, "14": 14 }
+  },
+  "Neh": {
+    "versesCount": { "3": 38, "4": 17, "8": 17, "9": 37, "10": 40 }
+  },
+  "Job": {
+    "versesCount": { "40": 32, "41": 26 }
+  },
+  "Eccl": {
+    "versesCount": { "4": 17, "5": 19 }
+  },
+  "Song": {
+    "versesCount": { "6": 12, "7": 14 }
+  },
+  "Isa": {
+    "versesCount": { "8": 23, "9": 20, "64": 11 }
+  },
+  "Jer": {
+    "versesCount": { "8": 23, "9": 25 }
+  },
+  "Ezek": {
+    "versesCount": { "20": 44, "21": 37 }
+  },
+  "Dan": {
+    "versesCount": { "3": 33, "4": 34, "5": 30, "6": 29, "11": 44 }
+  },
+  "Hos": {
+    "versesCount": { "1": 9, "2": 25, "11": 11, "12": 15, "13": 15, "14": 10 }
+  },
+  "Joel": {
+    "chaptersCount": 4,
+    "versesCount": { "2": 27, "3": 5, "4": 21 }
+  },
+  "Jonah": {
+    "versesCount": { "1": 16, "2": 11 }
+  },
+  "Mic": {
+    "versesCount": { "4": 14, "5": 14 }
+  },
+  "Nah": {
+    "versesCount": { "1": 14, "2": 14 }
+  },
+  "Zech": {
+    "versesCount": { "1": 17, "2": 17 }
+  },
+  "Mal": {
+    "chaptersCount": 3,
+    "versesCount": { "3": 24 }
+  },
+  "Mark": {
+    "versesCount": { "9": 49 }
+  },
+  "John": {
+    "versesCount": { "10": 41 }
+  },
+  "Acts": {
+    "versesCount": { "8": 39, "16": 39, "22": 29 }
+  },
+  "1Cor": {
+    "versesCount": { "11": 33 }
+  },
+  "2Cor": {
+    "versesCount": { "7": 15 }
+  },
+  "Eph": {
+    "versesCount": { "2": 21, "5": 32 }
+  },
+  "Col": {
+    "versesCount": { "4": 17 }
+  },
+  "Heb": {
+    "versesCount": { "4": 15 }
+  },
+  "1John": {
+    "versesCount": { "3": 23 }
+  },
+  "3John": {
+    "versesCount": { "1": 15 }
+  },
+  "Rev": {
+    "versesCount": { "13": 17 }
+  }
+}

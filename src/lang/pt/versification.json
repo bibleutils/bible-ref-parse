@@ -1,0 +1,23 @@
+{
+  "Judg": {
+    "versesCount": { "5": 32 }
+  },
+  "1Sam": {
+    "versesCount": { "20": 43 }
+  },
+  "1Kgs": {
+    "versesCount": { "22": 54 }
+  },
+  "Matt": {
+    "versesCount": { "2": 22, "27": 65 }
+  },
+  "Luke": {
+    "versesCount": { "22": 70 }
+  },
+  "3John": {
+    "versesCount": { "1": 15 }
+  },
+  "Rev": {
+    "versesCount": { "12": 18 }
+  }
+}
